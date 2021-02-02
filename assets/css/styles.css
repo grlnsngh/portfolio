@@ -92,6 +92,9 @@ img{
 }
 
 /*===== CLASS CSS ===== */
+.primary-color{
+    color: var(--first-color);
+}
 .section-title{
   position: relative;
   font-size: var(--h2-font-size);
@@ -156,41 +159,6 @@ img{
     background-color: var(--second-color);
     transition: .5s;
   }
-    
-/*
-    .effect-1{
-        width: 30px;
-        height: 30px;
-        border: 4px solid #8a49ff;
-        right: 10%;
-        top: 50%;
-        animation: spin 10s linear infinite;
-    }
-    .effect-2{
-        left: 2%;
-        bottom: 5%;
-        width: 40px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        animation: topBounce 3s ease-in-out infinite;
-    }
-    .effect-2 div{
-        height: 3px;
-        width: 3px;
-        background-color: var(--first-color);
-        margin: 0 3px 8px;
-    }
-    .effect-3{
-        height: 180px;
-        width: 180px;
-        border: 25px solid #fdba00;
-        border-radius: 50%;      
-        left: 20%;
-        top: -50px;
-        animation: leftBounce 3s ease-in-out infinite;
-    }
-*/
 }
 .nav__item{
   margin-bottom: var(--mb-4);
@@ -213,6 +181,10 @@ img{
 }
 .nav__logo{
   color: var(--second-color);
+}
+.nav__logo:hover{
+  color: var(--first-color);
+  text-decoration: none;
 }
 .nav__toggle{
   color: var(--second-color);
@@ -322,7 +294,7 @@ img{
 }
 .skills__name:hover{
   background-color: var(--first-color);
-  color: var(--white-color);
+  color: #fff;
 }
 .skills__img img{
   border-radius: .5rem;
@@ -499,6 +471,9 @@ img{
   }
   .nav__link{
     color: var(--second-color);
+  }
+  .nav__link:hover{
+    text-decoration: none;
   }
 
   .home{
