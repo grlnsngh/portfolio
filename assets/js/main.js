@@ -98,7 +98,16 @@ $(document).ready(function () {
     $('.project-area .grid .test-popup-link').magnificPopup({
         type: 'image',
         gallery: { enabled: true }
+    });    
+           
+    // typing text animation script
+    var typed = new Typed(".typing", {
+        strings: ["Web Designer", "Android Developer", "Web Developer", "ML Enthusiast"],
+        typeSpeed: 100,
+        backSpeed: 60,
+        loop: true
     });
-
 });
+
+
 

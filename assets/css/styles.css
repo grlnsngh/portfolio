@@ -76,6 +76,21 @@ img{
   display: block;
 }
 
+/* custom scroll bar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--first-color);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #0030b5;
+}
+
 /*===== CLASS CSS ===== */
 .section-title{
   position: relative;
@@ -129,6 +144,7 @@ img{
   align-items: center;
   font-weight: var(--font-semi);
 }
+
 @media screen and (max-width: 768px){
   .nav__menu{
     position: fixed;
