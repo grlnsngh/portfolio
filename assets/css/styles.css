@@ -9,6 +9,7 @@
 /*===== Colores =====*/
 :root{
   --first-color: #4070F4;
+  --first-color-dark:#0030b5;
   --second-color: #0E2431;
   --background-color: #fff;
 }
@@ -88,7 +89,7 @@ img{
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #0030b5;
+    background: var(--first-color-dark);
 }
 
 /*===== CLASS CSS ===== */
@@ -242,6 +243,13 @@ img{
   bottom: 0;
   width: 295px;
 }
+.home__data a:hover{
+    color: white;
+    text-decoration: none;
+}
+.home__data button{
+    background-color: white;
+}
 /*BUTTONS*/
 .button{
   display: inline-block;
@@ -253,6 +261,9 @@ img{
 }
 .button:hover{
   box-shadow: 0 10px 36px rgba(0,0,0,.15);
+}
+.home__data .button:hover{
+    background-color: var(--first-color-dark);
 }
 
 /* ===== ABOUT =====*/
