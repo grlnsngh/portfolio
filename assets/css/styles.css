@@ -310,7 +310,18 @@ img{
 .skills__img img{
   border-radius: .5rem;
 }
-
+.skills__name_temp{
+  font-size: var(--small-font-size);
+  margin-right: var(--mb-2);
+  margin-bottom: var(--mb-3);
+  padding: .25rem .5rem;
+  background-color: var(--white-color);
+  border-radius: .25rem;
+}
+.skills__name_temp:hover{
+  background-color: var(--first-color);
+  color: #fff;
+}
 
 /* ===== CONTACT =====*/
 .contact__input{
