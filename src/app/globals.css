@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 15% 96%;
+    --foreground: 220 9% 23%;
+    --card: 220 15% 92%;
+    --card-foreground: 220 9% 23%;
+    --popover: 220 15% 92%;
+    --popover-foreground: 220 9% 23%;
+    --primary: 220 25% 35%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 90%;
+    --secondary-foreground: 220 25% 35%;
+    --muted: 220 15% 94%;
+    --muted-foreground: 220 10% 40%;
+    --accent: 220 25% 35%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 10% 80%;
+    --input: 220 10% 85%;
+    --ring: 220 25% 35%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 220 9% 23%;
+    --foreground: 220 15% 96%;
+    --card: 220 9% 26%;
+    --card-foreground: 220 15% 96%;
+    --popover: 220 9% 26%;
+    --popover-foreground: 220 15% 96%;
+    --primary: 220 15% 80%;
+    --primary-foreground: 220 9% 15%;
+    --secondary: 220 9% 30%;
+    --secondary-foreground: 220 15% 80%;
+    --muted: 220 9% 30%;
+    --muted-foreground: 220 5% 60%;
+    --accent: 220 15% 80%;
+    --accent-foreground: 220 9% 15%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 220 9% 30%;
+    --input: 220 9% 30%;
+    --ring: 220 15% 80%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .section {
+    @apply flex items-center justify-center text-center;
+  }
+}
+
+#fp-nav ul li a span, .fp-slidesNav ul li a span {
+    background: hsl(var(--primary)) !important;
+}
+
