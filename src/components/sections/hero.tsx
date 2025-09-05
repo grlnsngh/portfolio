@@ -27,7 +27,7 @@ export function Hero() {
                 Front-End Developer
             </h1>
             <p className="font-body text-lg md:text-xl text-muted-foreground max-w-xl">
-                Hi! I'm Gurleen, a Front-End Developer specializing in creating high-performance, scalable, and user-centric web applications with React and Next.js. With extensive experience in architecting complex solutions, I am passionate about driving technical excellence and mentoring team members.
+                Hi! I&apos;m Gurleen, a Front-End Developer specializing in creating high-performance, scalable, and user-centric web applications with React and Next.js. With extensive experience in architecting complex solutions, I am passionate about driving technical excellence and mentoring team members.
             </p>
             <div className="flex gap-4">
                 <Button size="lg">Download CV</Button>

@@ -25,10 +25,11 @@ const FullpageWrapper = () => {
             navigation
             navigationTooltips={anchors}
             scrollingSpeed={1000}
-            onLeave={(origin, destination, direction) => {
-              setActiveSection(destination.anchor);
+            credits={{ enabled: false }}
+            onLeave={(origin, destination, _direction) => {
+              setActiveSection(destination.anchor as string);
             }}
-            render={({ state, fullpageApi }) => {
+            render={({ state: _state, fullpageApi: _fullpageApi }) => {
               return (
                 <ReactFullpage.Wrapper>
                   <div className="section">

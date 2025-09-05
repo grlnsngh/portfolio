@@ -1,7 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Code, Rocket, Wind, Zap, Bot, Component, GitBranch, Settings, Smartphone, Languages } from 'lucide-react';
+import { Code, Rocket, Wind, Zap, GitBranch, Settings, Smartphone, Languages } from 'lucide-react';
 import type { LucideProps } from 'lucide-react';
 import type { ForwardRefExoticComponent, RefAttributes } from 'react';
 
@@ -29,7 +29,7 @@ export function Skills() {
         Technologies & Skills
       </h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {skills.map((skill: Skill, index: number) => (
+        {skills.map((skill: Skill, _index: number) => (
           <Card
             key={skill.name}
             className="group text-center transition-all duration-300 hover:bg-primary/10 hover:shadow-lg hover:-translate-y-2"

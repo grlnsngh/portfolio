@@ -23,13 +23,13 @@ export function About() {
           </h2>
           <div className="space-y-4 text-muted-foreground text-lg">
             <p>
-              Hello! I'm a dedicated Front-End Developer with a love for building dynamic and user-friendly web interfaces. My journey into web development started with a curiosity for how things work on the internet, and it has since blossomed into a full-fledged passion for creating seamless digital experiences.
+              Hello! I&apos;m a dedicated Front-End Developer with a love for building dynamic and user-friendly web interfaces. My journey into web development started with a curiosity for how things work on the internet, and it has since blossomed into a full-fledged passion for creating seamless digital experiences.
             </p>
             <p>
-              With a strong foundation in React and the modern JavaScript ecosystem, I specialize in turning complex problems into elegant, interactive solutions. I thrive in collaborative environments and am always eager to learn new technologies to push the boundaries of what's possible on the web.
+              With a strong foundation in React and the modern JavaScript ecosystem, I specialize in turning complex problems into elegant, interactive solutions. I thrive in collaborative environments and am always eager to learn new technologies to push the boundaries of what&apos;s possible on the web.
             </p>
             <p>
-              When I'm not coding, you can find me exploring new hiking trails, experimenting with new recipes, or contributing to open-source projects.
+              When I&apos;m not coding, you can find me exploring new hiking trails, experimenting with new recipes, or contributing to open-source projects.
             </p>
           </div>
         </div>
