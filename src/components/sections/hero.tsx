@@ -34,22 +34,24 @@ export function Hero() {
                 <Button size="lg" variant="outline" onClick={handleContactClick}>Contact Me</Button>
             </div>
             <div className="flex items-center gap-4 pt-4">
-              <Link href="#" target="_blank" rel="noopener noreferrer">
+              <Link href="https://github.com/grlnsngh" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="icon">
                   <Github className="h-6 w-6" />
                   <span className="sr-only">GitHub</span>
                 </Button>
               </Link>
-              <Link href="#" target="_blank" rel="noopener noreferrer">
+              <Link href="https://www.linkedin.com/in/grlnsngh/" target="_blank" rel="noopener noreferrer">
                 <Button variant="outline" size="icon">
                   <Linkedin className="h-6 w-6" />
                   <span className="sr-only">LinkedIn</span>
                 </Button>
               </Link>
-              <Button variant="outline" size="icon" onClick={handleContactClick}>
-                <Mail className="h-6 w-6" />
-                <span className="sr-only">Email</span>
-              </Button>
+              <Link href="mailto:grlnsngh@gmail.com">
+                <Button variant="outline" size="icon">
+                  <Mail className="h-6 w-6" />
+                  <span className="sr-only">Email</span>
+                </Button>
+              </Link>
             </div>
         </div>
         <div className="flex justify-center items-center">
