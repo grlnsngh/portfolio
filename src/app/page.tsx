@@ -38,6 +38,7 @@ const FullpageWrapper = () => {
           anchors={anchors}
           onLeave={onLeave}
           credits={{ enabled: false }}
+          licenseKey="OPEN-SOURCE-GPLV3-LICENSE"
           render={({ state, fullpageApi: api }) => {
             fullpageApiRef.current = api;
             return (
