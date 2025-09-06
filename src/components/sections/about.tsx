@@ -23,13 +23,13 @@ export function About() {
           </h2>
           <div className="space-y-2 md:space-y-3 text-muted-foreground text-sm md:text-base lg:text-lg">
             <p>
-              Hello! I&apos;m a dedicated Front-End Developer with a love for building dynamic and user-friendly web interfaces. My journey into web development started with a curiosity for how things work on the internet, and it has since blossomed into a full-fledged passion for creating seamless digital experiences.
+              Hello! I&apos;m Gurleen, a passionate developer with expertise in React and Next.js. My tech journey encompasses a wide range of technologies including TypeScript, Redux, Node.js, and various UI libraries like Tailwind CSS, Chakra UI, and Radix UI.
             </p>
             <p>
-              With a strong foundation in React and the modern JavaScript ecosystem, I specialize in turning complex problems into elegant, interactive solutions. I thrive in collaborative environments and am always eager to learn new technologies to push the boundaries of what&apos;s possible on the web.
+              I specialize in building scalable web applications with a focus on performance optimization, internationalization, and testing. Using tools like Webpack, Vite, Jest, Storybook, and deployment platforms like Vercel, I create robust and maintainable solutions. I&apos;m also experienced in UI/UX design and working with RESTful APIs. Additionally, I have experience developing cross-platform mobile applications with React Native and Expo.
             </p>
             <p>
-              When I&apos;m not coding, you can find me exploring new hiking trails, experimenting with new recipes, or contributing to open-source projects.
+              When I&apos;m not coding, I enjoy exploring new technologies, contributing to open-source projects, and staying updated with the latest trends in web development.
             </p>
           </div>
         </div>
