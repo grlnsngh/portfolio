@@ -22,20 +22,7 @@ interface HeaderProps {
 
 export function Header({ activeSection, onSectionChange }: HeaderProps) {
   const handleNavClick = (anchor: string) => {
-    const element = document.getElementById(anchor);
-    if (element) {
-      // Update active section immediately
-      onSectionChange(anchor);
-
-      // Add visual feedback
-      const mainElement = document.querySelector(
-        ".enhanced-scroll"
-      ) as HTMLElement;
-      if (mainElement) {
-        mainElement.style.scrollBehavior = "smooth";
-      }
-      element.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+    onSectionChange(anchor);
   };
 
   return (
