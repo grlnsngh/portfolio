@@ -7,7 +7,6 @@ import {
   Linkedin,
   Mail,
   Download,
-  ArrowDown,
   Sparkles,
   Code,
   Palette,
@@ -86,7 +85,6 @@ export function Hero() {
               Available for new opportunities
             </div>
             <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
-              Hi, I'm{" "}
               <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
                 Gurleen
               </span>
@@ -108,13 +106,9 @@ export function Hero() {
 
           {/* Description */}
           <p className="font-body text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
-            I craft modern, scalable, and user-friendly web experiences using{" "}
-            <span className="text-foreground font-medium">
-              React, Next.js, and TypeScript
-            </span>
-            . With a passion for clean design and seamless user journeys, I love
-            turning complex ideas into polished digital products that make a
-            real impact.
+            I create exceptional digital experiences that combine beautiful
+            design with powerful functionality. Let's build something amazing
+            together.
           </p>
 
           {/* Highlights */}
@@ -262,7 +256,7 @@ export function Hero() {
           onClick={scrollToNext}
           className="rounded-full hover:bg-primary/10 transition-colors"
         >
-          <ArrowDown className="w-5 h-5" />
+          <span className="text-lg">↓</span>
           <span className="sr-only">Scroll to next section</span>
         </Button>
       </div>

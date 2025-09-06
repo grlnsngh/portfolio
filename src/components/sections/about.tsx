@@ -110,9 +110,8 @@ export function About() {
                 </div>
                 <div>
                   <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                    Hi, I'm{" "}
                     <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                      Gurleen
+                      About Me
                     </span>
                   </h2>
                   <p className="text-muted-foreground text-lg">
@@ -123,35 +122,28 @@ export function About() {
 
               <div className="space-y-4 text-muted-foreground text-base lg:text-lg leading-relaxed">
                 <p>
-                  I'm a passionate developer who loves turning complex problems
-                  into simple, beautiful solutions. With over 5 years of
-                  experience in web and mobile development, I specialize in
-                  creating
+                  With over 5 years of experience in web and mobile development,
+                  I specialize in creating{" "}
                   <span className="text-foreground font-medium">
-                    {" "}
                     user-centric applications
                   </span>{" "}
-                  that make a difference.
+                  that make a difference. My expertise spans from crafting
+                  pixel-perfect interfaces to building robust backend systems.
                 </p>
                 <p>
-                  My journey spans from crafting pixel-perfect interfaces with{" "}
-                  <span className="text-foreground font-medium">
-                    React, Next.js, and TypeScript
-                  </span>{" "}
-                  to building robust backend systems and cross-platform mobile
-                  apps. I'm always excited to explore new technologies and push
-                  the boundaries of what's possible on the web.
+                  I'm passionate about clean code, modern design patterns, and
+                  staying ahead of technology trends. When I'm not coding,
+                  you'll find me exploring the latest design trends,
+                  contributing to open-source projects, or sharing knowledge
+                  with the developer community.
                 </p>
                 <p>
-                  When I'm not coding, you'll find me exploring the latest
-                  design trends, contributing to open-source projects, or
-                  sharing knowledge with the developer community. I believe in
+                  I believe in{" "}
                   <span className="text-foreground font-medium">
-                    {" "}
                     continuous learning
                   </span>{" "}
                   and the power of collaboration to create amazing digital
-                  experiences.
+                  experiences that users love.
                 </p>
               </div>
             </div>
@@ -179,23 +171,21 @@ export function About() {
 
             {/* Tech Stack */}
             <div className="space-y-3">
-              <h3 className="text-lg font-semibold">Tech Stack & Tools</h3>
+              <h3 className="text-lg font-semibold">Featured Technologies</h3>
               <div className="flex flex-wrap gap-2">
                 {[
                   "React",
                   "Next.js",
                   "TypeScript",
-                  "Node.js",
-                  "Python",
                   "Tailwind CSS",
-                  "PostgreSQL",
-                  "MongoDB",
-                  "AWS",
-                  "Docker",
+                  "Redux",
+                  "Jest",
+                  "React Query",
+                  "Framer Motion",
+                  "ESLint",
+                  "Vite",
                   "Git",
                   "Figma",
-                  "React Native",
-                  "GraphQL",
                 ].map((tech) => (
                   <Badge
                     key={tech}
