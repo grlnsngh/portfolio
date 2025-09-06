@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import ReactFullpage from "@fullpage/react-fullpage";
 import { About } from "@/components/sections/about";
 import { Contact } from "@/components/sections/contact";
@@ -13,7 +13,7 @@ const anchors = ["hero", "about", "projects", "skills", "contact"];
 
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
-  const [fullpageApi, setFullpageApi] = useState<any>(null);
+  const fullpageApiRef = useRef<any>(null);
 
   const onLeave = (origin: any, destination: any, direction: any) => {
     setActiveSection(destination.anchor);
@@ -23,19 +23,23 @@ const FullpageWrapper = () => {
     <>
       <Sidebar
         activeSection={activeSection}
-        onSectionChange={(section: string) => fullpageApi?.moveTo(section)}
+        onSectionChange={(section: string) =>
+          fullpageApiRef.current?.moveTo(section)
+        }
       />
       <div className="flex flex-col flex-1 md:ml-20">
         <Header
           activeSection={activeSection}
-          onSectionChange={(section: string) => fullpageApi?.moveTo(section)}
+          onSectionChange={(section: string) =>
+            fullpageApiRef.current?.moveTo(section)
+          }
         />
         <ReactFullpage
           anchors={anchors}
           onLeave={onLeave}
           credits={{ enabled: false }}
           render={({ state, fullpageApi: api }) => {
-            setFullpageApi(api);
+            fullpageApiRef.current = api;
             return (
               <ReactFullpage.Wrapper>
                 <div className="section min-h-screen flex items-center justify-center">
