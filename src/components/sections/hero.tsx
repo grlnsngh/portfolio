@@ -22,7 +22,6 @@ export function Hero() {
     <section id="hero" className="relative min-h-screen w-full flex items-center justify-center p-4">
       <div className="container mx-auto grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
         <div className="space-y-6">
-            <p className="text-lg font-medium text-muted-foreground">GURLEEN SINGH</p>
             <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
                 Front-End Developer
             </h1>
