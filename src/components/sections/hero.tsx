@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 declare global {
   interface Window {
@@ -23,12 +24,12 @@ declare global {
   }
 }
 
-const roles = [
-  "Full-Stack Developer",
-  "UI/UX Designer",
-  "React Specialist",
-  "TypeScript Expert",
-  "Problem Solver",
+const developerTitles = [
+  "Developer",
+  "Specialist",
+  "Engineer",
+  "Expert",
+  "Developer",
 ];
 
 const highlights = [
@@ -38,14 +39,15 @@ const highlights = [
 ];
 
 export function Hero() {
-  const [currentRole, setCurrentRole] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
+    // Cycle through developer titles every 2.5 seconds
     const interval = setInterval(() => {
-      setCurrentRole((prev) => (prev + 1) % roles.length);
-    }, 3000);
+      setCurrentTitleIndex((prev) => (prev + 1) % developerTitles.length);
+    }, 2500);
     return () => clearInterval(interval);
   }, []);
 
@@ -84,24 +86,31 @@ export function Hero() {
               <Sparkles className="w-4 h-4" />
               Available for new opportunities
             </div>
-            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
-              <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
-                Gurleen
-              </span>
-            </h1>
-          </div>
-
-          {/* Animated Role */}
-          <div className="h-16 flex items-center justify-center lg:justify-start">
-            <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground">
-              <span className="text-foreground">I'm a </span>
-              <span
-                key={currentRole}
-                className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent animate-in slide-in-from-right-4 duration-500"
-              >
-                {roles[currentRole]}
-              </span>
-            </h2>
+            <div className="space-y-1">
+              <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground font-medium">
+                Hi
+              </p>
+              <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
+                <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
+                  I'm Gurleen
+                </span>
+              </h1>
+              <div className="h-16 flex items-center justify-center lg:justify-start">
+                <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground">
+                  <span className="text-foreground">React </span>
+                  <motion.span
+                    key={currentTitleIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                    className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent font-bold"
+                  >
+                    {developerTitles[currentTitleIndex]}
+                  </motion.span>
+                </h2>
+              </div>
+            </div>
           </div>
 
           {/* Description */}
