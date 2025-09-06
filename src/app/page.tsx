@@ -89,11 +89,73 @@ const FullpageWrapper = () => {
       mainElement.addEventListener('touchstart', handleTouchStart, { passive: true });
       mainElement.addEventListener('touchend', handleTouchEnd, { passive: true });
 
+      // Mobile performance optimizations
+      const optimizeForMobile = () => {
+        // Check for battery API
+        if ('getBattery' in navigator) {
+          (navigator as any).getBattery().then((battery: any) => {
+            if (battery.level < 0.2) {
+              // Low battery - reduce animations
+              document.documentElement.style.setProperty('--animation-duration', '0.1s');
+              mainElement.style.setProperty('--transition-duration', '0.1s');
+            }
+          });
+        }
+
+        // Check for network information
+        if ('connection' in navigator) {
+          const connection = (navigator as any).connection;
+          if (connection.saveData) {
+            // Save data mode - reduce animations and effects
+            document.documentElement.classList.add('save-data');
+          }
+        }
+
+        // Check for memory constraints
+        if ('deviceMemory' in navigator) {
+          const deviceMemory = (navigator as any).deviceMemory;
+          if (deviceMemory < 4) {
+            // Low memory device - reduce effects
+            document.documentElement.classList.add('low-memory');
+          }
+        }
+      };
+
+      // Run optimizations after a short delay to ensure DOM is ready
+      setTimeout(optimizeForMobile, 100);
+
+      // Add pull-to-refresh functionality for mobile
+      let startY = 0;
+      let isPulling = false;
+
+      const handlePullTouchStart = (e: TouchEvent) => {
+        startY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+        mainElement.style.scrollBehavior = 'auto';
+        isPulling = window.scrollY === 0;
+      };
+
+      const handleTouchMove = (e: TouchEvent) => {
+        if (!isPulling) return;
+
+        const currentY = e.touches[0].clientY;
+        const diff = currentY - startY;
+
+        if (diff > 80) {
+          // Trigger refresh
+          window.location.reload();
+        }
+      };
+
+      mainElement.addEventListener('touchmove', handleTouchMove, { passive: true });
+      mainElement.addEventListener('touchstart', handlePullTouchStart, { passive: true });
+
       return () => {
         observer.disconnect();
         mainElement.removeEventListener('scroll', handleScroll);
-        mainElement.removeEventListener('touchstart', handleTouchStart);
+        mainElement.removeEventListener('touchstart', handlePullTouchStart);
         mainElement.removeEventListener('touchend', handleTouchEnd);
+        mainElement.removeEventListener('touchmove', handleTouchMove);
         clearTimeout(scrollTimeout);
       };
     }

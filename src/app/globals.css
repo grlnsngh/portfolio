@@ -265,3 +265,127 @@
   }
 }
 
+/* Battery optimization - reduce animations when battery is low */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-scroll > div {
+    transition: none !important;
+  }
+
+  .snap-start {
+    transition: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Network optimization - reduce data usage when save-data is enabled */
+@media (prefers-reduced-data: reduce) {
+  /* Reduce image quality hints */
+  img {
+    image-rendering: optimizeSpeed;
+  }
+
+  /* Disable non-essential animations */
+  .enhanced-scroll > div {
+    transition-duration: 0.1s;
+  }
+
+  /* Reduce backdrop blur for performance */
+  header {
+    backdrop-filter: none;
+    background-color: hsl(var(--background));
+  }
+}
+
+/* Dark mode optimization for OLED displays */
+@media (prefers-color-scheme: dark) {
+  .enhanced-scroll {
+    background-color: hsl(var(--background));
+  }
+}
+
+/* Optimize for different device pixel ratios */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .enhanced-scroll > div {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+
+/* Improve scrolling on low-end devices */
+@media (max-width: 768px) and (max-height: 600px) {
+  .enhanced-scroll {
+    scroll-snap-type: y proximity;
+  }
+
+  .enhanced-scroll > div {
+    scroll-snap-stop: normal;
+  }
+}
+
+/* Optimize for foldable devices */
+@media (max-width: 600px) and (max-height: 1000px) {
+  .container {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Improve performance on mobile Safari */
+@supports (-webkit-touch-callout: none) {
+  .enhanced-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: contain;
+  }
+
+  /* Fix iOS Safari zoom on input focus */
+  input:focus, textarea:focus, select:focus {
+    font-size: 16px;
+  }
+}
+
+/* Optimize for Android devices */
+@supports (-webkit-appearance: none) and (not (-webkit-touch-callout: none)) {
+  .enhanced-scroll {
+    scroll-behavior: smooth;
+    overscroll-behavior-y: contain;
+  }
+}
+
+/* Save data mode optimizations */
+.save-data .enhanced-scroll > div {
+  transition-duration: 0.1s;
+}
+
+.save-data header {
+  backdrop-filter: none;
+  background-color: hsl(var(--background));
+}
+
+.save-data img {
+  image-rendering: optimizeSpeed;
+}
+
+/* Low memory device optimizations */
+.low-memory .enhanced-scroll > div {
+  transition-duration: 0.2s;
+}
+
+.low-memory * {
+  will-change: auto;
+}
+
+/* Battery optimization styles */
+[data-battery-low="true"] .enhanced-scroll > div {
+  transition-duration: 0.1s;
+}
+
+[data-battery-low="true"] * {
+  animation-duration: 0.1s !important;
+}
+

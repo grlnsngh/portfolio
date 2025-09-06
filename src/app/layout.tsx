@@ -47,6 +47,29 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+        <link rel="dns-prefetch" href="//picsum.photos" />
+        <link rel="preload" href="/favicon.ico" as="image" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="application-name" content="ReactfolioX" />
+        <meta name="msapplication-TileColor" content="#1e293b" />
+        <meta name="msapplication-config" content="/browserconfig.xml" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', function() {
+                  navigator.serviceWorker.register('/sw.js')
+                    .then(function(registration) {
+                      console.log('SW registered: ', registration);
+                    })
+                    .catch(function(registrationError) {
+                      console.log('SW registration failed: ', registrationError);
+                    });
+                });
+              }
+            `,
+          }}
+        />
       </head>
       <body className={cn('font-body antialiased')}>
         <ThemeProvider
