@@ -24,7 +24,7 @@ const FullpageWrapper = () => {
       entries.forEach((entry) => {
         if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
           setActiveSection(entry.target.id);
-          
+
           // Add visual feedback for active section
           document.querySelectorAll('.enhanced-scroll > div').forEach((el) => {
             el.removeAttribute('data-active');
@@ -36,18 +36,20 @@ const FullpageWrapper = () => {
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);
     const sections = document.querySelectorAll('[id]');
-    
+
     sections.forEach((section) => {
       if (anchors.includes(section.id)) {
         observer.observe(section);
       }
     });
 
-    // Enhanced mobile scrolling
+    // Enhanced mobile scrolling with performance optimizations
     const mainElement = document.querySelector('.enhanced-scroll') as HTMLElement;
     if (mainElement) {
       let isScrolling = false;
       let scrollTimeout: NodeJS.Timeout;
+      let touchStartY = 0;
+      let touchStartTime = 0;
 
       const handleScroll = () => {
         if (!isScrolling) {
@@ -62,14 +64,25 @@ const FullpageWrapper = () => {
         }, 150);
       };
 
-      const handleTouchStart = () => {
+      const handleTouchStart = (e: TouchEvent) => {
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
         mainElement.style.scrollBehavior = 'auto';
       };
 
-      const handleTouchEnd = () => {
-        setTimeout(() => {
+      const handleTouchEnd = (e: TouchEvent) => {
+        const touchEndY = e.changedTouches[0].clientY;
+        const touchDuration = Date.now() - touchStartTime;
+        const touchDistance = Math.abs(touchEndY - touchStartY);
+
+        // Detect swipe gestures for better mobile experience
+        if (touchDuration < 300 && touchDistance > 50) {
+          setTimeout(() => {
+            mainElement.style.scrollBehavior = 'smooth';
+          }, 100);
+        } else {
           mainElement.style.scrollBehavior = 'smooth';
-        }, 100);
+        }
       };
 
       mainElement.addEventListener('scroll', handleScroll, { passive: true });

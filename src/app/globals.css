@@ -157,3 +157,111 @@
   transition: transform 0.3s ease-out;
 }
 
+/* Mobile-first responsive improvements */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  /* Improve button touch targets */
+  button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Better text readability on mobile */
+  body {
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  /* Optimize spacing for mobile */
+  .space-y-6 > * + * {
+    margin-top: 1rem;
+  }
+
+  /* Better form inputs on mobile */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+}
+
+/* Touch-friendly interactions */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .hover\:bg-primary\/10:hover {
+    background-color: transparent;
+  }
+
+  /* Better active states for touch */
+  button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+}
+
+/* Improve accessibility and usability */
+@media (prefers-reduced-motion: reduce) {
+  .enhanced-scroll > div {
+    transition: none;
+  }
+
+  .snap-start {
+    transition: none;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .enhanced-scroll > div[data-active="true"] {
+    transform: none;
+    border: 2px solid hsl(var(--primary));
+  }
+}
+
+/* Focus management for better accessibility */
+@media (max-width: 768px) {
+  /* Ensure focus is visible on mobile */
+  button:focus-visible,
+  a:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+  }
+
+  /* Improve focus for touch targets */
+  button:focus-visible,
+  a:focus-visible {
+    transform: scale(1.05);
+    transition: transform 0.2s ease-out;
+  }
+}
+
+/* Safe area support for devices with notches */
+@supports (padding: max(0px)) {
+  .enhanced-scroll > div {
+    padding-left: max(1rem, env(safe-area-inset-left));
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+
+  header {
+    padding-top: max(0px, env(safe-area-inset-top));
+  }
+}
+
+/* Optimize for different mobile screen sizes */
+@media (max-width: 375px) {
+  .container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .enhanced-scroll > div {
+    min-height: 100vh;
+  }
+}
+

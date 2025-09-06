@@ -1,0 +1,33 @@
+{
+  "name": "ReactfolioX - Front-End Developer Portfolio",
+  "short_name": "ReactfolioX",
+  "description": "A portfolio for a front-end React developer showcasing modern web development skills",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f9",
+  "theme_color": "#1e293b",
+  "orientation": "portrait-primary",
+  "categories": ["portfolio", "developer", "web"],
+  "lang": "en-US",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}

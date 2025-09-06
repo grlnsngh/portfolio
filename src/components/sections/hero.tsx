@@ -25,47 +25,49 @@ export function Hero() {
     }
   };
   return (
-    <section id="hero" className="relative min-h-screen w-full flex items-center justify-center p-4">
-      <div className="container mx-auto grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
-        <div className="space-y-6">
-            <h1 className="font-headline text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter">
+    <section id="hero" className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl">
+        <div className="space-y-4 sm:space-y-6 text-left">
+            <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
                 Front-End Developer
             </h1>
-            <p className="font-body text-lg md:text-xl text-muted-foreground max-w-xl">
+            <p className="font-body text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto md:mx-0 leading-relaxed">
                 Hi! I&apos;m Gurleen, a Front-End Developer specializing in creating high-performance, scalable, and user-centric web applications with React and Next.js. With extensive experience in architecting complex solutions, I am passionate about driving technical excellence and mentoring team members.
             </p>
-            <div className="flex gap-4">
-                <Button size="lg">Download CV</Button>
-                <Button size="lg" variant="outline" onClick={handleContactClick}>Contact Me</Button>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start pt-2">
+                <Button size="lg" className="w-full sm:w-auto min-h-[44px] text-base font-medium">Download CV</Button>
+                <Button size="lg" variant="outline" onClick={handleContactClick} className="w-full sm:w-auto min-h-[44px] text-base font-medium">Contact Me</Button>
             </div>
-            <div className="flex items-center gap-4 pt-4">
+            <div className="flex items-center justify-center md:justify-start gap-4 pt-4">
               <Link href="https://github.com/grlnsngh" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="icon">
-                  <Github className="h-6 w-6" />
+                <Button variant="outline" size="icon" className="min-h-[44px] min-w-[44px]">
+                  <Github className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="sr-only">GitHub</span>
                 </Button>
               </Link>
               <Link href="https://www.linkedin.com/in/grlnsngh/" target="_blank" rel="noopener noreferrer">
-                <Button variant="outline" size="icon">
-                  <Linkedin className="h-6 w-6" />
+                <Button variant="outline" size="icon" className="min-h-[44px] min-w-[44px]">
+                  <Linkedin className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="sr-only">LinkedIn</span>
                 </Button>
               </Link>
               <Link href="mailto:grlnsngh@gmail.com">
-                <Button variant="outline" size="icon">
-                  <Mail className="h-6 w-6" />
+                <Button variant="outline" size="icon" className="min-h-[44px] min-w-[44px]">
+                  <Mail className="h-5 w-5 sm:h-6 sm:w-6" />
                   <span className="sr-only">Email</span>
                 </Button>
               </Link>
             </div>
         </div>
-        <div className="flex justify-center items-center">
-          <div className="relative w-80 h-96 md:w-[400px] md:h-[500px] rounded-[50px] overflow-hidden">
+        <div className="flex justify-center items-center mt-8 md:mt-0">
+          <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-[400px] md:h-[500px] rounded-[30px] sm:rounded-[50px] overflow-hidden shadow-2xl">
             <Image
               src="https://picsum.photos/400/500"
               alt="Portrait of Gurleen"
               fill
               className="object-cover"
+              sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 400px"
+              priority
               data-ai-hint="professional portrait"
             />
           </div>
