@@ -1,5 +1,5 @@
-import { Card } from '@/components/ui/card';
-import Image from 'next/image';
+import { Card } from "@/components/ui/card";
+import Image from "next/image";
 
 export function About() {
   return (
@@ -17,19 +17,29 @@ export function About() {
             />
           </Card>
         </div>
-        <div className="md:col-span-3 space-y-3 md:space-y-4">
+        <div className="md:col-span-3 space-y-3 md:space-y-4 pr-8">
           <h2 className="font-headline text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-center md:text-left">
             About Me
           </h2>
           <div className="space-y-2 md:space-y-3 text-muted-foreground text-sm md:text-base lg:text-lg">
             <p>
-              Hello! I&apos;m Gurleen, a passionate developer with expertise in React and Next.js. My tech journey encompasses a wide range of technologies including TypeScript, Redux, Node.js, and various UI libraries like Tailwind CSS, Chakra UI, and Radix UI.
+              I&apos;m a developer who enjoys solving problems through code and
+              design. Over the years, I&apos;ve worked with technologies like
+              Redux, Tailwind CSS, Chakra UI, and Radix UI, and I&apos;m
+              comfortable building with tools such as Webpack, Vite, Jest, and
+              Storybook.
             </p>
             <p>
-              I specialize in building scalable web applications with a focus on performance optimization, internationalization, and testing. Using tools like Webpack, Vite, Jest, Storybook, and deployment platforms like Vercel, I create robust and maintainable solutions. I&apos;m also experienced in UI/UX design and working with RESTful APIs. Additionally, I have experience developing cross-platform mobile applications with React Native and Expo.
+              Beyond front-end, I&apos;ve also explored full-stack
+              workflows—integrating RESTful APIs, optimizing for international
+              audiences with i18n, and deploying applications on platforms like
+              Vercel. I&apos;ve even built cross-platform mobile apps with React
+              Native and Expo.
             </p>
             <p>
-              When I&apos;m not coding, I enjoy exploring new technologies, contributing to open-source projects, and staying updated with the latest trends in web development.
+              When I&apos;m not coding, I enjoy exploring new technologies,
+              brainstorming project ideas, and keeping up with the latest trends
+              in web and mobile development.
             </p>
           </div>
         </div>

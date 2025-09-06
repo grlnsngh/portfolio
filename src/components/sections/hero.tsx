@@ -26,7 +26,10 @@ export function Hero() {
             Front-End Developer
           </h1>
           <p className="font-body text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto md:mx-0 leading-relaxed">
-            Hi! I&apos;m Gurleen, a skilled developer proficient in React and Next.js. I specialize in building modern, scalable web applications using TypeScript, Redux, Tailwind CSS, and a variety of tools like Webpack, Vite, Jest, and Storybook. With experience in UI/UX design, RESTful APIs, i18n localization, and deployment on Vercel, I create efficient and user-friendly solutions. I also have experience building cross-platform mobile apps using React Native and Expo.
+            Hi, I&apos;m Gurleen 👋 I craft modern, scalable, and user-friendly
+            web experiences using React, Next.js, and TypeScript. With a strong
+            focus on performance, clean design, and seamless user journeys, I
+            love turning ideas into polished digital products.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start pt-2">
             <Button
