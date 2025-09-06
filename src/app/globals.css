@@ -72,6 +72,55 @@
   }
 }
 
+/* Fullpage.js Navigation Dots Styling */
+#fp-nav ul li a span,
+.fp-slidesNav ul li a span {
+  background: #435270 !important; /* Light theme primary */
+  border: 2px solid #435270 !important;
+  transition: all 0.3s ease !important;
+  opacity: 0.6 !important;
+}
+
+.dark #fp-nav ul li a span,
+.dark .fp-slidesNav ul li a span {
+  background: #c4c9d4 !important; /* Dark theme primary */
+  border: 2px solid #c4c9d4 !important;
+}
+
+#fp-nav ul li a.active span,
+.fp-slidesNav ul li a.active span,
+#fp-nav ul li:hover a.active span,
+.fp-slidesNav ul li:hover a.active span {
+  background: #435270 !important; /* Light theme primary */
+  border-color: #435270 !important;
+  opacity: 1 !important;
+}
+
+.dark #fp-nav ul li a.active span,
+.dark .fp-slidesNav ul li a.active span,
+.dark #fp-nav ul li:hover a.active span,
+.dark .fp-slidesNav ul li:hover a.active span {
+  background: #c4c9d4 !important; /* Dark theme primary */
+  border-color: #c4c9d4 !important;
+  opacity: 1 !important;
+}
+
+#fp-nav ul li a:hover span,
+.fp-slidesNav ul li a:hover span {
+  background: #435270 !important; /* Light theme primary */
+  opacity: 0.8 !important;
+}
+
+.dark #fp-nav ul li a:hover span,
+.dark .fp-slidesNav ul li a:hover span {
+  background: #c4c9d4 !important; /* Dark theme primary */
+  opacity: 0.8 !important;
+}
+
+#fp-nav {
+  z-index: 50 !important;
+}
+
 /* Enhanced Mobile Scrolling */
 .enhanced-scroll {
   scroll-behavior: smooth;
@@ -182,7 +231,9 @@
   }
 
   /* Better form inputs on mobile */
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     font-size: 16px; /* Prevents zoom on iOS */
   }
 }
@@ -344,7 +395,9 @@
   }
 
   /* Fix iOS Safari zoom on input focus */
-  input:focus, textarea:focus, select:focus {
+  input:focus,
+  textarea:focus,
+  select:focus {
     font-size: 16px;
   }
 }
@@ -388,4 +441,3 @@
 [data-battery-low="true"] * {
   animation-duration: 0.1s !important;
 }
-
