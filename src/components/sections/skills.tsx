@@ -80,7 +80,6 @@ const techCategories = [
 export function Skills() {
   return (
     <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
