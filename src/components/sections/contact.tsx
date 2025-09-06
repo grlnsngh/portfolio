@@ -44,23 +44,23 @@ export function Contact() {
   }
 
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12">
-      <Card className="max-w-xl mx-auto shadow-2xl">
-        <CardHeader className="text-center">
-          <CardTitle className="font-headline text-4xl md:text-5xl font-bold tracking-tight">Get In Touch</CardTitle>
-          <CardDescription>Have a project in mind or just want to say hi? Drop me a line.</CardDescription>
+    <div className="container mx-auto px-4 md:px-6 py-6 md:py-12 h-full flex items-center">
+      <Card className="max-w-xl mx-auto shadow-2xl w-full">
+        <CardHeader className="text-center p-4 md:p-6">
+          <CardTitle className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight">Get In Touch</CardTitle>
+          <CardDescription className="text-sm md:text-base">Have a project in mind or just want to say hi? Drop me a line.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-4 md:p-6">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 md:space-y-6">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel className="text-sm md:text-base">Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="Your Name" {...field} />
+                      <Input placeholder="Your Name" {...field} className="text-sm md:text-base" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -71,9 +71,9 @@ export function Contact() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel className="text-sm md:text-base">Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="your.email@example.com" {...field} />
+                      <Input placeholder="your.email@example.com" {...field} className="text-sm md:text-base" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -84,15 +84,15 @@ export function Contact() {
                 name="message"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Message</FormLabel>
+                    <FormLabel className="text-sm md:text-base">Message</FormLabel>
                     <FormControl>
-                      <Textarea placeholder="Your message..." {...field} rows={5} />
+                      <Textarea placeholder="Your message..." {...field} rows={4} className="text-sm md:text-base" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit" className="w-full" disabled={form.formState.isSubmitting}>
+              <Button type="submit" className="w-full text-sm md:text-base" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting ? "Sending..." : "Send Message"}
               </Button>
             </form>

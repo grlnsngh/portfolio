@@ -31,36 +31,38 @@ export function Header({ activeSection, onSectionChange }: HeaderProps) {
         <Logo />
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="min-h-[44px] min-w-[44px]"
-              >
-                <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[280px] sm:w-[320px]">
-              <nav className="grid gap-4 sm:gap-6 text-lg font-medium mt-8">
-                {navLinks.map((link) => (
-                  <button
-                    key={link.anchor}
-                    onClick={() => handleNavClick(link.anchor)}
-                    className={cn(
-                      "flex items-center gap-4 px-3 py-3 text-left text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent transition-colors min-h-[48px]",
-                      activeSection === link.anchor &&
-                        "text-foreground bg-accent"
-                    )}
-                  >
-                    <link.icon className="h-5 w-5 flex-shrink-0" />
-                    <span className="font-medium">{link.label}</span>
-                  </button>
-                ))}
-              </nav>
-            </SheetContent>
-          </Sheet>
+          <div className="hidden md:block">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="min-h-[44px] min-w-[44px]"
+                >
+                  <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+                <nav className="grid gap-4 sm:gap-6 text-lg font-medium mt-8">
+                  {navLinks.map((link) => (
+                    <button
+                      key={link.anchor}
+                      onClick={() => handleNavClick(link.anchor)}
+                      className={cn(
+                        "flex items-center gap-4 px-3 py-3 text-left text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent transition-colors min-h-[48px]",
+                        activeSection === link.anchor &&
+                          "text-foreground bg-accent"
+                      )}
+                    >
+                      <link.icon className="h-5 w-5 flex-shrink-0" />
+                      <span className="font-medium">{link.label}</span>
+                    </button>
+                  ))}
+                </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>

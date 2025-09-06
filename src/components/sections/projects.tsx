@@ -34,41 +34,43 @@ const projects = [
 
 export function Projects() {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12">
-      <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-center mb-12">
-        My Projects
-      </h2>
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {projects.map((project) => (
-          <Card key={project.title} className="group overflow-hidden relative shadow-lg hover:shadow-primary/20 transition-all duration-300">
-            <Image
-              src={project.image}
-              alt={`Screenshot of ${project.title}`}
-              width={1280}
-              height={720}
-              data-ai-hint={project.imageHint}
-              className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-            <div className="absolute inset-0 flex flex-col justify-end p-6">
-              <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-              <div className="absolute top-0 left-0 right-0 bottom-0 p-6 bg-black/80 flex flex-col justify-center items-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
-                <h3 className="text-2xl font-bold text-primary mb-2">{project.title}</h3>
-                <p className="text-background mb-4">{project.description}</p>
-                <div className="flex flex-wrap gap-2 justify-center mb-4">
-                  {project.technologies.map((tech) => (
-                    <Badge key={tech} variant="secondary">{tech}</Badge>
-                  ))}
+    <div className="container mx-auto px-4 md:px-6 py-6 md:py-12 h-full flex items-center">
+      <div className="w-full">
+        <h2 className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-6 md:mb-12">
+          My Projects
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+          {projects.map((project) => (
+            <Card key={project.title} className="group overflow-hidden relative shadow-lg hover:shadow-primary/20 transition-all duration-300">
+              <Image
+                src={project.image}
+                alt={`Screenshot of ${project.title}`}
+                width={1280}
+                height={720}
+                data-ai-hint={project.imageHint}
+                className="object-cover w-full h-full transform transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-6">
+                <h3 className="text-lg md:text-2xl font-bold text-white mb-1 md:mb-2">{project.title}</h3>
+                <div className="absolute top-0 left-0 right-0 bottom-0 p-4 md:p-6 bg-black/80 flex flex-col justify-center items-center text-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 backdrop-blur-sm">
+                  <h3 className="text-lg md:text-2xl font-bold text-primary mb-2">{project.title}</h3>
+                  <p className="text-background mb-3 md:mb-4 text-sm md:text-base">{project.description}</p>
+                  <div className="flex flex-wrap gap-1 md:gap-2 justify-center mb-3 md:mb-4">
+                    {project.technologies.map((tech) => (
+                      <Badge key={tech} variant="secondary" className="text-xs">{tech}</Badge>
+                    ))}
+                  </div>
+                  <Button asChild variant="outline" size="sm" className="text-sm">
+                    <Link href={project.link} target="_blank" rel="noopener noreferrer">
+                      View Project <ExternalLink className="ml-1 md:ml-2 h-3 w-3 md:h-4 md:w-4" />
+                    </Link>
+                  </Button>
                 </div>
-                <Button asChild variant="outline">
-                  <Link href={project.link} target="_blank" rel="noopener noreferrer">
-                    View Project <ExternalLink className="ml-2 h-4 w-4" />
-                  </Link>
-                </Button>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

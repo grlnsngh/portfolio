@@ -24,26 +24,28 @@ interface Skill {
 
 export function Skills() {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-12">
-      <h2 className="font-headline text-4xl md:text-5xl font-bold tracking-tight text-center mb-12">
-        Technologies & Skills
-      </h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-        {skills.map((skill: Skill, _index: number) => (
-          <Card
-            key={skill.name}
-            className="group text-center transition-all duration-300 hover:bg-primary/10 hover:shadow-lg hover:-translate-y-2"
-          >
-            <CardHeader className="items-center">
-              <div className="p-4 bg-primary/20 rounded-full group-hover:bg-primary transition-colors duration-300">
-                <skill.icon className="h-8 w-8 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <CardTitle className="text-lg font-medium">{skill.name}</CardTitle>
-            </CardContent>
-          </Card>
-        ))}
+    <div className="container mx-auto px-4 md:px-6 py-6 md:py-12 h-full flex items-center">
+      <div className="w-full">
+        <h2 className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-6 md:mb-12">
+          Technologies & Skills
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-6">
+          {skills.map((skill: Skill, _index: number) => (
+            <Card
+              key={skill.name}
+              className="group text-center transition-all duration-300 hover:bg-primary/10 hover:shadow-lg hover:-translate-y-2"
+            >
+              <CardHeader className="items-center p-3 md:p-6">
+                <div className="p-3 md:p-4 bg-primary/20 rounded-full group-hover:bg-primary transition-colors duration-300">
+                  <skill.icon className="h-6 w-6 md:h-8 md:w-8 text-primary group-hover:text-primary-foreground transition-colors duration-300" />
+                </div>
+              </CardHeader>
+              <CardContent className="p-3 md:p-6 pt-0">
+                <CardTitle className="text-sm md:text-lg font-medium">{skill.name}</CardTitle>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     </div>
   );

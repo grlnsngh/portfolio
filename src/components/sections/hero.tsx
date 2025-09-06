@@ -19,13 +19,13 @@ export function Hero() {
     }
   };
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 items-center max-w-7xl">
-        <div className="space-y-4 sm:space-y-6 text-left">
-          <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
+    <section className="relative w-full flex items-center justify-center p-4 sm:p-6">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-12 items-center max-w-7xl">
+        <div className="space-y-3 sm:space-y-6 text-center md:text-left">
+          <h1 className="font-headline text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tighter leading-tight">
             Front-End Developer
           </h1>
-          <p className="font-body text-base sm:text-lg md:text-xl text-muted-foreground max-w-xl mx-auto md:mx-0 leading-relaxed">
+          <p className="font-body text-sm sm:text-base md:text-lg text-muted-foreground max-w-xl mx-auto md:mx-0 leading-relaxed">
             Hi! I&apos;m Gurleen, a Front-End Developer specializing in creating
             high-performance, scalable, and user-centric web applications with
             React and Next.js. With extensive experience in architecting complex
@@ -35,7 +35,7 @@ export function Hero() {
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center md:justify-start pt-2">
             <Button
               size="lg"
-              className="w-full sm:w-auto min-h-[44px] text-base font-medium"
+              className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base font-medium"
             >
               Download CV
             </Button>
@@ -43,7 +43,7 @@ export function Hero() {
               size="lg"
               variant="outline"
               onClick={handleContactClick}
-              className="w-full sm:w-auto min-h-[44px] text-base font-medium"
+              className="w-full sm:w-auto min-h-[44px] text-sm sm:text-base font-medium"
             >
               Contact Me
             </Button>
@@ -89,14 +89,14 @@ export function Hero() {
             </Link>
           </div>
         </div>
-        <div className="flex justify-center items-center mt-8 md:mt-0">
-          <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-[400px] md:h-[500px] rounded-[30px] sm:rounded-[50px] overflow-hidden shadow-2xl">
+        <div className="flex justify-center items-center mt-6 md:mt-0">
+          <div className="relative w-64 h-72 sm:w-72 sm:h-80 md:w-80 sm:h-96 lg:w-[400px] lg:h-[500px] rounded-[20px] sm:rounded-[30px] lg:rounded-[50px] overflow-hidden shadow-2xl">
             <Image
               src="https://picsum.photos/400/500"
               alt="Portrait of Gurleen"
               fill
               className="object-cover"
-              sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, 400px"
+              sizes="(max-width: 640px) 256px, (max-width: 768px) 288px, (max-width: 1024px) 320px, 400px"
               priority
               loading="eager"
               quality={85}
