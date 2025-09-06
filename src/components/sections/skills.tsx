@@ -1,30 +1,41 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Code, Rocket, Wind, Zap, GitBranch, Settings, Smartphone, Languages } from 'lucide-react';
-import type { LucideProps } from 'lucide-react';
-import type { ForwardRefExoticComponent, RefAttributes } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Code,
+  Rocket,
+  Wind,
+  Zap,
+  GitBranch,
+  Settings,
+  Smartphone,
+  Languages,
+} from "lucide-react";
+import type { LucideProps } from "lucide-react";
+import type { ForwardRefExoticComponent, RefAttributes } from "react";
 
 const skills = [
-  { name: 'React & Next.js', icon: Code },
-  { name: 'TypeScript', icon: Code },
-  { name: 'React Native', icon: Smartphone },
-  { name: 'Performance Optimization', icon: Rocket },
-  { name: 'i18n Localization', icon: Languages },
-  { name: 'Tailwind CSS', icon: Wind },
-  { name: 'Webpack / Vite', icon: Zap },
-  { name: 'Git & Github', icon: GitBranch },
-  { name: 'RESTful APIs', icon: Settings },
+  { name: "React & Next.js", icon: Code },
+  { name: "TypeScript", icon: Code },
+  { name: "React Native", icon: Smartphone },
+  { name: "Performance Optimization", icon: Rocket },
+  { name: "i18n Localization", icon: Languages },
+  { name: "Tailwind CSS", icon: Wind },
+  { name: "Webpack / Vite", icon: Zap },
+  { name: "Git & Github", icon: GitBranch },
+  { name: "RESTful APIs", icon: Settings },
 ];
 
 interface Skill {
   name: string;
-  icon: ForwardRefExoticComponent<Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>>;
+  icon: ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & RefAttributes<SVGSVGElement>
+  >;
 }
 
 export function Skills() {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-6 md:py-12 h-full flex items-center">
+    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
       <div className="w-full">
         <h2 className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-center mb-6 md:mb-12">
           Technologies & Skills
@@ -41,7 +52,9 @@ export function Skills() {
                 </div>
               </CardHeader>
               <CardContent className="p-3 md:p-6 pt-0">
-                <CardTitle className="text-sm md:text-lg font-medium">{skill.name}</CardTitle>
+                <CardTitle className="text-sm md:text-lg font-medium">
+                  {skill.name}
+                </CardTitle>
               </CardContent>
             </Card>
           ))}

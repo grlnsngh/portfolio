@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export function About() {
   return (
-    <div className="container mx-auto px-4 md:px-6 py-6 md:py-12 h-full flex items-center">
+    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4 lg:gap-8 items-center w-full">
         <div className="md:col-span-2">
           <Card className="overflow-hidden shadow-2xl rotate-[-2deg] md:rotate-[-3deg] hover:rotate-0 transition-transform duration-300 max-w-xs mx-auto md:mx-0">
@@ -17,7 +17,7 @@ export function About() {
             />
           </Card>
         </div>
-        <div className="md:col-span-3 space-y-3 md:space-y-4 pr-8">
+        <div className="md:col-span-3 space-y-3 md:space-y-4">
           <h2 className="font-headline text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold tracking-tight text-center md:text-left">
             About Me
           </h2>
