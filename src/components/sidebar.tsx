@@ -1,19 +1,19 @@
-'use client';
-import { Home, User, Folder, Mail, Star } from 'lucide-react';
+"use client";
+import { Home, User, Folder, Mail, Star } from "lucide-react";
 import {
   TooltipProvider,
   Tooltip,
   TooltipTrigger,
   TooltipContent,
-} from '@/components/ui/tooltip';
-import { cn } from '@/lib/utils';
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 export const navLinks = [
-  { anchor: 'hero', label: 'Home', icon: Home },
-  { anchor: 'about', label: 'About', icon: User },
-  { anchor: 'projects', label: 'Projects', icon: Folder },
-  { anchor: 'skills', label: 'Skills', icon: Star },
-  { anchor: 'contact', label: 'Contact', icon: Mail },
+  { anchor: "hero", label: "Home", icon: Home },
+  { anchor: "about", label: "About", icon: User },
+  { anchor: "projects", label: "Projects", icon: Folder },
+  { anchor: "skills", label: "Skills", icon: Star },
+  { anchor: "contact", label: "Contact", icon: Mail },
 ];
 
 declare global {
@@ -26,18 +26,24 @@ declare global {
 
 interface SidebarProps {
   activeSection: string;
+  onSectionChange: (section: string) => void;
 }
 
-export function Sidebar({ activeSection }: SidebarProps) {
+export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   const handleNavClick = (anchor: string) => {
     const element = document.getElementById(anchor);
     if (element) {
+      // Update active section immediately
+      onSectionChange(anchor);
+
       // Add visual feedback
-      const mainElement = document.querySelector('.enhanced-scroll') as HTMLElement;
+      const mainElement = document.querySelector(
+        ".enhanced-scroll"
+      ) as HTMLElement;
       if (mainElement) {
-        mainElement.style.scrollBehavior = 'smooth';
+        mainElement.style.scrollBehavior = "smooth";
       }
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 

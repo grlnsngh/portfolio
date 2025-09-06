@@ -1,15 +1,11 @@
-'use client';
-import { Logo } from '@/components/logo';
-import { Menu } from 'lucide-react';
-import { Button } from './ui/button';
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
-import { navLinks } from './sidebar';
-import { ThemeToggle } from './theme-toggle';
-import { cn } from '@/lib/utils';
+"use client";
+import { Logo } from "@/components/logo";
+import { Menu } from "lucide-react";
+import { Button } from "./ui/button";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { navLinks } from "./sidebar";
+import { ThemeToggle } from "./theme-toggle";
+import { cn } from "@/lib/utils";
 
 declare global {
   interface Window {
@@ -21,18 +17,24 @@ declare global {
 
 interface HeaderProps {
   activeSection: string;
+  onSectionChange: (section: string) => void;
 }
 
-export function Header({ activeSection }: HeaderProps) {
+export function Header({ activeSection, onSectionChange }: HeaderProps) {
   const handleNavClick = (anchor: string) => {
     const element = document.getElementById(anchor);
     if (element) {
+      // Update active section immediately
+      onSectionChange(anchor);
+
       // Add visual feedback
-      const mainElement = document.querySelector('.enhanced-scroll') as HTMLElement;
+      const mainElement = document.querySelector(
+        ".enhanced-scroll"
+      ) as HTMLElement;
       if (mainElement) {
-        mainElement.style.scrollBehavior = 'smooth';
+        mainElement.style.scrollBehavior = "smooth";
       }
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -44,7 +46,11 @@ export function Header({ activeSection }: HeaderProps) {
           <ThemeToggle />
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="min-h-[44px] min-w-[44px]">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="min-h-[44px] min-w-[44px]"
+              >
                 <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
                 <span className="sr-only">Toggle Menu</span>
               </Button>
@@ -57,7 +63,8 @@ export function Header({ activeSection }: HeaderProps) {
                     onClick={() => handleNavClick(link.anchor)}
                     className={cn(
                       "flex items-center gap-4 px-3 py-3 text-left text-muted-foreground hover:text-foreground rounded-lg hover:bg-accent transition-colors min-h-[48px]",
-                      activeSection === link.anchor && "text-foreground bg-accent"
+                      activeSection === link.anchor &&
+                        "text-foreground bg-accent"
                     )}
                   >
                     <link.icon className="h-5 w-5 flex-shrink-0" />
