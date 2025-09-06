@@ -14,8 +14,14 @@ declare global {
 
 export function Hero() {
   const handleContactClick = () => {
-    if (window.fullpage_api) {
-      window.fullpage_api.moveTo('contact');
+    const element = document.getElementById('contact');
+    if (element) {
+      // Add visual feedback
+      const mainElement = document.querySelector('.enhanced-scroll') as HTMLElement;
+      if (mainElement) {
+        mainElement.style.scrollBehavior = 'smooth';
+      }
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
   return (

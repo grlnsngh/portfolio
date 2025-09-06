@@ -30,8 +30,14 @@ interface SidebarProps {
 
 export function Sidebar({ activeSection }: SidebarProps) {
   const handleNavClick = (anchor: string) => {
-    if (window.fullpage_api) {
-      window.fullpage_api.moveTo(anchor);
+    const element = document.getElementById(anchor);
+    if (element) {
+      // Add visual feedback
+      const mainElement = document.querySelector('.enhanced-scroll') as HTMLElement;
+      if (mainElement) {
+        mainElement.style.scrollBehavior = 'smooth';
+      }
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 

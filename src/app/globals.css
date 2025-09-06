@@ -68,11 +68,92 @@
     -moz-osx-font-smoothing: grayscale;
   }
   .section {
-    @apply flex items-center justify-center text-center;
+    /* Let fullpage.js handle the styling */
   }
 }
 
-#fp-nav ul li a span, .fp-slidesNav ul li a span {
-    background: hsl(var(--primary)) !important;
+/* Enhanced Mobile Scrolling */
+.enhanced-scroll {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.enhanced-scroll > div {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* Mobile-specific enhancements */
+@media (max-width: 768px) {
+  .enhanced-scroll {
+    scroll-snap-type: y mandatory;
+    scroll-padding-top: 0;
+  }
+
+  .enhanced-scroll > div {
+    min-height: 100vh;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+
+  /* Improve touch scrolling on mobile */
+  .enhanced-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior-y: none;
+  }
+
+  /* Add momentum scrolling effect */
+  .enhanced-scroll > div {
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+}
+
+/* Smooth transitions for all devices */
+.snap-start {
+  scroll-snap-align: start;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Enhanced visual feedback during scroll */
+.enhanced-scroll::-webkit-scrollbar {
+  width: 0;
+  display: none;
+}
+
+.enhanced-scroll {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* Add subtle parallax effect for enhanced feel */
+@media (max-width: 768px) {
+  .enhanced-scroll > div {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .enhanced-scroll > div:nth-child(even) {
+    background-attachment: fixed;
+  }
+}
+
+/* Smooth momentum scrolling on iOS */
+.enhanced-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+/* Enhanced transition effects */
+.snap-start {
+  transition: all 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  will-change: transform;
+}
+
+/* Add subtle scale effect on active section */
+.enhanced-scroll > div[data-active="true"] {
+  transform: scale(1.02);
+  transition: transform 0.3s ease-out;
 }
 
