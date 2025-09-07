@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
+import { useTheme } from "next-themes";
 
 declare global {
   interface Window {
@@ -33,6 +34,7 @@ const highlights = [
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
+  const { theme } = useTheme();
 
   useEffect(() => {
     setIsVisible(true);
@@ -207,34 +209,54 @@ export function Hero() {
             {/* Terminal Container */}
             <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500">
               {/* Terminal Header */}
-              <div className="bg-gray-800 px-4 py-2 flex items-center gap-2">
+              <div className={`px-4 py-2 flex items-center gap-2 ${
+                theme === 'dark'
+                  ? 'bg-gray-800'
+                  : 'bg-gray-200 border-b border-gray-300'
+              }`}>
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm ml-2 font-mono">
+                <span className={`text-sm ml-2 font-mono ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   gurleen@portfolio ~
                 </span>
               </div>
 
               {/* Terminal Body */}
-              <div className="bg-gray-900 h-full p-4 font-mono text-sm overflow-hidden">
-                <div className="text-green-400 mb-2">
+              <div className={`h-full p-4 font-mono text-sm overflow-hidden ${
+                theme === 'dark'
+                  ? 'bg-gray-900'
+                  : 'bg-gray-100'
+              }`}>
+                <div className={`mb-2 ${
+                  theme === 'dark' ? 'text-green-400' : 'text-green-600'
+                }`}>
                   Welcome to Gurleen's Terminal
                 </div>
 
                 {/* Command History */}
-                <div className="space-y-1 text-gray-300">
+                <div className={`space-y-1 ${
+                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
+                }`}>
                   <div>
                     <span className="text-blue-400">$ </span>
                     <span>whoami</span>
                   </div>
-                  <div className="text-yellow-300 pl-4">gurleen-singh</div>
+                  <div className={`pl-4 ${
+                    theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'
+                  }`}>
+                    gurleen-singh
+                  </div>
 
                   <div className="mt-3">
                     <span className="text-blue-400">$ </span>
                     <span>ls skills/</span>
                   </div>
-                  <div className="text-cyan-300 pl-4">
+                  <div className={`pl-4 ${
+                    theme === 'dark' ? 'text-cyan-300' : 'text-cyan-600'
+                  }`}>
                     react/ nextjs/ typescript/ tailwind/
                   </div>
 
@@ -242,7 +264,9 @@ export function Hero() {
                     <span className="text-blue-400">$ </span>
                     <span>cat experience.txt</span>
                   </div>
-                  <div className="text-green-300 pl-4">
+                  <div className={`pl-4 ${
+                    theme === 'dark' ? 'text-green-300' : 'text-green-600'
+                  }`}>
                     Frontend Developer | React Specialist
                   </div>
 
@@ -262,7 +286,7 @@ export function Hero() {
                       wrapper="span"
                       speed={70}
                       repeat={Infinity}
-                      className="text-white"
+                      className={theme === 'dark' ? 'text-white' : 'text-gray-900'}
                       cursor={true}
                     />
                   </div>
@@ -271,8 +295,14 @@ export function Hero() {
                 {/* Animated Cursor Line */}
                 <div className="mt-4 flex items-center">
                   <span className="text-blue-400">$ </span>
-                  <span className="text-white">./start-portfolio.sh</span>
-                  <span className="text-white animate-pulse ml-1">█</span>
+                  <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                    ./start-portfolio.sh
+                  </span>
+                  <span className={`animate-pulse ml-1 ${
+                    theme === 'dark' ? 'text-white' : 'text-gray-900'
+                  }`}>
+                    █
+                  </span>
                 </div>
               </div>
 
@@ -280,7 +310,11 @@ export function Hero() {
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                 <Badge
                   variant="secondary"
-                  className="bg-gray-800 text-green-400 border-green-400/20 shadow-lg"
+                  className={`shadow-lg ${
+                    theme === 'dark'
+                      ? 'bg-gray-800 text-green-400 border-green-400/20'
+                      : 'bg-white text-green-600 border-green-600/20'
+                  }`}
                 >
                   <Code className="w-3 h-3 mr-1" />
                   Developer
