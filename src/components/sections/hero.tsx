@@ -13,7 +13,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { useTheme } from "next-themes";
@@ -31,6 +31,228 @@ const highlights = [
   { icon: Palette, text: "Modern Design", color: "text-purple-500" },
   { icon: Zap, text: "Fast Performance", color: "text-yellow-500" },
 ];
+
+// Code rain characters themed to web development
+const codeChars = [
+  "React",
+  "Next.js",
+  "TypeScript",
+  "JavaScript",
+  "HTML",
+  "CSS",
+  "useState",
+  "useEffect",
+  "component",
+  "function",
+  "const",
+  "let",
+  "{",
+  "}",
+  "(",
+  ")",
+  "[",
+  "]",
+  "<",
+  ">",
+  "/",
+  "=>",
+  "&&",
+  "||",
+  "div",
+  "span",
+  "className",
+  "onClick",
+  "onSubmit",
+  "props",
+  "async",
+  "await",
+  "fetch",
+  "API",
+  "JSON",
+  "import",
+  "export",
+  "npm",
+  "yarn",
+  "git",
+  "commit",
+  "push",
+  "pull",
+  "merge",
+  "&&",
+  "||",
+  "===",
+  "!==",
+  "++",
+  "--",
+  "...",
+  "??",
+  "?.",
+];
+
+interface CodeDrop {
+  id: number;
+  char: string;
+  x: number;
+  y: number;
+  speed: number;
+  opacity: number;
+  size: number;
+}
+
+// CodeRain component for background effect
+function CodeRain() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const dropsRef = useRef<CodeDrop[]>([]);
+  const animationRef = useRef<number>();
+  const lastTimeRef = useRef<number>(0);
+  const isVisibleRef = useRef<boolean>(true);
+  const { theme } = useTheme();
+
+  const initializeDrops = useCallback(() => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const { width, height } = canvas;
+
+    // Fewer drops for mobile, more for desktop
+    const dropCount = width < 768 ? 15 : width < 1024 ? 25 : 35;
+
+    dropsRef.current = Array.from({ length: dropCount }, (_, i) => ({
+      id: i,
+      char: codeChars[Math.floor(Math.random() * codeChars.length)],
+      x: Math.random() * width,
+      y: Math.random() * height,
+      speed: 1 + Math.random() * 2, // Increased speed from 0.5-2 to 1-3
+      opacity: 0.1 + Math.random() * 0.3, // Very low opacity
+      size: 10 + Math.random() * 4, // Smaller text
+    }));
+  }, []);
+
+  const animate = useCallback(
+    (currentTime: number) => {
+      if (!canvasRef.current || !isVisibleRef.current) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const canvas = canvasRef.current;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+
+      // Throttle animation to 30fps for better performance
+      if (currentTime - lastTimeRef.current < 33) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+      lastTimeRef.current = currentTime;
+
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Update and draw drops
+      dropsRef.current.forEach((drop) => {
+        // Update position
+        drop.y += drop.speed;
+
+        // Reset drop when it goes off screen
+        if (drop.y > canvas.height + 20) {
+          drop.y = -20;
+          drop.x = Math.random() * canvas.width;
+          drop.char = codeChars[Math.floor(Math.random() * codeChars.length)];
+          drop.opacity = 0.1 + Math.random() * 0.3;
+        }
+
+        // Set text style based on theme
+        let primaryColor;
+        try {
+          primaryColor = getComputedStyle(document.documentElement)
+            .getPropertyValue("--primary")
+            .trim();
+          // Ensure we have a valid color value
+          if (!primaryColor) {
+            primaryColor = theme === "dark" ? "217 91% 60%" : "217 91% 60%";
+          }
+        } catch (error) {
+          // Fallback color
+          primaryColor = "217 91% 60%";
+        }
+
+        ctx.fillStyle = `hsl(${primaryColor})`;
+        ctx.globalAlpha = drop.opacity;
+        ctx.font = `${drop.size}px monospace`;
+        ctx.textAlign = "center";
+
+        // Draw the character
+        ctx.fillText(drop.char, drop.x, drop.y);
+      });
+
+      ctx.globalAlpha = 1;
+      animationRef.current = requestAnimationFrame(animate);
+    },
+    [theme]
+  );
+
+  const handleResize = useCallback(() => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const rect = canvas.getBoundingClientRect();
+
+    // Set canvas size to match container
+    canvas.width = rect.width;
+    canvas.height = rect.height;
+
+    // Reinitialize drops with new dimensions
+    initializeDrops();
+  }, [initializeDrops]);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    // Initial setup
+    handleResize();
+
+    // Start animation
+    animationRef.current = requestAnimationFrame(animate);
+
+    // Setup resize listener with debouncing
+    let resizeTimeout: NodeJS.Timeout;
+    const debouncedResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(handleResize, 150);
+    };
+
+    // Setup visibility change listener for performance
+    const handleVisibilityChange = () => {
+      isVisibleRef.current = !document.hidden;
+    };
+
+    window.addEventListener("resize", debouncedResize);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    // Cleanup
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      window.removeEventListener("resize", debouncedResize);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearTimeout(resizeTimeout);
+    };
+  }, [animate, handleResize]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="absolute inset-0 pointer-events-none opacity-30 sm:opacity-40"
+      style={{
+        width: "100%",
+        height: "100%",
+      }}
+    />
+  );
+}
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
@@ -54,11 +276,16 @@ export function Hero() {
 
   return (
     <section className="relative w-full min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+      {/* Code Rain Background */}
+      <div className="absolute inset-0 z-0">
+        <CodeRain />
+      </div>
+
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5" />
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-secondary/5 z-1" />
+      <div className="absolute top-20 left-10 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse z-1" />
       <div
-        className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse"
+        className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse z-1"
         style={{ animationDelay: "1s" }}
       />
 
@@ -209,44 +436,54 @@ export function Hero() {
             {/* Terminal Container */}
             <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500">
               {/* Terminal Header */}
-              <div className={`px-4 py-2 flex items-center gap-2 ${
-                theme === 'dark'
-                  ? 'bg-gray-800'
-                  : 'bg-gray-200 border-b border-gray-300'
-              }`}>
+              <div
+                className={`px-4 py-2 flex items-center gap-2 ${
+                  theme === "dark"
+                    ? "bg-gray-800"
+                    : "bg-gray-200 border-b border-gray-300"
+                }`}
+              >
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className={`text-sm ml-2 font-mono ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+                <span
+                  className={`text-sm ml-2 font-mono ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
                   gurleen@portfolio ~
                 </span>
               </div>
 
               {/* Terminal Body */}
-              <div className={`h-full p-4 font-mono text-sm overflow-hidden ${
-                theme === 'dark'
-                  ? 'bg-gray-900'
-                  : 'bg-gray-100'
-              }`}>
-                <div className={`mb-2 ${
-                  theme === 'dark' ? 'text-green-400' : 'text-green-600'
-                }`}>
+              <div
+                className={`h-full p-4 font-mono text-sm overflow-hidden ${
+                  theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+                }`}
+              >
+                <div
+                  className={`mb-2 ${
+                    theme === "dark" ? "text-green-400" : "text-green-600"
+                  }`}
+                >
                   Welcome to Gurleen's Terminal
                 </div>
 
                 {/* Command History */}
-                <div className={`space-y-1 ${
-                  theme === 'dark' ? 'text-gray-300' : 'text-gray-700'
-                }`}>
+                <div
+                  className={`space-y-1 ${
+                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                  }`}
+                >
                   <div>
                     <span className="text-blue-400">$ </span>
                     <span>whoami</span>
                   </div>
-                  <div className={`pl-4 ${
-                    theme === 'dark' ? 'text-yellow-300' : 'text-yellow-600'
-                  }`}>
+                  <div
+                    className={`pl-4 ${
+                      theme === "dark" ? "text-yellow-300" : "text-yellow-600"
+                    }`}
+                  >
                     gurleen-singh
                   </div>
 
@@ -254,9 +491,11 @@ export function Hero() {
                     <span className="text-blue-400">$ </span>
                     <span>ls skills/</span>
                   </div>
-                  <div className={`pl-4 ${
-                    theme === 'dark' ? 'text-cyan-300' : 'text-cyan-600'
-                  }`}>
+                  <div
+                    className={`pl-4 ${
+                      theme === "dark" ? "text-cyan-300" : "text-cyan-600"
+                    }`}
+                  >
                     react/ nextjs/ typescript/ tailwind/
                   </div>
 
@@ -264,9 +503,11 @@ export function Hero() {
                     <span className="text-blue-400">$ </span>
                     <span>cat experience.txt</span>
                   </div>
-                  <div className={`pl-4 ${
-                    theme === 'dark' ? 'text-green-300' : 'text-green-600'
-                  }`}>
+                  <div
+                    className={`pl-4 ${
+                      theme === "dark" ? "text-green-300" : "text-green-600"
+                    }`}
+                  >
                     Frontend Developer | React Specialist
                   </div>
 
@@ -286,7 +527,9 @@ export function Hero() {
                       wrapper="span"
                       speed={70}
                       repeat={Infinity}
-                      className={theme === 'dark' ? 'text-white' : 'text-gray-900'}
+                      className={
+                        theme === "dark" ? "text-white" : "text-gray-900"
+                      }
                       cursor={true}
                     />
                   </div>
@@ -295,12 +538,18 @@ export function Hero() {
                 {/* Animated Cursor Line */}
                 <div className="mt-4 flex items-center">
                   <span className="text-blue-400">$ </span>
-                  <span className={theme === 'dark' ? 'text-white' : 'text-gray-900'}>
+                  <span
+                    className={
+                      theme === "dark" ? "text-white" : "text-gray-900"
+                    }
+                  >
                     ./start-portfolio.sh
                   </span>
-                  <span className={`animate-pulse ml-1 ${
-                    theme === 'dark' ? 'text-white' : 'text-gray-900'
-                  }`}>
+                  <span
+                    className={`animate-pulse ml-1 ${
+                      theme === "dark" ? "text-white" : "text-gray-900"
+                    }`}
+                  >
                     █
                   </span>
                 </div>
@@ -311,9 +560,9 @@ export function Hero() {
                 <Badge
                   variant="secondary"
                   className={`shadow-lg ${
-                    theme === 'dark'
-                      ? 'bg-gray-800 text-green-400 border-green-400/20'
-                      : 'bg-white text-green-600 border-green-600/20'
+                    theme === "dark"
+                      ? "bg-gray-800 text-green-400 border-green-400/20"
+                      : "bg-white text-green-600 border-green-600/20"
                   }`}
                 >
                   <Code className="w-3 h-3 mr-1" />
