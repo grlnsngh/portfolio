@@ -360,13 +360,19 @@ export function Hero() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-            <Button
-              size="lg"
-              className="w-full sm:w-auto min-h-[48px] text-base font-medium group"
+            <Link
+              href="https://drive.google.com/file/d/1ofCl_ckbqShGYy2ExRfzfrg-mj4PGrra/view"
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Download className="w-4 h-4 mr-2 group-hover:translate-y-[-2px] transition-transform" />
-              Download CV
-            </Button>
+              <Button
+                size="lg"
+                className="w-full sm:w-auto min-h-[48px] text-base font-medium group"
+              >
+                <Download className="w-4 h-4 mr-2 group-hover:translate-y-[-2px] transition-transform" />
+                Download CV
+              </Button>
+            </Link>
             <Button
               size="lg"
               variant="outline"
