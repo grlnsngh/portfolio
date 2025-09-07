@@ -157,11 +157,11 @@ export function About() {
               </Card>
 
               {/* Floating Stats */}
-              <div className="absolute -top-4 -right-4 lg:-right-8 space-y-2">
+              <div className="absolute -top-4 -right-2 sm:-right-4 lg:-right-8 space-y-2">
                 {stats.map((stat, index) => (
                   <Card
                     key={stat.label}
-                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200"
+                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200 mr-2 sm:mr-0"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-2">
