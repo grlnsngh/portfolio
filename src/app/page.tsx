@@ -21,21 +21,21 @@ const FullpageWrapper = () => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   // Track active section on mobile scroll
   useEffect(() => {
     if (!isMobile) return;
 
-    const sections = ['hero', 'about', 'projects', 'skills', 'contact'];
+    const sections = ["hero", "about", "projects", "skills", "contact"];
     const observerOptions = {
       root: null,
-      rootMargin: '-50% 0px -50% 0px',
-      threshold: 0
+      rootMargin: "-50% 0px -50% 0px",
+      threshold: 0,
     };
 
     const observer = new IntersectionObserver((entries) => {
@@ -70,7 +70,7 @@ const FullpageWrapper = () => {
       // Smooth scroll to section on mobile
       const element = document.getElementById(section);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ behavior: "smooth" });
       }
     } else {
       fullpageApiRef.current?.moveTo(section);
@@ -85,19 +85,34 @@ const FullpageWrapper = () => {
           onSectionChange={handleSectionChange}
         />
         <main className="flex-1 overflow-y-auto">
-          <section id="hero" className="min-h-screen flex items-center justify-center">
+          <section
+            id="hero"
+            className="min-h-screen flex items-center justify-center"
+          >
             <Hero />
           </section>
-          <section id="about" className="min-h-screen flex items-center justify-center bg-secondary/20">
+          <section
+            id="about"
+            className="min-h-screen flex items-center justify-center bg-secondary/20"
+          >
             <About />
           </section>
-          <section id="projects" className="min-h-screen flex items-center justify-center">
+          <section
+            id="projects"
+            className="min-h-screen flex items-center justify-center"
+          >
             <Projects />
           </section>
-          <section id="skills" className="min-h-screen flex items-center justify-center bg-secondary/20">
+          <section
+            id="skills"
+            className="min-h-screen flex items-center justify-center bg-secondary/20"
+          >
             <Skills />
           </section>
-          <section id="contact" className="min-h-screen flex items-center justify-center">
+          <section
+            id="contact"
+            className="min-h-screen flex items-center justify-center"
+          >
             <Contact />
           </section>
         </main>
@@ -128,6 +143,10 @@ const FullpageWrapper = () => {
           navigation={true}
           render={({ state, fullpageApi: api }) => {
             fullpageApiRef.current = api;
+            // Expose API to window for components that need it
+            if (typeof window !== "undefined") {
+              (window as any).fullpage_api = api;
+            }
             return (
               <ReactFullpage.Wrapper>
                 <div className="section min-h-screen flex items-center justify-center">

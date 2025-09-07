@@ -256,21 +256,49 @@ function CodeRain() {
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
     setIsVisible(true);
+
+    // Mobile detection
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   const handleContactClick = () => {
-    if (window.fullpage_api) {
-      window.fullpage_api.moveTo("contact");
+    if (isMobile) {
+      // Mobile: smooth scroll to contact section
+      const element = document.getElementById("contact");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      // Desktop: use fullpage API
+      if (window.fullpage_api) {
+        window.fullpage_api.moveTo("contact");
+      }
     }
   };
 
   const scrollToNext = () => {
-    if (window.fullpage_api) {
-      window.fullpage_api.moveTo("about");
+    if (isMobile) {
+      // Mobile: smooth scroll to about section
+      const element = document.getElementById("about");
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    } else {
+      // Desktop: use fullpage API
+      if (window.fullpage_api) {
+        window.fullpage_api.moveTo("about");
+      }
     }
   };
 
