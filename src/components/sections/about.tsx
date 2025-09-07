@@ -287,21 +287,8 @@ export function About() {
                   "React",
                   "Next.js",
                   "React Native",
-                  "JavaScript",
                   "TypeScript",
-                  "C#",
-                  "Java",
-                  "SQL",
-                  "MongoDB",
-                  "Android",
-                  "HTML5",
-                  "CSS",
-                  "jQuery",
-                  "Kendo UI",
-                  "SQLite",
                   "Storybook",
-                  "Adobe Photoshop",
-                  "Adobe Illustrator",
                   "Git",
                 ].map((tech) => (
                   <Badge
@@ -313,31 +300,6 @@ export function About() {
                   </Badge>
                 ))}
               </div>
-            </div>
-
-            {/* Call to Action */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button asChild size="lg" className="flex-1 sm:flex-none">
-                <Link href="#contact">
-                  <Mail className="w-4 h-4 mr-2" />
-                  Get In Touch
-                </Link>
-              </Button>
-              <Button
-                asChild
-                variant="outline"
-                size="lg"
-                className="flex-1 sm:flex-none"
-              >
-                <Link
-                  href="/resume.pdf"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download Resume
-                </Link>
-              </Button>
             </div>
           </div>
         </div>
