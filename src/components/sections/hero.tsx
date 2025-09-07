@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import Image from "next/image";
 import {
   Github,
   Linkedin,
@@ -30,60 +31,11 @@ const highlights = [
   { icon: Zap, text: "Fast Performance", color: "text-yellow-500" },
 ];
 
-const codeSnippets = [
-  {
-    title: "React Component",
-    language: "jsx",
-    code: `function Hero() {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
-
-  return (
-    <div className="hero-section">
-      <h1>Modern Web Development</h1>
-      <p>Building amazing user experiences</p>
-    </div>
-  );
-}`,
-  },
-  {
-    title: "Next.js API Route",
-    language: "javascript",
-    code: `export default function handler(req, res) {
-  if (req.method === 'GET') {
-    res.status(200).json({
-      message: 'Hello from Next.js API!',
-      timestamp: new Date().toISOString()
-    });
-  }
-}`,
-  },
-  {
-    title: "Tailwind Styles",
-    language: "css",
-    code: `.hero-section {
-  @apply flex items-center justify-center;
-  @apply min-h-screen bg-gradient-to-br;
-  @apply from-blue-500 to-purple-600;
-  @apply text-white text-center;
-}`,
-  },
-];
-
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentSnippetIndex, setCurrentSnippetIndex] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
-    // Rotate through code snippets every 4 seconds
-    const interval = setInterval(() => {
-      setCurrentSnippetIndex((prev) => (prev + 1) % codeSnippets.length);
-    }, 4000);
-    return () => clearInterval(interval);
   }, []);
 
   const handleContactClick = () => {
@@ -242,7 +194,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Animated Code Editor */}
+        {/* Terminal Interface */}
         <div
           className={`lg:col-span-5 flex justify-center items-center mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -252,81 +204,101 @@ export function Hero() {
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[30px] lg:rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
 
-            {/* Code Editor Container */}
+            {/* Terminal Container */}
             <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500">
-              {/* Editor Header */}
-              <div className="bg-gray-800 px-4 py-3 flex items-center gap-2 border-b border-gray-700">
-                <div className="flex gap-2">
-                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
-                </div>
-                <div className="flex-1 text-center">
-                  <span className="text-gray-300 text-sm font-mono">
-                    {codeSnippets[currentSnippetIndex].title}
-                  </span>
-                </div>
-              </div>
-              {/* Code Content */}
-              <div className="bg-gray-900 p-4 h-full overflow-hidden">
-                {/* Line Numbers */}
-                <div className="flex">
-                  <div className="text-gray-600 text-sm font-mono pr-4 select-none">
-                    {codeSnippets[currentSnippetIndex].code
-                      .split("\n")
-                      .map((_, i) => (
-                        <div key={i} className="leading-6">
-                          {i + 1}
-                        </div>
-                      ))}
-                  </div>
-
-                  {/* Code */}
-                  <div className="flex-1">
-                    <motion.pre
-                      key={currentSnippetIndex}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.5 }}
-                      className="text-sm font-mono text-gray-300 leading-6 whitespace-pre-wrap"
-                    >
-                      {codeSnippets[currentSnippetIndex].code}
-                    </motion.pre>
-                  </div>
-                </div>
-
-                {/* Animated Cursor */}
-                <motion.div
-                  animate={{ opacity: [1, 0, 1] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                  className="inline-block w-2 h-5 bg-blue-400 ml-1"
-                />
+              {/* Terminal Header */}
+              <div className="bg-gray-800 px-4 py-2 flex items-center gap-2">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                <span className="text-gray-300 text-sm ml-2 font-mono">gurleen@portfolio ~</span>
               </div>
 
-              {/* Floating Tech Badge */}
+              {/* Terminal Body */}
+              <div className="bg-gray-900 h-full p-4 font-mono text-sm overflow-hidden">
+                <div className="text-green-400 mb-2">
+                  Welcome to Gurleen's Terminal
+                </div>
+
+                {/* Command History */}
+                <div className="space-y-1 text-gray-300">
+                  <div>
+                    <span className="text-blue-400">$ </span>
+                    <span>whoami</span>
+                  </div>
+                  <div className="text-yellow-300 pl-4">
+                    gurleen-singh
+                  </div>
+
+                  <div className="mt-3">
+                    <span className="text-blue-400">$ </span>
+                    <span>ls skills/</span>
+                  </div>
+                  <div className="text-cyan-300 pl-4">
+                    react/  nextjs/  typescript/  tailwind/
+                  </div>
+
+                  <div className="mt-3">
+                    <span className="text-blue-400">$ </span>
+                    <span>cat experience.txt</span>
+                  </div>
+                  <div className="text-green-300 pl-4">
+                    Frontend Developer | React Specialist
+                  </div>
+
+                  <div className="mt-3">
+                    <span className="text-blue-400">$ </span>
+                    <TypeAnimation
+                      sequence={[
+                        "npm run build",
+                        2000,
+                        "git status",
+                        2000,
+                        "npx create-next-app",
+                        2000,
+                        "yarn dev",
+                        2000,
+                      ]}
+                      wrapper="span"
+                      speed={70}
+                      repeat={Infinity}
+                      className="text-white"
+                      cursor={true}
+                    />
+                  </div>
+                </div>
+
+                {/* Animated Cursor Line */}
+                <div className="mt-4 flex items-center">
+                  <span className="text-blue-400">$ </span>
+                  <span className="text-white">./start-portfolio.sh</span>
+                  <span className="text-white animate-pulse ml-1">█</span>
+                </div>
+              </div>
+
+              {/* Floating Elements */}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                 <Badge
                   variant="secondary"
-                  className="bg-blue-500/90 text-white shadow-lg"
+                  className="bg-gray-800 text-green-400 border-green-400/20 shadow-lg"
                 >
                   <Code className="w-3 h-3 mr-1" />
-                  {codeSnippets[currentSnippetIndex].language.toUpperCase()}
+                  Developer
                 </Badge>
               </div>
             </div>
 
             {/* Decorative Elements */}
             <div
-              className="absolute -top-4 -left-4 w-8 h-8 bg-primary rounded-full animate-bounce"
+              className="absolute -top-4 -left-4 w-8 h-8 bg-primary/30 rounded-full animate-bounce"
               style={{ animationDelay: "0.5s" }}
             />
             <div
-              className="absolute -bottom-4 -right-4 w-6 h-6 bg-secondary rounded-full animate-bounce"
+              className="absolute -bottom-4 -right-4 w-6 h-6 bg-secondary/30 rounded-full animate-bounce"
               style={{ animationDelay: "1s" }}
             />
             <div
-              className="absolute top-1/2 -right-8 w-4 h-4 bg-primary/50 rounded-full animate-pulse"
+              className="absolute top-1/2 -right-8 w-4 h-4 bg-primary/20 rounded-full animate-pulse"
               style={{ animationDelay: "1.5s" }}
             />
           </div>
