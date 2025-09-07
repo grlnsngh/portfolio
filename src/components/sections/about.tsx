@@ -22,29 +22,6 @@ import {
   ChevronRight,
 } from "lucide-react";
 
-const highlights = [
-  {
-    icon: Code,
-    label: "React Developer",
-    description: "Building micro-frontends & modern UIs",
-  },
-  {
-    icon: Smartphone,
-    label: "React Native Developer",
-    description: "Cross-platform mobile applications",
-  },
-  {
-    icon: Smartphone,
-    label: "Mobile Developer",
-    description: "Native Android & hybrid apps",
-  },
-  {
-    icon: Globe,
-    label: "Web Developer",
-    description: "Modern web applications",
-  },
-];
-
 const stats = [
   { icon: Calendar, value: "5+", label: "Years Experience" },
   { icon: Award, value: "5+", label: "Companies" },
@@ -257,25 +234,49 @@ export function About() {
               </div>
             </div>
 
-            {/* Skills Highlights */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {highlights.map((highlight, index) => (
-                <Card
-                  key={highlight.label}
-                  className="p-4 hover:shadow-lg transition-all duration-300 hover:-translate-y-1 group animate-in fade-in slide-in-from-bottom"
-                  style={{ animationDelay: `${index * 150}ms` }}
-                >
-                  <div className="text-center space-y-2">
-                    <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mx-auto group-hover:bg-primary/20 transition-colors duration-300">
-                      <highlight.icon className="w-5 h-5 text-primary" />
-                    </div>
-                    <h3 className="font-semibold text-sm">{highlight.label}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {highlight.description}
-                    </p>
-                  </div>
-                </Card>
-              ))}
+            {/* Expertise Areas */}
+            <div className="space-y-3">
+              <h3 className="text-lg font-semibold text-center">
+                Expertise Areas
+              </h3>
+              <div className="flex justify-between gap-2 overflow-x-auto">
+                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
+                  <Code className="w-6 h-6 text-primary" />
+                  <span className="text-xs font-medium text-center">
+                    React/Next.js
+                  </span>
+                  <span className="text-[10px] text-muted-foreground text-center">
+                    Web apps & SSR
+                  </span>
+                </div>
+                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
+                  <Smartphone className="w-6 h-6 text-primary" />
+                  <span className="text-xs font-medium text-center">
+                    React Native
+                  </span>
+                  <span className="text-[10px] text-muted-foreground text-center">
+                    Cross-platform
+                  </span>
+                </div>
+                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
+                  <Zap className="w-6 h-6 text-primary" />
+                  <span className="text-xs font-medium text-center">
+                    Mobile Dev
+                  </span>
+                  <span className="text-[10px] text-muted-foreground text-center">
+                    Native apps
+                  </span>
+                </div>
+                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
+                  <Briefcase className="w-6 h-6 text-primary" />
+                  <span className="text-xs font-medium text-center">
+                    Components
+                  </span>
+                  <span className="text-[10px] text-muted-foreground text-center">
+                    Storybook
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Tech Stack */}
