@@ -7,9 +7,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Github, Code, Star, Calendar } from "lucide-react";
+import { ExternalLink, Github, Code, Star, Calendar, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState } from "react";
 
 const projects = [
   {
@@ -24,7 +33,14 @@ const projects = [
       { name: "TinyMCE", icon: "�" },
       { name: "Cloudflare Pages", icon: "☁️" },
     ],
-    image: "/images/shamshersons-preview.webp",
+    images: [
+      "/images/shamshersons-preview.webp",
+      "/images/shamshersons-cms-1.webp",
+      "/images/shamshersons-cms-2.webp",
+      "/images/shamshersons-cms-3.webp",
+      "/images/shamshersons-cms-4.webp",
+      "/images/shamshersons-cms-5.webp"
+    ],
     imageHint: "piano repair website",
     link: "https://shamshersons.pages.dev/",
     github: "#",
@@ -44,7 +60,10 @@ const projects = [
       { name: "React Image Gallery", icon: "🖼️" },
       { name: "Google Sheets Integration", icon: "�" },
     ],
-    image: "/images/girl-side-wedding-invite.webp",
+    images: [
+      "/images/girl-side-wedding-invite.webp",
+      "/images/boy-side-wedding-invite.webp"
+    ],
     imageHint: "wedding invitation website",
     link: "https://liviaandjaskaran.pages.dev/",
     github: "#",
@@ -65,7 +84,9 @@ const projects = [
       { name: "JavaScript", icon: "�" },
       { name: "HTML/CSS", icon: "🌐" },
     ],
-    image: "/images/youtube-downloader-preview.webp",
+    images: [
+      "/images/youtube-downloader-preview.webp"
+    ],
     imageHint: "YouTube downloader app",
     link: "https://github.com/grlnsngh/YT",
     github: "https://github.com/grlnsngh/YT",
@@ -75,6 +96,22 @@ const projects = [
 ];
 
 export function Projects() {
+  const [currentImageIndexes, setCurrentImageIndexes] = useState<{[key: string]: number}>({});
+
+  const nextImage = (projectTitle: string, imagesLength: number) => {
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [projectTitle]: ((prev[projectTitle] || 0) + 1) % imagesLength
+    }));
+  };
+
+  const prevImage = (projectTitle: string, imagesLength: number) => {
+    setCurrentImageIndexes(prev => ({
+      ...prev,
+      [projectTitle]: prev[projectTitle] === 0 ? imagesLength - 1 : (prev[projectTitle] || 0) - 1
+    }));
+  };
+
   return (
     <TooltipProvider>
       <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
@@ -89,156 +126,228 @@ export function Projects() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {projects.map((project, index) => (
-              <Card
-                key={project.title}
-                className={`group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
-                  project.featured ? "ring-2 ring-primary/20" : ""
-                } animate-in fade-in slide-in-from-bottom-${
-                  index % 2 === 0 ? "left" : "right"
-                }`}
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                {/* Featured Badge */}
-                {project.featured && (
-                  <div className="absolute top-4 left-4 z-20">
-                    <Badge
-                      variant="default"
-                      className="bg-primary text-primary-foreground shadow-lg"
-                    >
-                      <Star className="w-3 h-3 mr-1" />
-                      Featured
+            {projects.map((project, index) => {
+              const currentImageIndex = currentImageIndexes[project.title] || 0;
+              const currentImage = project.images[currentImageIndex];
+
+              return (
+                <Card
+                  key={project.title}
+                  className={`group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
+                    project.featured ? "ring-2 ring-primary/20" : ""
+                  } animate-in fade-in slide-in-from-bottom-${
+                    index % 2 === 0 ? "left" : "right"
+                  }`}
+                  style={{ animationDelay: `${index * 150}ms` }}
+                >
+                  {/* Featured Badge */}
+                  {project.featured && (
+                    <div className="absolute top-4 left-4 z-20">
+                      <Badge
+                        variant="default"
+                        className="bg-primary text-primary-foreground shadow-lg"
+                      >
+                        <Star className="w-3 h-3 mr-1" />
+                        Featured
+                      </Badge>
+                    </div>
+                  )}
+
+                  {/* Date Badge */}
+                  <div className="absolute top-4 right-4 z-20">
+                    <Badge variant="secondary" className="shadow-lg">
+                      <Calendar className="w-3 h-3 mr-1" />
+                      {project.date}
                     </Badge>
                   </div>
-                )}
 
-                {/* Date Badge */}
-                <div className="absolute top-4 right-4 z-20">
-                  <Badge variant="secondary" className="shadow-lg">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {project.date}
-                  </Badge>
-                </div>
+                  {/* Image Gallery */}
+                  <div className="relative h-48 md:h-56 overflow-hidden">
+                    <Image
+                      src={currentImage}
+                      alt={`Screenshot of ${project.title}`}
+                      width={1280}
+                      height={720}
+                      data-ai-hint={project.imageHint}
+                      className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
-                <div className="relative h-48 md:h-56 overflow-hidden">
-                  <Image
-                    src={project.image}
-                    alt={`Screenshot of ${project.title}`}
-                    width={1280}
-                    height={720}
-                    data-ai-hint={project.imageHint}
-                    className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
-                </div>
+                    {/* Image Navigation */}
+                    {project.images.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => prevImage(project.title, project.images.length)}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          <ChevronLeft className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => nextImage(project.title, project.images.length)}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                        >
+                          <ChevronRight className="w-4 h-4" />
+                        </button>
 
-                <div className="p-6">
-                  <h3 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
-                    {project.title}
-                  </h3>
-
-                  <p className="text-muted-foreground mb-4 text-sm md:text-base line-clamp-3">
-                    {project.description}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.technologies.slice(0, 4).map((tech) => (
-                      <Tooltip key={tech.name}>
-                        <TooltipTrigger asChild>
-                          <Badge
-                            variant="outline"
-                            className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors duration-200 cursor-default"
-                          >
-                            <span className="mr-1">{tech.icon}</span>
-                            {tech.name}
-                          </Badge>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{tech.name}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    ))}
-                    {project.technologies.length > 4 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{project.technologies.length - 4} more
-                      </Badge>
+                        {/* Image Indicators */}
+                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                          {project.images.map((_, imgIndex) => (
+                            <div
+                              key={imgIndex}
+                              className={`w-2 h-2 rounded-full ${
+                                imgIndex === currentImageIndex ? "bg-white" : "bg-white/50"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      </>
                     )}
                   </div>
 
-                  <div className="flex gap-2">
-                    <Button asChild size="sm" className="flex-1">
-                      <Link
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Live Demo
-                      </Link>
-                    </Button>
-                    <Button
-                      asChild
-                      variant="outline"
-                      size="sm"
-                      className="flex-1"
-                    >
-                      <Link
-                        href={project.github}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Github className="w-4 h-4 mr-2" />
-                        Code
-                      </Link>
-                    </Button>
-                  </div>
-                </div>
+                  <div className="p-6">
+                    <h3 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
+                      {project.title}
+                    </h3>
 
-                {/* Hover overlay with expanded details */}
-                <div className="absolute inset-0 bg-black/95 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center p-6 backdrop-blur-sm">
-                  <div className="text-center text-white">
-                    <h3 className="text-2xl font-bold mb-4">{project.title}</h3>
-                    <p className="mb-6 text-gray-300 max-w-sm mx-auto">
+                    <p className="text-muted-foreground mb-4 text-sm md:text-base line-clamp-3">
                       {project.description}
                     </p>
-                    <div className="flex flex-wrap gap-2 justify-center mb-6">
-                      {project.technologies.map((tech) => (
-                        <Badge
-                          key={tech.name}
-                          variant="secondary"
-                          className="text-xs"
-                        >
-                          <span className="mr-1">{tech.icon}</span>
-                          {tech.name}
-                        </Badge>
+
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {project.technologies.slice(0, 4).map((tech) => (
+                        <Tooltip key={tech.name}>
+                          <TooltipTrigger asChild>
+                            <Badge
+                              variant="outline"
+                              className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors duration-200 cursor-default"
+                            >
+                              <span className="mr-1">{tech.icon}</span>
+                              {tech.name}
+                            </Badge>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{tech.name}</p>
+                          </TooltipContent>
+                        </Tooltip>
                       ))}
+                      {project.technologies.length > 4 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{project.technologies.length - 4} more
+                        </Badge>
+                      )}
                     </div>
-                    <div className="flex gap-3 justify-center">
-                      <Button asChild size="sm">
+
+                    <div className="flex gap-2">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" className="flex-1">
+                            <Eye className="w-4 h-4 mr-2" />
+                            View Details
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle className="text-2xl">{project.title}</DialogTitle>
+                            <DialogDescription className="text-base">
+                              {project.description}
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <div className="space-y-6">
+                            {/* Image Gallery in Dialog */}
+                            <div className="relative">
+                              <Image
+                                src={currentImage}
+                                alt={`Screenshot of ${project.title}`}
+                                width={1280}
+                                height={720}
+                                className="w-full h-64 object-cover rounded-lg"
+                              />
+                              {project.images.length > 1 && (
+                                <>
+                                  <button
+                                    onClick={() => prevImage(project.title, project.images.length)}
+                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
+                                  >
+                                    <ChevronLeft className="w-5 h-5" />
+                                  </button>
+                                  <button
+                                    onClick={() => nextImage(project.title, project.images.length)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
+                                  >
+                                    <ChevronRight className="w-5 h-5" />
+                                  </button>
+                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                                    {project.images.map((_, imgIndex) => (
+                                      <div
+                                        key={imgIndex}
+                                        className={`w-2 h-2 rounded-full ${
+                                          imgIndex === currentImageIndex ? "bg-white" : "bg-white/50"
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                </>
+                              )}
+                            </div>
+
+                            {/* Technologies */}
+                            <div>
+                              <h4 className="text-lg font-semibold mb-3">Technologies Used</h4>
+                              <div className="flex flex-wrap gap-2">
+                                {project.technologies.map((tech) => (
+                                  <Badge key={tech.name} variant="secondary">
+                                    <span className="mr-1">{tech.icon}</span>
+                                    {tech.name}
+                                  </Badge>
+                                ))}
+                              </div>
+                            </div>
+
+                            {/* Links */}
+                            <div className="flex gap-3">
+                              <Button asChild>
+                                <Link
+                                  href={project.link}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  <ExternalLink className="w-4 h-4 mr-2" />
+                                  Live Demo
+                                </Link>
+                              </Button>
+                              {project.github !== "#" && (
+                                <Button asChild variant="outline">
+                                  <Link
+                                    href={project.github}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                  >
+                                    <Github className="w-4 h-4 mr-2" />
+                                    Source Code
+                                  </Link>
+                                </Button>
+                              )}
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
+
+                      <Button asChild variant="outline" size="sm" className="flex-1">
                         <Link
                           href={project.link}
                           target="_blank"
                           rel="noopener noreferrer"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
-                          View Live
-                        </Link>
-                      </Button>
-                      <Button asChild variant="outline" size="sm">
-                        <Link
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <Code className="w-4 h-4 mr-2" />
-                          Source Code
+                          Live Demo
                         </Link>
                       </Button>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
+                </Card>
+              );
+            })}
           </div>
 
           {/* Call to action */}
