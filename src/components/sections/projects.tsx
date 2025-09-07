@@ -17,7 +17,16 @@ import {
 } from "@/components/ui/dialog";
 import Image from "next/image";
 import Link from "next/link";
-import { ExternalLink, Github, Code, Star, Calendar, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ExternalLink,
+  Github,
+  Code,
+  Star,
+  Calendar,
+  Eye,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 import { useState } from "react";
 
 const projects = [
@@ -39,7 +48,7 @@ const projects = [
       "/images/shamshersons-cms-2.webp",
       "/images/shamshersons-cms-3.webp",
       "/images/shamshersons-cms-4.webp",
-      "/images/shamshersons-cms-5.webp"
+      "/images/shamshersons-cms-5.webp",
     ],
     imageHint: "piano repair website",
     link: "https://shamshersons.pages.dev/",
@@ -62,12 +71,12 @@ const projects = [
     ],
     images: [
       "/images/girl-side-wedding-invite.webp",
-      "/images/boy-side-wedding-invite.webp"
+      "/images/boy-side-wedding-invite.webp",
     ],
     imageHint: "wedding invitation website",
     link: "https://liviaandjaskaran.pages.dev/",
     github: "#",
-    featured: true,
+    featured: false,
     date: "2025",
   },
   {
@@ -84,9 +93,7 @@ const projects = [
       { name: "JavaScript", icon: "�" },
       { name: "HTML/CSS", icon: "🌐" },
     ],
-    images: [
-      "/images/youtube-downloader-preview.webp"
-    ],
+    images: ["/images/youtube-downloader-preview.webp"],
     imageHint: "YouTube downloader app",
     link: "https://github.com/grlnsngh/YT",
     github: "https://github.com/grlnsngh/YT",
@@ -96,19 +103,24 @@ const projects = [
 ];
 
 export function Projects() {
-  const [currentImageIndexes, setCurrentImageIndexes] = useState<{[key: string]: number}>({});
+  const [currentImageIndexes, setCurrentImageIndexes] = useState<{
+    [key: string]: number;
+  }>({});
 
   const nextImage = (projectTitle: string, imagesLength: number) => {
-    setCurrentImageIndexes(prev => ({
+    setCurrentImageIndexes((prev) => ({
       ...prev,
-      [projectTitle]: ((prev[projectTitle] || 0) + 1) % imagesLength
+      [projectTitle]: ((prev[projectTitle] || 0) + 1) % imagesLength,
     }));
   };
 
   const prevImage = (projectTitle: string, imagesLength: number) => {
-    setCurrentImageIndexes(prev => ({
+    setCurrentImageIndexes((prev) => ({
       ...prev,
-      [projectTitle]: prev[projectTitle] === 0 ? imagesLength - 1 : (prev[projectTitle] || 0) - 1
+      [projectTitle]:
+        prev[projectTitle] === 0
+          ? imagesLength - 1
+          : (prev[projectTitle] || 0) - 1,
     }));
   };
 
@@ -173,17 +185,47 @@ export function Projects() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
+                    {/* GitHub Button - Bottom Left on Image */}
+                    {project.github !== "#" && (
+                      <div className="absolute bottom-4 left-4 z-30">
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button
+                              asChild
+                              size="sm"
+                              className="h-10 w-10 p-0 bg-secondary/80 hover:bg-secondary/90 text-secondary-foreground border-0 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                            >
+                              <Link
+                                href={project.github}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <Github className="w-5 h-5" />
+                              </Link>
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>View Source Code</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </div>
+                    )}
+
                     {/* Image Navigation */}
                     {project.images.length > 1 && (
                       <>
                         <button
-                          onClick={() => prevImage(project.title, project.images.length)}
+                          onClick={() =>
+                            prevImage(project.title, project.images.length)
+                          }
                           className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={() => nextImage(project.title, project.images.length)}
+                          onClick={() =>
+                            nextImage(project.title, project.images.length)
+                          }
                           className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                         >
                           <ChevronRight className="w-4 h-4" />
@@ -195,7 +237,9 @@ export function Projects() {
                             <div
                               key={imgIndex}
                               className={`w-2 h-2 rounded-full ${
-                                imgIndex === currentImageIndex ? "bg-white" : "bg-white/50"
+                                imgIndex === currentImageIndex
+                                  ? "bg-white"
+                                  : "bg-white/50"
                               }`}
                             />
                           ))}
@@ -247,7 +291,9 @@ export function Projects() {
                         </DialogTrigger>
                         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                           <DialogHeader>
-                            <DialogTitle className="text-2xl">{project.title}</DialogTitle>
+                            <DialogTitle className="text-2xl">
+                              {project.title}
+                            </DialogTitle>
                             <DialogDescription className="text-base">
                               {project.description}
                             </DialogDescription>
@@ -266,13 +312,23 @@ export function Projects() {
                               {project.images.length > 1 && (
                                 <>
                                   <button
-                                    onClick={() => prevImage(project.title, project.images.length)}
+                                    onClick={() =>
+                                      prevImage(
+                                        project.title,
+                                        project.images.length
+                                      )
+                                    }
                                     className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
                                   >
                                     <ChevronLeft className="w-5 h-5" />
                                   </button>
                                   <button
-                                    onClick={() => nextImage(project.title, project.images.length)}
+                                    onClick={() =>
+                                      nextImage(
+                                        project.title,
+                                        project.images.length
+                                      )
+                                    }
                                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
                                   >
                                     <ChevronRight className="w-5 h-5" />
@@ -282,7 +338,9 @@ export function Projects() {
                                       <div
                                         key={imgIndex}
                                         className={`w-2 h-2 rounded-full ${
-                                          imgIndex === currentImageIndex ? "bg-white" : "bg-white/50"
+                                          imgIndex === currentImageIndex
+                                            ? "bg-white"
+                                            : "bg-white/50"
                                         }`}
                                       />
                                     ))}
@@ -293,7 +351,9 @@ export function Projects() {
 
                             {/* Technologies */}
                             <div>
-                              <h4 className="text-lg font-semibold mb-3">Technologies Used</h4>
+                              <h4 className="text-lg font-semibold mb-3">
+                                Technologies Used
+                              </h4>
                               <div className="flex flex-wrap gap-2">
                                 {project.technologies.map((tech) => (
                                   <Badge key={tech.name} variant="secondary">
@@ -333,7 +393,12 @@ export function Projects() {
                         </DialogContent>
                       </Dialog>
 
-                      <Button asChild variant="outline" size="sm" className="flex-1">
+                      <Button
+                        asChild
+                        variant="outline"
+                        size="sm"
+                        className="flex-1"
+                      >
                         <Link
                           href={project.link}
                           target="_blank"
