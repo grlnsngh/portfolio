@@ -55,11 +55,11 @@ const stats = [
 const timeline = [
   {
     year: "2022-Present",
-    title: "Software Developer",
+    title: "Front End Developer II",
     company: "LexisNexis",
     type: "work",
     description:
-      "Built and maintained React micro-frontends for Microsoft Word add-ins and websites, delivering pixel-perfect, high-performance UIs. Improved test coverage and code quality with modern React best practices.",
+      "React micro-frontends for Word add-ins, improved code quality & test coverage with modern practices.",
     icon: Briefcase,
   },
   {
@@ -68,7 +68,7 @@ const timeline = [
     company: "Creative Realities",
     type: "work",
     description:
-      "Maintained front-end features using JavaScript, Kendo UI, jQuery, HTML5, and CSS. Developed back-end functionalities in C# and optimized SQL queries for better performance.",
+      "Front-end development with JS, Kendo UI, jQuery. Back-end with C# and SQL optimization.",
     icon: Code,
   },
   {
@@ -77,7 +77,7 @@ const timeline = [
     company: "Dynacare",
     type: "work",
     description:
-      "Developed ML application to predict hourly patient volume with 92.35% accuracy. Integrated Flask framework with Bootstrap for data visualization and analysis.",
+      "ML model predicting patient volume with 92.35% accuracy using Flask & Bootstrap.",
     icon: Zap,
   },
   {
@@ -86,7 +86,7 @@ const timeline = [
     company: "IT Direct UK, India",
     type: "work",
     description:
-      "Developed Android applications using Java, XML, JSON, and SQLite. Tested code for robustness and optimized existing applications for better performance.",
+      "Android apps with Java, XML, JSON, SQLite. Code testing and performance optimization.",
     icon: Smartphone,
   },
   {
@@ -95,7 +95,7 @@ const timeline = [
     company: "Systomax, India",
     type: "work",
     description:
-      "Designed and developed websites with improved user experience, resulting in 20% increase in traffic. Created web-optimized graphics using Adobe Photoshop and Illustrator.",
+      "Website development with improved UX (20% traffic increase) using Adobe tools.",
     icon: Globe,
   },
 ];
