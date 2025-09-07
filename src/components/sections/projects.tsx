@@ -196,7 +196,7 @@ export function Projects() {
 
   const onTouchEnd = (projectTitle?: string, imagesLength?: number) => {
     if (!touchStart || !touchEnd) return;
-    
+
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
@@ -208,7 +208,7 @@ export function Projects() {
         nextFullscreenImage();
       }
     }
-    
+
     if (isRightSwipe) {
       if (projectTitle && imagesLength) {
         prevImage(projectTitle, imagesLength);
@@ -302,7 +302,9 @@ export function Projects() {
                     }
                     onTouchStart={onTouchStart}
                     onTouchMove={onTouchMove}
-                    onTouchEnd={() => onTouchEnd(project.title, project.images.length)}
+                    onTouchEnd={() =>
+                      onTouchEnd(project.title, project.images.length)
+                    }
                   >
                     <div className="relative w-full h-full">
                       {project.images.map((image, index) => (
@@ -469,18 +471,22 @@ export function Projects() {
                         <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0">
                           <div className="relative">
                             {/* Enhanced Image Gallery in Dialog */}
-                            <div 
+                            <div
                               className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg"
                               onTouchStart={onTouchStart}
                               onTouchMove={onTouchMove}
-                              onTouchEnd={() => onTouchEnd(project.title, project.images.length)}
+                              onTouchEnd={() =>
+                                onTouchEnd(project.title, project.images.length)
+                              }
                             >
                               <div className="relative w-full h-full">
                                 {project.images.map((image, index) => (
                                   <Image
                                     key={`${project.title}-dialog-${index}`}
                                     src={image}
-                                    alt={`Screenshot of ${project.title} - ${index + 1}`}
+                                    alt={`Screenshot of ${project.title} - ${
+                                      index + 1
+                                    }`}
                                     width={1280}
                                     height={720}
                                     className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out ${
@@ -491,7 +497,8 @@ export function Projects() {
                                         : "translate-x-full opacity-0 scale-95"
                                     }`}
                                     style={{
-                                      zIndex: index === dialogImageIndex ? 10 : 5,
+                                      zIndex:
+                                        index === dialogImageIndex ? 10 : 5,
                                     }}
                                   />
                                 ))}
@@ -634,17 +641,17 @@ export function Projects() {
           </div>
 
           {/* Call to action */}
-          <div className="text-center mt-12">
-            <p className="text-muted-foreground mb-6">
+          <div className="text-center mt-8 md:mt-12">
+            <p className="text-muted-foreground mb-4 md:mb-6 text-sm md:text-base">
               Interested in seeing more of my work?
             </p>
-            <Button asChild size="lg">
+            <Button asChild size="sm" className="md:size-lg">
               <Link
                 href="https://github.com/grlnsngh"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Github className="w-5 h-5 mr-2" />
+                <Github className="w-4 h-4 md:w-5 md:h-5 mr-2" />
                 View All Projects on GitHub
               </Link>
             </Button>
@@ -677,7 +684,7 @@ export function Projects() {
             </button>
 
             {/* Main Image */}
-            <div 
+            <div
               className="relative w-full h-full flex items-center justify-center"
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
