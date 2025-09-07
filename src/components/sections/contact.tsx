@@ -213,9 +213,9 @@ export function Contact() {
             <div className="flex justify-center pt-2">
               <Badge
                 variant="secondary"
-                className="px-4 py-2 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 text-sm md:text-sm min-h-[44px] md:min-h-0 flex items-center"
+                className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 text-xs md:text-sm min-h-[36px] md:min-h-0 flex items-center"
               >
-                <CheckCircle className="w-4 h-4 mr-2" />
+                <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mr-2" />
                 Available for new projects
               </Badge>
             </div>
