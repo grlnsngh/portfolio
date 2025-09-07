@@ -232,18 +232,19 @@ export function About() {
                   </span>{" "}
                   across web and mobile domains. My expertise spans building
                   React micro-frontends, React Native apps, and Android
-                  applications, with additional experience in machine learning.
+                  applications, with additional experience in machine learning,
+                  C#, Java, and SQL/MongoDB.
                 </p>
                 <p>
                   I'm passionate about clean code, modern development practices,
                   and delivering pixel-perfect user experiences. In my current
-                  role, I've contributed to a React package library used across
-                  the organization for consistency, and worked on internal
-                  portals, customer-facing software, micro-frontends, and
-                  Storybook components. In my free time, I've built
-                  React/Next.js websites and React Native apps for clients as a
-                  freelancer. I'm always eager to tackle new challenges and stay
-                  current with emerging technologies.
+                  role, I've developed a React component library using Storybook
+                  for interactive prototyping and organization-wide consistency,
+                  and worked on internal portals, customer-facing software, and
+                  micro-frontends. In my free time, I've built React/Next.js
+                  websites and React Native apps for clients as a freelancer.
+                  I'm always eager to tackle new challenges and stay current
+                  with emerging technologies.
                 </p>
                 <p>
                   I believe in{" "}
@@ -290,6 +291,7 @@ export function About() {
                   "C#",
                   "Java",
                   "SQL",
+                  "MongoDB",
                   "Android",
                   "HTML5",
                   "CSS",
