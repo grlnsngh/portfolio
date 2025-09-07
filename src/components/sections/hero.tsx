@@ -307,7 +307,12 @@ export function Hero() {
                 Hi
               </p>
               <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
-                <span className="bg-gradient-to-r from-primary via-secondary to-primary bg-clip-text text-transparent animate-gradient">
+                <span
+                  className="text-transparent font-bold hover:text-primary transition-colors duration-300"
+                  style={{
+                    WebkitTextStroke: "2px hsl(var(--primary))",
+                  }}
+                >
                   I'm Gurleen
                 </span>
               </h1>
