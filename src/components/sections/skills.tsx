@@ -168,7 +168,7 @@ export function Skills() {
             </div>
             <div className="space-y-1">
               <div className="text-3xl md:text-2xl font-bold text-primary">
-                50+
+                15+
               </div>
               <div className="text-sm md:text-xs text-muted-foreground">
                 Projects Built
