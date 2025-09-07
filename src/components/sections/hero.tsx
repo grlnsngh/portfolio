@@ -442,10 +442,10 @@ export function Hero() {
         >
           <div className="relative group">
             {/* Background Glow */}
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[30px] lg:rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
+            <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
 
             {/* Terminal Container */}
-            <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500">
+            <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mb-20 lg:mb-0">
               {/* Terminal Header */}
               <div
                 className={`px-4 py-2 flex items-center gap-2 ${
