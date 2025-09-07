@@ -27,7 +27,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const projects = [
   {
@@ -115,6 +115,14 @@ export function Projects() {
     []
   );
 
+  // Touch gesture state
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const touchRef = useRef<HTMLDivElement>(null);
+
+  // Minimum swipe distance (in px)
+  const minSwipeDistance = 50;
+
   const nextImage = (projectTitle: string, imagesLength: number) => {
     setCurrentImageIndexes((prev) => ({
       ...prev,
@@ -174,6 +182,40 @@ export function Projects() {
         : fullscreenIndex - 1;
     setFullscreenIndex(prevIndex);
     setFullscreenImage(currentProjectImages[prevIndex]);
+  };
+
+  // Touch gesture handlers
+  const onTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = (projectTitle?: string, imagesLength?: number) => {
+    if (!touchStart || !touchEnd) return;
+    
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      if (projectTitle && imagesLength) {
+        nextImage(projectTitle, imagesLength);
+      } else if (fullscreenImage) {
+        nextFullscreenImage();
+      }
+    }
+    
+    if (isRightSwipe) {
+      if (projectTitle && imagesLength) {
+        prevImage(projectTitle, imagesLength);
+      } else if (fullscreenImage) {
+        prevFullscreenImage();
+      }
+    }
   };
 
   // Keyboard navigation
@@ -253,19 +295,37 @@ export function Projects() {
 
                   {/* Image Gallery */}
                   <div
+                    ref={touchRef}
                     className="relative h-48 md:h-56 overflow-hidden cursor-pointer group/image"
                     onClick={() =>
                       openFullscreen(project.images, dialogImageIndex)
                     }
+                    onTouchStart={onTouchStart}
+                    onTouchMove={onTouchMove}
+                    onTouchEnd={() => onTouchEnd(project.title, project.images.length)}
                   >
-                    <Image
-                      src={currentImage}
-                      alt={`Screenshot of ${project.title}`}
-                      width={1280}
-                      height={720}
-                      data-ai-hint={project.imageHint}
-                      className="object-cover w-full h-full transform transition-transform duration-700 group-hover:scale-110"
-                    />
+                    <div className="relative w-full h-full">
+                      {project.images.map((image, index) => (
+                        <Image
+                          key={`${project.title}-${index}`}
+                          src={image}
+                          alt={`Screenshot of ${project.title} - ${index + 1}`}
+                          width={1280}
+                          height={720}
+                          data-ai-hint={project.imageHint}
+                          className={`absolute inset-0 object-cover w-full h-full transform transition-all duration-500 ease-in-out ${
+                            index === currentImageIndex
+                              ? "translate-x-0 opacity-100 scale-100"
+                              : index < currentImageIndex
+                              ? "-translate-x-full opacity-0 scale-95"
+                              : "translate-x-full opacity-0 scale-95"
+                          }`}
+                          style={{
+                            zIndex: index === currentImageIndex ? 10 : 5,
+                          }}
+                        />
+                      ))}
+                    </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
                     {/* Fullscreen Hint */}
@@ -409,14 +469,33 @@ export function Projects() {
                         <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0">
                           <div className="relative">
                             {/* Enhanced Image Gallery in Dialog */}
-                            <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg">
-                              <Image
-                                src={dialogImage}
-                                alt={`Screenshot of ${project.title}`}
-                                width={1280}
-                                height={720}
-                                className="w-full h-full object-cover"
-                              />
+                            <div 
+                              className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg"
+                              onTouchStart={onTouchStart}
+                              onTouchMove={onTouchMove}
+                              onTouchEnd={() => onTouchEnd(project.title, project.images.length)}
+                            >
+                              <div className="relative w-full h-full">
+                                {project.images.map((image, index) => (
+                                  <Image
+                                    key={`${project.title}-dialog-${index}`}
+                                    src={image}
+                                    alt={`Screenshot of ${project.title} - ${index + 1}`}
+                                    width={1280}
+                                    height={720}
+                                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out ${
+                                      index === dialogImageIndex
+                                        ? "translate-x-0 opacity-100 scale-100"
+                                        : index < dialogImageIndex
+                                        ? "-translate-x-full opacity-0 scale-95"
+                                        : "translate-x-full opacity-0 scale-95"
+                                    }`}
+                                    style={{
+                                      zIndex: index === dialogImageIndex ? 10 : 5,
+                                    }}
+                                  />
+                                ))}
+                              </div>
                               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
                               {/* Enhanced Navigation */}
@@ -598,14 +677,33 @@ export function Projects() {
             </button>
 
             {/* Main Image */}
-            <div className="relative w-full h-full flex items-center justify-center">
-              <Image
-                src={fullscreenImage}
-                alt="Fullscreen view"
-                width={1920}
-                height={1080}
-                className="max-w-full max-h-full object-contain"
-              />
+            <div 
+              className="relative w-full h-full flex items-center justify-center"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={() => onTouchEnd()}
+            >
+              <div className="relative w-full h-full flex items-center justify-center">
+                {currentProjectImages.map((image, index) => (
+                  <Image
+                    key={`fullscreen-${index}`}
+                    src={image}
+                    alt={`Fullscreen view ${index + 1}`}
+                    width={1920}
+                    height={1080}
+                    className={`absolute max-w-full max-h-full object-contain transition-all duration-500 ease-in-out ${
+                      index === fullscreenIndex
+                        ? "translate-x-0 opacity-100 scale-100"
+                        : index < fullscreenIndex
+                        ? "-translate-x-full opacity-0 scale-95"
+                        : "translate-x-full opacity-0 scale-95"
+                    }`}
+                    style={{
+                      zIndex: index === fullscreenIndex ? 10 : 5,
+                    }}
+                  />
+                ))}
+              </div>
 
               {/* Navigation Arrows */}
               {currentProjectImages.length > 1 && (
