@@ -1,7 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
 import Link from "next/link";
 import {
   Code,
@@ -16,36 +15,89 @@ import {
   Award,
   Users,
   Zap,
+  GraduationCap,
+  Briefcase,
+  Trophy,
+  Star,
+  ChevronRight,
 } from "lucide-react";
 
 const highlights = [
   {
     icon: Code,
-    label: "Full-Stack Developer",
-    description: "Building end-to-end solutions",
+    label: "React Developer",
+    description: "Building micro-frontends & modern UIs",
   },
   {
-    icon: Palette,
-    label: "UI/UX Enthusiast",
-    description: "Creating beautiful interfaces",
+    icon: Zap,
+    label: "ML Engineer",
+    description: "Predictive models with 92% accuracy",
   },
   {
     icon: Smartphone,
-    label: "Mobile Developer",
-    description: "Cross-platform apps with React Native",
+    label: "Android Developer",
+    description: "Native mobile applications",
   },
   {
     icon: Globe,
-    label: "International Experience",
-    description: "Multi-language applications",
+    label: "Full-Stack Developer",
+    description: "End-to-end web solutions",
   },
 ];
 
 const stats = [
   { icon: Calendar, value: "5+", label: "Years Experience" },
-  { icon: Award, value: "50+", label: "Projects Completed" },
-  { icon: Users, value: "100K+", label: "Users Impacted" },
-  { icon: Zap, value: "24/7", label: "Problem Solver" },
+  { icon: Award, value: "5+", label: "Companies" },
+  { icon: Code, value: "15+", label: "Technologies" },
+  { icon: Zap, value: "92%", label: "ML Accuracy" },
+];
+
+const timeline = [
+  {
+    year: "2022-Present",
+    title: "Software Developer",
+    company: "LexisNexis",
+    type: "work",
+    description:
+      "Built and maintained React micro-frontends for Microsoft Word add-ins and websites, delivering pixel-perfect, high-performance UIs. Improved test coverage and code quality with modern React best practices.",
+    icon: Briefcase,
+  },
+  {
+    year: "Jan-Mar 2022",
+    title: "Software Developer",
+    company: "Creative Realities",
+    type: "work",
+    description:
+      "Maintained front-end features using JavaScript, Kendo UI, jQuery, HTML5, and CSS. Developed back-end functionalities in C# and optimized SQL queries for better performance.",
+    icon: Code,
+  },
+  {
+    year: "Jan-Apr 2020",
+    title: "Machine Learning Developer",
+    company: "Dynacare",
+    type: "work",
+    description:
+      "Developed ML application to predict hourly patient volume with 92.35% accuracy. Integrated Flask framework with Bootstrap for data visualization and analysis.",
+    icon: Zap,
+  },
+  {
+    year: "Jul 2017-Jun 2018",
+    title: "Android Developer (Internship)",
+    company: "IT Direct UK, India",
+    type: "work",
+    description:
+      "Developed Android applications using Java, XML, JSON, and SQLite. Tested code for robustness and optimized existing applications for better performance.",
+    icon: Smartphone,
+  },
+  {
+    year: "Jun 2016-Jul 2017",
+    title: "Web Developer (Internship)",
+    company: "Systomax, India",
+    type: "work",
+    description:
+      "Designed and developed websites with improved user experience, resulting in 20% increase in traffic. Created web-optimized graphics using Adobe Photoshop and Illustrator.",
+    icon: Globe,
+  },
 ];
 
 export function About() {
@@ -53,25 +105,76 @@ export function About() {
     <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Portrait Section */}
+          {/* Career Timeline Section */}
           <div className="lg:col-span-5">
             <div className="relative">
-              <Card className="overflow-hidden shadow-2xl rotate-[-2deg] lg:rotate-[-3deg] hover:rotate-0 transition-all duration-500 hover:shadow-primary/20 max-w-sm mx-auto lg:mx-0 group">
-                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-secondary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <Image
-                  src="https://picsum.photos/600/800"
-                  alt="Portrait of the developer"
-                  width={600}
-                  height={800}
-                  className="aspect-[3/4] object-cover transition-transform duration-500 group-hover:scale-105"
-                  data-ai-hint="professional portrait"
-                />
-                <div className="absolute bottom-4 left-4 right-4">
-                  <div className="flex items-center gap-2 text-white/90">
-                    <MapPin className="w-4 h-4" />
-                    <span className="text-sm font-medium">
-                      Remote / Worldwide
-                    </span>
+              <Card className="overflow-hidden shadow-2xl hover:shadow-primary/20 max-w-sm mx-auto lg:mx-0 group">
+                <div className="p-6 space-y-4">
+                  <div className="text-center mb-6">
+                    <h3 className="text-xl font-bold mb-2">Career Journey</h3>
+                    <p className="text-sm text-muted-foreground">
+                      Milestones & Achievements
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {timeline.map((item, index) => (
+                      <div
+                        key={item.year}
+                        className="relative flex items-start gap-3 group/timeline-item"
+                        style={{ animationDelay: `${index * 150}ms` }}
+                      >
+                        {/* Timeline Line */}
+                        <div className="flex flex-col items-center">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 group-hover/timeline-item:scale-110 ${
+                              item.type === "work"
+                                ? "bg-blue-500"
+                                : item.type === "education"
+                                ? "bg-green-500"
+                                : "bg-purple-500"
+                            }`}
+                          >
+                            <item.icon className="w-5 h-5 text-white" />
+                          </div>
+                          {index < timeline.length - 1 && (
+                            <div className="w-0.5 h-8 bg-gradient-to-b from-primary/50 to-transparent mt-2"></div>
+                          )}
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0 pb-4">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-semibold text-primary bg-primary/10 px-2 py-1 rounded-full">
+                              {item.year}
+                            </span>
+                            {item.type === "achievement" && (
+                              <Trophy className="w-3 h-3 text-yellow-500" />
+                            )}
+                          </div>
+                          <h4 className="font-semibold text-sm mb-1 group-hover/timeline-item:text-primary transition-colors">
+                            {item.title}
+                          </h4>
+                          <p className="text-xs text-muted-foreground mb-2">
+                            {item.company}
+                          </p>
+                          <p className="text-xs text-muted-foreground leading-relaxed">
+                            {item.description}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Current Status */}
+                  <div className="pt-4 border-t border-border/50">
+                    <div className="flex items-center gap-2 text-sm">
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="font-medium">Currently Available</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Open to new opportunities and collaborations
+                    </p>
                   </div>
                 </div>
               </Card>
@@ -122,20 +225,23 @@ export function About() {
 
               <div className="space-y-4 text-muted-foreground text-base lg:text-lg leading-relaxed">
                 <p>
-                  With over 5 years of experience in web and mobile development,
-                  I specialize in creating{" "}
+                  With over 5 years of experience in software development, I
+                  specialize in creating{" "}
                   <span className="text-foreground font-medium">
-                    user-centric applications
+                    high-performance applications
                   </span>{" "}
-                  that make a difference. My expertise spans from crafting
-                  pixel-perfect interfaces to building robust backend systems.
+                  across web, mobile, and machine learning domains. My expertise
+                  spans from building React micro-frontends and Android
+                  applications to developing predictive ML models with 92%
+                  accuracy.
                 </p>
                 <p>
-                  I'm passionate about clean code, modern design patterns, and
-                  staying ahead of technology trends. When I'm not coding,
-                  you'll find me exploring the latest design trends,
-                  contributing to open-source projects, or sharing knowledge
-                  with the developer community.
+                  I'm passionate about clean code, modern development practices,
+                  and delivering pixel-perfect user experiences. Throughout my
+                  career, I've contributed to diverse projects including
+                  Microsoft Word add-ins, healthcare prediction systems, and
+                  enterprise web applications. I'm always eager to tackle new
+                  challenges and stay current with emerging technologies.
                 </p>
                 <p>
                   I believe in{" "}
@@ -175,17 +281,23 @@ export function About() {
               <div className="flex flex-wrap gap-2">
                 {[
                   "React",
-                  "Next.js",
+                  "JavaScript",
                   "TypeScript",
-                  "Tailwind CSS",
-                  "Redux",
-                  "Jest",
-                  "React Query",
-                  "Framer Motion",
-                  "ESLint",
-                  "Vite",
+                  "C#",
+                  "Python",
+                  "Java",
+                  "SQL",
+                  "Flask",
+                  "Android",
+                  "HTML5",
+                  "CSS",
+                  "jQuery",
+                  "Kendo UI",
+                  "SQLite",
+                  "Machine Learning",
+                  "Adobe Photoshop",
+                  "Adobe Illustrator",
                   "Git",
-                  "Figma",
                 ].map((tech) => (
                   <Badge
                     key={tech}
