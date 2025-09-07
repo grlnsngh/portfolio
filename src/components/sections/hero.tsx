@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { TypeAnimation } from "react-type-animation";
 
 declare global {
   interface Window {
@@ -24,14 +25,6 @@ declare global {
   }
 }
 
-const developerTitles = [
-  "Developer",
-  "Specialist",
-  "Engineer",
-  "Expert",
-  "Developer",
-];
-
 const highlights = [
   { icon: Code, text: "Clean Code", color: "text-blue-500" },
   { icon: Palette, text: "Modern Design", color: "text-purple-500" },
@@ -40,15 +33,9 @@ const highlights = [
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const [currentTitleIndex, setCurrentTitleIndex] = useState(0);
 
   useEffect(() => {
     setIsVisible(true);
-    // Cycle through developer titles every 2.5 seconds
-    const interval = setInterval(() => {
-      setCurrentTitleIndex((prev) => (prev + 1) % developerTitles.length);
-    }, 2500);
-    return () => clearInterval(interval);
   }, []);
 
   const handleContactClick = () => {
@@ -97,17 +84,25 @@ export function Hero() {
               </h1>
               <div className="h-16 flex items-center justify-center lg:justify-start">
                 <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground">
-                  <span className="text-foreground">React </span>
-                  <motion.span
-                    key={currentTitleIndex}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                  <TypeAnimation
+                    sequence={[
+                      "React Developer",
+                      2000,
+                      "Next.js Developer",
+                      2000,
+                      "Frontend Engineer",
+                      2000,
+                      "Mobile Developer",
+                      2000,
+                      "UI/UX Designer",
+                      2000,
+                    ]}
+                    wrapper="span"
+                    speed={50}
+                    repeat={Infinity}
                     className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 bg-clip-text text-transparent font-bold"
-                  >
-                    {developerTitles[currentTitleIndex]}
-                  </motion.span>
+                    cursor={true}
+                  />
                 </h2>
               </div>
             </div>
