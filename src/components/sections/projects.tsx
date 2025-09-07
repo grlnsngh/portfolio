@@ -380,15 +380,7 @@ export function Projects() {
                         <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0">
                           <div className="relative">
                             {/* Enhanced Image Gallery in Dialog */}
-                            <div
-                              className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg cursor-pointer"
-                              onClick={() =>
-                                openFullscreen(
-                                  project.images,
-                                  currentImageIndex
-                                )
-                              }
-                            >
+                            <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg">
                               <Image
                                 src={currentImage}
                                 alt={`Screenshot of ${project.title}`}
@@ -441,24 +433,6 @@ export function Projects() {
                                   </div>
                                 </>
                               )}
-
-                              {/* Fullscreen Hint for Dialog */}
-                              <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm opacity-0 hover:opacity-100 transition-opacity duration-300">
-                                <svg
-                                  className="w-4 h-4 inline mr-1"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
-                                  />
-                                </svg>
-                                Click to expand
-                              </div>
                             </div>
 
                             {/* Content Section */}
