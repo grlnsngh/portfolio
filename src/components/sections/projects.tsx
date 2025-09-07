@@ -145,8 +145,10 @@ export function Projects() {
               return (
                 <Card
                   key={project.title}
-                  className={`group overflow-hidden relative shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 ${
-                    project.featured ? "ring-2 ring-primary/20" : ""
+                  className={`group relative overflow-hidden border-0 bg-card/50 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-primary/10 ${
+                    project.featured
+                      ? "ring-2 ring-primary/30 shadow-primary/20"
+                      : "hover:ring-1 hover:ring-primary/20"
                   } animate-in fade-in slide-in-from-bottom-${
                     index % 2 === 0 ? "left" : "right"
                   }`}
@@ -211,14 +213,14 @@ export function Projects() {
                       </div>
                     )}
 
-                    {/* Image Navigation */}
+                    {/* Enhanced Image Navigation */}
                     {project.images.length > 1 && (
                       <>
                         <button
                           onClick={() =>
                             prevImage(project.title, project.images.length)
                           }
-                          className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
@@ -226,20 +228,20 @@ export function Projects() {
                           onClick={() =>
                             nextImage(project.title, project.images.length)
                           }
-                          className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
 
-                        {/* Image Indicators */}
-                        <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                        {/* Enhanced Image Indicators */}
+                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
                           {project.images.map((_, imgIndex) => (
                             <div
                               key={imgIndex}
-                              className={`w-2 h-2 rounded-full ${
+                              className={`w-2 h-2 rounded-full transition-all duration-300 ${
                                 imgIndex === currentImageIndex
-                                  ? "bg-white"
-                                  : "bg-white/50"
+                                  ? "bg-white scale-125"
+                                  : "bg-white/60 hover:bg-white/80"
                               }`}
                             />
                           ))}
@@ -248,22 +250,23 @@ export function Projects() {
                     )}
                   </div>
 
-                  <div className="p-6">
-                    <h3 className="text-xl md:text-2xl font-bold mb-3 group-hover:text-primary transition-colors duration-300">
-                      {project.title}
-                    </h3>
+                  <div className="p-6 space-y-4">
+                    <div className="space-y-2">
+                      <h3 className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors duration-300 leading-tight">
+                        {project.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 leading-relaxed">
+                        {project.description}
+                      </p>
+                    </div>
 
-                    <p className="text-muted-foreground mb-4 text-sm md:text-base line-clamp-3">
-                      {project.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="flex flex-wrap gap-2">
                       {project.technologies.slice(0, 4).map((tech) => (
                         <Tooltip key={tech.name}>
                           <TooltipTrigger asChild>
                             <Badge
                               variant="outline"
-                              className="text-xs hover:bg-primary hover:text-primary-foreground transition-colors duration-200 cursor-default"
+                              className="text-xs hover:bg-primary hover:text-primary-foreground transition-all duration-200 cursor-default hover:scale-105 border-primary/20"
                             >
                               <span className="mr-1">{tech.icon}</span>
                               {tech.name}
@@ -275,16 +278,19 @@ export function Projects() {
                         </Tooltip>
                       ))}
                       {project.technologies.length > 4 && (
-                        <Badge variant="outline" className="text-xs">
+                        <Badge variant="outline" className="text-xs border-primary/20">
                           +{project.technologies.length - 4} more
                         </Badge>
                       )}
                     </div>
 
-                    <div className="flex gap-2">
+                    <div className="flex gap-3 pt-2">
                       <Dialog>
                         <DialogTrigger asChild>
-                          <Button size="sm" className="flex-1">
+                          <Button
+                            size="sm"
+                            className="flex-1 bg-primary/90 hover:bg-primary text-primary-foreground shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                          >
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
                           </Button>
@@ -397,7 +403,7 @@ export function Projects() {
                         asChild
                         variant="outline"
                         size="sm"
-                        className="flex-1"
+                        className="flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300 hover:scale-[1.02]"
                       >
                         <Link
                           href={project.link}
