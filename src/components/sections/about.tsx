@@ -29,19 +29,19 @@ const highlights = [
     description: "Building micro-frontends & modern UIs",
   },
   {
-    icon: Zap,
-    label: "ML Engineer",
-    description: "Predictive models with 92% accuracy",
+    icon: Smartphone,
+    label: "React Native Developer",
+    description: "Cross-platform mobile applications",
   },
   {
     icon: Smartphone,
-    label: "Android Developer",
-    description: "Native mobile applications",
+    label: "Mobile Developer",
+    description: "Native Android & hybrid apps",
   },
   {
     icon: Globe,
-    label: "Full-Stack Developer",
-    description: "End-to-end web solutions",
+    label: "Web Developer",
+    description: "Modern web applications",
   },
 ];
 
@@ -218,7 +218,7 @@ export function About() {
                     </span>
                   </h2>
                   <p className="text-muted-foreground text-lg">
-                    Full-Stack Developer & UI/UX Enthusiast
+                    Front End Developer
                   </p>
                 </div>
               </div>
@@ -228,20 +228,22 @@ export function About() {
                   With over 5 years of experience in software development, I
                   specialize in creating{" "}
                   <span className="text-foreground font-medium">
-                    high-performance applications
+                    high-performance front-end applications
                   </span>{" "}
-                  across web, mobile, and machine learning domains. My expertise
-                  spans from building React micro-frontends and Android
-                  applications to developing predictive ML models with 92%
-                  accuracy.
+                  across web and mobile domains. My expertise spans building
+                  React micro-frontends, React Native apps, and Android
+                  applications, with additional experience in machine learning.
                 </p>
                 <p>
                   I'm passionate about clean code, modern development practices,
-                  and delivering pixel-perfect user experiences. Throughout my
-                  career, I've contributed to diverse projects including
-                  Microsoft Word add-ins, healthcare prediction systems, and
-                  enterprise web applications. I'm always eager to tackle new
-                  challenges and stay current with emerging technologies.
+                  and delivering pixel-perfect user experiences. In my current
+                  role, I've contributed to a React package library used across
+                  the organization for consistency, and worked on internal
+                  portals, customer-facing software, micro-frontends, and
+                  Storybook components. In my free time, I've built
+                  React/Next.js websites and React Native apps for clients as a
+                  freelancer. I'm always eager to tackle new challenges and stay
+                  current with emerging technologies.
                 </p>
                 <p>
                   I believe in{" "}
@@ -281,20 +283,20 @@ export function About() {
               <div className="flex flex-wrap gap-2">
                 {[
                   "React",
+                  "Next.js",
+                  "React Native",
                   "JavaScript",
                   "TypeScript",
                   "C#",
-                  "Python",
                   "Java",
                   "SQL",
-                  "Flask",
                   "Android",
                   "HTML5",
                   "CSS",
                   "jQuery",
                   "Kendo UI",
                   "SQLite",
-                  "Machine Learning",
+                  "Storybook",
                   "Adobe Photoshop",
                   "Adobe Illustrator",
                   "Git",
