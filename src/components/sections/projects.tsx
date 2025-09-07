@@ -106,6 +106,9 @@ export function Projects() {
   const [currentImageIndexes, setCurrentImageIndexes] = useState<{
     [key: string]: number;
   }>({});
+  const [dialogImageIndexes, setDialogImageIndexes] = useState<{
+    [key: string]: number;
+  }>({});
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
   const [fullscreenIndex, setFullscreenIndex] = useState<number>(0);
   const [currentProjectImages, setCurrentProjectImages] = useState<string[]>(
@@ -121,6 +124,23 @@ export function Projects() {
 
   const prevImage = (projectTitle: string, imagesLength: number) => {
     setCurrentImageIndexes((prev) => ({
+      ...prev,
+      [projectTitle]:
+        prev[projectTitle] === 0
+          ? imagesLength - 1
+          : (prev[projectTitle] || 0) - 1,
+    }));
+  };
+
+  const nextDialogImage = (projectTitle: string, imagesLength: number) => {
+    setDialogImageIndexes((prev) => ({
+      ...prev,
+      [projectTitle]: ((prev[projectTitle] || 0) + 1) % imagesLength,
+    }));
+  };
+
+  const prevDialogImage = (projectTitle: string, imagesLength: number) => {
+    setDialogImageIndexes((prev) => ({
       ...prev,
       [projectTitle]:
         prev[projectTitle] === 0
@@ -194,7 +214,9 @@ export function Projects() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {projects.map((project, index) => {
               const currentImageIndex = currentImageIndexes[project.title] || 0;
+              const dialogImageIndex = dialogImageIndexes[project.title] || 0;
               const currentImage = project.images[currentImageIndex];
+              const dialogImage = project.images[dialogImageIndex];
 
               return (
                 <Card
@@ -233,7 +255,7 @@ export function Projects() {
                   <div
                     className="relative h-48 md:h-56 overflow-hidden cursor-pointer group/image"
                     onClick={() =>
-                      openFullscreen(project.images, currentImageIndex)
+                      openFullscreen(project.images, dialogImageIndex)
                     }
                   >
                     <Image
@@ -372,6 +394,13 @@ export function Projects() {
                           <Button
                             size="sm"
                             className="flex-1 bg-primary/90 hover:bg-primary text-primary-foreground shadow-md hover:shadow-lg transition-all duration-300 hover:scale-[1.02]"
+                            onClick={() => {
+                              // Initialize dialog with current preview image
+                              setDialogImageIndexes((prev) => ({
+                                ...prev,
+                                [project.title]: currentImageIndex,
+                              }));
+                            }}
                           >
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
@@ -382,7 +411,7 @@ export function Projects() {
                             {/* Enhanced Image Gallery in Dialog */}
                             <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg">
                               <Image
-                                src={currentImage}
+                                src={dialogImage}
                                 alt={`Screenshot of ${project.title}`}
                                 width={1280}
                                 height={720}
@@ -396,7 +425,7 @@ export function Projects() {
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      prevImage(
+                                      prevDialogImage(
                                         project.title,
                                         project.images.length
                                       );
@@ -408,7 +437,7 @@ export function Projects() {
                                   <button
                                     onClick={(e) => {
                                       e.stopPropagation();
-                                      nextImage(
+                                      nextDialogImage(
                                         project.title,
                                         project.images.length
                                       );
@@ -424,7 +453,7 @@ export function Projects() {
                                       <div
                                         key={imgIndex}
                                         className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                                          imgIndex === currentImageIndex
+                                          imgIndex === dialogImageIndex
                                             ? "bg-white scale-125"
                                             : "bg-white/60 hover:bg-white/80"
                                         }`}
