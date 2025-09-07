@@ -211,7 +211,9 @@ export function Hero() {
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="text-gray-300 text-sm ml-2 font-mono">gurleen@portfolio ~</span>
+                <span className="text-gray-300 text-sm ml-2 font-mono">
+                  gurleen@portfolio ~
+                </span>
               </div>
 
               {/* Terminal Body */}
@@ -226,16 +228,14 @@ export function Hero() {
                     <span className="text-blue-400">$ </span>
                     <span>whoami</span>
                   </div>
-                  <div className="text-yellow-300 pl-4">
-                    gurleen-singh
-                  </div>
+                  <div className="text-yellow-300 pl-4">gurleen-singh</div>
 
                   <div className="mt-3">
                     <span className="text-blue-400">$ </span>
                     <span>ls skills/</span>
                   </div>
                   <div className="text-cyan-300 pl-4">
-                    react/  nextjs/  typescript/  tailwind/
+                    react/ nextjs/ typescript/ tailwind/
                   </div>
 
                   <div className="mt-3">
