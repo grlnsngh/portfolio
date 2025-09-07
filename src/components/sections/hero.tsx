@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
 import {
   Github,
   Linkedin,
@@ -31,11 +30,60 @@ const highlights = [
   { icon: Zap, text: "Fast Performance", color: "text-yellow-500" },
 ];
 
-export function Hero() {
+const codeSnippets = [
+  {
+    title: "React Component",
+    language: "jsx",
+    code: `function Hero() {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+
+  return (
+    <div className="hero-section">
+      <h1>Modern Web Development</h1>
+      <p>Building amazing user experiences</p>
+    </div>
+  );
+}`,
+  },
+  {
+    title: "Next.js API Route",
+    language: "javascript",
+    code: `export default function handler(req, res) {
+  if (req.method === 'GET') {
+    res.status(200).json({
+      message: 'Hello from Next.js API!',
+      timestamp: new Date().toISOString()
+    });
+  }
+}`,
+  },
+  {
+    title: "Tailwind Styles",
+    language: "css",
+    code: `.hero-section {
+  @apply flex items-center justify-center;
+  @apply min-h-screen bg-gradient-to-br;
+  @apply from-blue-500 to-purple-600;
+  @apply text-white text-center;
+}`,
+  },
+];
+
+export function Hero() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [currentSnippetIndex, setCurrentSnippetIndex] = useState(0);
+
+  useEffect(() => {
+    setIsVisible(true);
+    // Rotate through code snippets every 4 seconds
+    const interval = setInterval(() => {
+      setCurrentSnippetIndex((prev) => (prev + 1) % codeSnippets.length);
+    }, 4000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleContactClick = () => {
@@ -194,7 +242,7 @@ export function Hero() {
           </div>
         </div>
 
-        {/* Image Section */}
+        {/* Animated Code Editor */}
         <div
           className={`lg:col-span-5 flex justify-center items-center mt-8 lg:mt-0 transition-all duration-1000 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
@@ -204,33 +252,66 @@ export function Hero() {
             {/* Background Glow */}
             <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[30px] lg:rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
 
-            {/* Main Image Container */}
+            {/* Code Editor Container */}
             <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500">
-              <Image
-                src="https://picsum.photos/400/500"
-                alt="Portrait of Gurleen - Full-Stack Developer"
-                fill
-                className="object-cover transition-transform duration-700 group-hover:scale-110"
-                sizes="(max-width: 640px) 288px, (max-width: 768px) 320px, (max-width: 1024px) 384px, 420px"
-                priority
-                loading="eager"
-                quality={90}
-                placeholder="blur"
-                blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAhEAACAQMDBQAAAAAAAAAAAAABAgMABAUGIWGRkqGx0f/EABUBAQEAAAAAAAAAAAAAAAAAAAMF/8QAGhEAAgIDAAAAAAAAAAAAAAAAAAECEgMRkf/aAAwDAQACEQMRAD8AltJagyeH0AthI5xdrLcNM91BF5pX2HaH9bcfaSXWGaRmknyJckliyjqTzSlT54b6bk+h0R+IRjWjBqO6O2mhP//Z"
-                data-ai-hint="professional portrait"
-              />
+              {/* Editor Header */}
+              <div className="bg-gray-800 px-4 py-3 flex items-center gap-2 border-b border-gray-700">
+                <div className="flex gap-2">
+                  <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                  <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <div className="flex-1 text-center">
+                  <span className="text-gray-300 text-sm font-mono">
+                    {codeSnippets[currentSnippetIndex].title}
+                  </span>
+                </div>
+              </div>
+              {/* Code Content */}
+              <div className="bg-gray-900 p-4 h-full overflow-hidden">
+                {/* Line Numbers */}
+                <div className="flex">
+                  <div className="text-gray-600 text-sm font-mono pr-4 select-none">
+                    {codeSnippets[currentSnippetIndex].code
+                      .split("\n")
+                      .map((_, i) => (
+                        <div key={i} className="leading-6">
+                          {i + 1}
+                        </div>
+                      ))}
+                  </div>
 
-              {/* Overlay Gradient */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  {/* Code */}
+                  <div className="flex-1">
+                    <motion.pre
+                      key={currentSnippetIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                      transition={{ duration: 0.5 }}
+                      className="text-sm font-mono text-gray-300 leading-6 whitespace-pre-wrap"
+                    >
+                      {codeSnippets[currentSnippetIndex].code}
+                    </motion.pre>
+                  </div>
+                </div>
 
-              {/* Floating Elements */}
+                {/* Animated Cursor */}
+                <motion.div
+                  animate={{ opacity: [1, 0, 1] }}
+                  transition={{ duration: 1, repeat: Infinity }}
+                  className="inline-block w-2 h-5 bg-blue-400 ml-1"
+                />
+              </div>
+
+              {/* Floating Tech Badge */}
               <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-200">
                 <Badge
                   variant="secondary"
-                  className="bg-white/90 text-black shadow-lg"
+                  className="bg-blue-500/90 text-white shadow-lg"
                 >
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  Creative
+                  <Code className="w-3 h-3 mr-1" />
+                  {codeSnippets[currentSnippetIndex].language.toUpperCase()}
                 </Badge>
               </div>
             </div>
