@@ -73,7 +73,7 @@ const timeline = [
   },
   {
     year: "Jan-Apr 2020",
-    title: "Machine Learning Developer",
+    title: "Machine Learning Developer (Internship)",
     company: "Dynacare",
     type: "work",
     description:
