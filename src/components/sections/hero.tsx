@@ -275,7 +275,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center p-4 sm:p-6 overflow-hidden">
+    <section className="relative w-full min-h-screen flex items-center justify-center p-4 sm:p-6 lg:pr-20 xl:pr-24 overflow-hidden">
       {/* Code Rain Background */}
       <div className="absolute inset-0 z-0">
         <CodeRain />
