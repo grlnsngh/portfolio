@@ -600,7 +600,7 @@ export function Hero() {
       </div>
 
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+      <div className="absolute bottom-4 sm:bottom-8 w-full flex justify-center animate-bounce">
         <Button
           variant="ghost"
           size="icon"
