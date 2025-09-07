@@ -49,7 +49,7 @@ const stats = [
   { icon: Calendar, value: "5+", label: "Years Experience" },
   { icon: Award, value: "5+", label: "Companies" },
   { icon: Code, value: "15+", label: "Technologies" },
-  { icon: Zap, value: "92%", label: "ML Accuracy" },
+  { icon: Zap, value: "50+", label: "React Components" },
 ];
 
 const timeline = [
@@ -59,7 +59,7 @@ const timeline = [
     company: "LexisNexis",
     type: "work",
     description:
-      "React micro-frontends for Word add-ins, improved code quality & test coverage with modern practices.",
+      "Built Storybook shared component library, created MFEs from scratch, optimized existing micro-frontends. React development for Word add-ins with modern practices.",
     icon: Briefcase,
   },
   {
@@ -180,20 +180,20 @@ export function About() {
               </Card>
 
               {/* Floating Stats */}
-              <div className="absolute -top-4 -right-4 lg:-right-8 space-y-3">
+              <div className="absolute -top-4 -right-4 lg:-right-8 space-y-2">
                 {stats.map((stat, index) => (
                   <Card
                     key={stat.label}
-                    className="p-3 shadow-lg animate-in slide-in-from-right"
+                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-2">
-                      <stat.icon className="w-4 h-4 text-primary" />
-                      <div className="text-center">
-                        <div className="text-sm font-bold text-primary">
+                      <stat.icon className="w-3 h-3 text-primary flex-shrink-0" />
+                      <div className="text-left">
+                        <div className="text-xs font-bold text-primary">
                           {stat.value}
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-[10px] text-muted-foreground leading-tight">
                           {stat.label}
                         </div>
                       </div>
