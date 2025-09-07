@@ -278,7 +278,10 @@ export function Projects() {
                         </Tooltip>
                       ))}
                       {project.technologies.length > 4 && (
-                        <Badge variant="outline" className="text-xs border-primary/20">
+                        <Badge
+                          variant="outline"
+                          className="text-xs border-primary/20"
+                        >
                           +{project.technologies.length - 4} more
                         </Badge>
                       )}
@@ -295,26 +298,20 @@ export function Projects() {
                             View Details
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle className="text-2xl">
-                              {project.title}
-                            </DialogTitle>
-                            <DialogDescription className="text-base">
-                              {project.description}
-                            </DialogDescription>
-                          </DialogHeader>
-
-                          <div className="space-y-6">
-                            {/* Image Gallery in Dialog */}
-                            <div className="relative">
+                        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0">
+                          <div className="relative">
+                            {/* Enhanced Image Gallery in Dialog */}
+                            <div className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg">
                               <Image
                                 src={currentImage}
                                 alt={`Screenshot of ${project.title}`}
                                 width={1280}
                                 height={720}
-                                className="w-full h-64 object-cover rounded-lg"
+                                className="w-full h-full object-cover"
                               />
+                              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
+
+                              {/* Enhanced Navigation */}
                               {project.images.length > 1 && (
                                 <>
                                   <button
@@ -324,7 +321,7 @@ export function Projects() {
                                         project.images.length
                                       )
                                     }
-                                    className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
+                                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronLeft className="w-5 h-5" />
                                   </button>
@@ -335,18 +332,20 @@ export function Projects() {
                                         project.images.length
                                       )
                                     }
-                                    className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronRight className="w-5 h-5" />
                                   </button>
-                                  <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+
+                                  {/* Enhanced Indicators */}
+                                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
                                     {project.images.map((_, imgIndex) => (
                                       <div
                                         key={imgIndex}
-                                        className={`w-2 h-2 rounded-full ${
+                                        className={`w-2 h-2 rounded-full transition-all duration-300 ${
                                           imgIndex === currentImageIndex
-                                            ? "bg-white"
-                                            : "bg-white/50"
+                                            ? "bg-white scale-125"
+                                            : "bg-white/60 hover:bg-white/80"
                                         }`}
                                       />
                                     ))}
@@ -355,45 +354,69 @@ export function Projects() {
                               )}
                             </div>
 
-                            {/* Technologies */}
-                            <div>
-                              <h4 className="text-lg font-semibold mb-3">
-                                Technologies Used
-                              </h4>
-                              <div className="flex flex-wrap gap-2">
-                                {project.technologies.map((tech) => (
-                                  <Badge key={tech.name} variant="secondary">
-                                    <span className="mr-1">{tech.icon}</span>
-                                    {tech.name}
-                                  </Badge>
-                                ))}
-                              </div>
-                            </div>
+                            {/* Content Section */}
+                            <div className="p-6 space-y-6">
+                              <DialogHeader className="space-y-3">
+                                <DialogTitle className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
+                                  {project.title}
+                                </DialogTitle>
+                                <DialogDescription className="text-sm sm:text-base text-muted-foreground leading-relaxed">
+                                  {project.description}
+                                </DialogDescription>
+                              </DialogHeader>
 
-                            {/* Links */}
-                            <div className="flex gap-3">
-                              <Button asChild>
-                                <Link
-                                  href={project.link}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
+                              {/* Technologies */}
+                              <div className="space-y-4">
+                                <h4 className="text-lg font-semibold flex items-center gap-2">
+                                  <Code className="w-5 h-5 text-primary" />
+                                  Technologies Used
+                                </h4>
+                                <div className="flex flex-wrap gap-2">
+                                  {project.technologies.map((tech) => (
+                                    <Badge
+                                      key={tech.name}
+                                      variant="secondary"
+                                      className="text-sm px-3 py-1 hover:bg-primary hover:text-primary-foreground transition-all duration-200 cursor-default"
+                                    >
+                                      <span className="mr-2">{tech.icon}</span>
+                                      {tech.name}
+                                    </Badge>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {/* Action Buttons */}
+                              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t border-border/50">
+                                <Button
+                                  asChild
+                                  className="flex-1 bg-primary hover:bg-primary/90 text-primary-foreground shadow-md hover:shadow-lg transition-all duration-300"
                                 >
-                                  <ExternalLink className="w-4 h-4 mr-2" />
-                                  Live Demo
-                                </Link>
-                              </Button>
-                              {project.github !== "#" && (
-                                <Button asChild variant="outline">
                                   <Link
-                                    href={project.github}
+                                    href={project.link}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                   >
-                                    <Github className="w-4 h-4 mr-2" />
-                                    Source Code
+                                    <ExternalLink className="w-4 h-4 mr-2" />
+                                    Live Demo
                                   </Link>
                                 </Button>
-                              )}
+                                {project.github !== "#" && (
+                                  <Button
+                                    asChild
+                                    variant="outline"
+                                    className="flex-1 border-primary/30 hover:bg-primary/10 hover:border-primary/50 transition-all duration-300"
+                                  >
+                                    <Link
+                                      href={project.github}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <Github className="w-4 h-4 mr-2" />
+                                      Source Code
+                                    </Link>
+                                  </Button>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </DialogContent>
