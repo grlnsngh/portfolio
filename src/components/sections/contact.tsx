@@ -117,64 +117,64 @@ export function Contact() {
   }
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden">
-      <div className="container mx-auto max-w-6xl relative z-10">
+    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-16 lg:py-20">
+      <div className="container mx-auto max-w-6xl relative z-10 px-4 md:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4">
+        <div className="text-center mb-8 md:mb-8">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 md:mb-4">
             <Sparkles className="w-4 h-4" />
             Let's Connect
           </div>
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-3">
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 md:mb-3">
             Ready to{" "}
             <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
               Work Together?
             </span>
           </h2>
-          <p className="text-muted-foreground text-base max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-lg md:text-base max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
             I'm always excited to discuss new opportunities, collaborate on
             projects, or just have a friendly chat about technology and
             innovation.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-6 lg:gap-8">
           {/* Contact Information */}
-          <div className="lg:col-span-1 space-y-4">
+          <div className="lg:col-span-1 space-y-4 md:space-y-4">
             <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
+              <CardHeader className="pb-4 px-4 md:px-6">
+                <CardTitle className="flex items-center gap-2 text-lg md:text-lg">
                   <MessageSquare className="w-5 h-5 text-primary" />
                   Contact Info
                 </CardTitle>
                 <CardDescription>Multiple ways to reach out</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 px-4 md:px-6">
                 {contactInfo.map((info, index) => (
                   <div
                     key={info.label}
-                    className="flex items-start gap-3 p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left"
+                    className="flex items-start gap-3 p-3 md:p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left min-h-[60px] md:min-h-0"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
-                    <div className="p-2 bg-primary/10 rounded-lg flex-shrink-0">
+                    <div className="p-2 md:p-2 bg-primary/10 rounded-lg flex-shrink-0">
                       <info.icon className="w-4 h-4 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-medium text-sm text-foreground">
+                      <h4 className="font-medium text-sm md:text-sm text-foreground">
                         {info.label}
                       </h4>
-                      <p className="text-sm text-muted-foreground mb-1">
+                      <p className="text-sm md:text-sm text-muted-foreground mb-1">
                         {info.description}
                       </p>
                       {info.href !== "#" ? (
                         <Link
                           href={info.href}
-                          className="text-sm text-primary hover:underline font-medium"
+                          className="text-sm md:text-sm text-primary hover:underline font-medium"
                         >
                           {info.value}
                         </Link>
                       ) : (
-                        <span className="text-sm text-foreground font-medium">
+                        <span className="text-sm md:text-sm text-foreground font-medium">
                           {info.value}
                         </span>
                       )}
@@ -186,19 +186,19 @@ export function Contact() {
 
             {/* Social Links */}
             <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-4">
+              <CardHeader className="pb-4 px-4 md:px-6">
                 <CardTitle className="text-lg">Follow Me</CardTitle>
                 <CardDescription>Connect on social platforms</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="flex gap-3">
+              <CardContent className="px-4 md:px-6">
+                <div className="flex gap-3 md:gap-3 justify-center lg:justify-start">
                   {socialLinks.map((social, index) => (
                     <Link
                       key={social.label}
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors duration-200 ${social.color} animate-in fade-in slide-in-from-bottom`}
+                      className={`p-3 md:p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors duration-200 ${social.color} animate-in fade-in slide-in-from-bottom min-w-[48px] md:min-w-0 h-12 md:h-auto flex items-center justify-center`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <social.icon className="w-5 h-5" />
@@ -210,10 +210,10 @@ export function Contact() {
             </Card>
 
             {/* Status Badge */}
-            <div className="flex justify-center">
+            <div className="flex justify-center pt-2">
               <Badge
                 variant="secondary"
-                className="px-4 py-2 bg-green-100 text-green-800 border-green-200"
+                className="px-4 py-2 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 text-sm md:text-sm min-h-[44px] md:min-h-0 flex items-center"
               >
                 <CheckCircle className="w-4 h-4 mr-2" />
                 Available for new projects
@@ -224,35 +224,35 @@ export function Contact() {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card className="shadow-xl border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="text-center pb-6">
-                <CardTitle className="text-2xl font-bold">
+              <CardHeader className="text-center pb-6 px-4 md:px-6">
+                <CardTitle className="text-2xl md:text-2xl font-bold">
                   Send a Message
                 </CardTitle>
-                <CardDescription className="text-base">
+                <CardDescription className="text-base md:text-base">
                   Fill out the form below and I'll get back to you as soon as
                   possible
                 </CardDescription>
               </CardHeader>
-              <CardContent className="px-6 pb-6">
+              <CardContent className="px-4 md:px-6 pb-6">
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-5"
+                    className="space-y-5 md:space-y-5"
                   >
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4">
                       <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium">
+                            <FormLabel className="text-sm md:text-sm font-medium">
                               Full Name
                             </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Your full name"
                                 {...field}
-                                className="h-11 text-sm focus:ring-2 focus:ring-primary/20"
+                                className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"
                               />
                             </FormControl>
                             <FormMessage />
@@ -264,14 +264,14 @@ export function Contact() {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-sm font-medium">
+                            <FormLabel className="text-sm md:text-sm font-medium">
                               Email Address
                             </FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="your.email@example.com"
                                 {...field}
-                                className="h-11 text-sm focus:ring-2 focus:ring-primary/20"
+                                className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"
                               />
                             </FormControl>
                             <FormMessage />
@@ -285,7 +285,7 @@ export function Contact() {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-sm font-medium">
+                          <FormLabel className="text-sm md:text-sm font-medium">
                             Message
                           </FormLabel>
                           <FormControl>
@@ -293,7 +293,7 @@ export function Contact() {
                               placeholder="Tell me about your project, ideas, or just say hello..."
                               {...field}
                               rows={5}
-                              className="text-sm resize-none focus:ring-2 focus:ring-primary/20"
+                              className="text-base md:text-sm resize-none focus:ring-2 focus:ring-primary/20 min-h-[120px] md:min-h-0"
                             />
                           </FormControl>
                           <FormMessage />
@@ -303,7 +303,7 @@ export function Contact() {
 
                     <Button
                       type="submit"
-                      className="w-full h-11 text-sm font-medium group"
+                      className="w-full h-12 md:h-11 text-base md:text-sm font-medium group"
                       disabled={form.formState.isSubmitting}
                     >
                       {form.formState.isSubmitting ? (
@@ -326,8 +326,8 @@ export function Contact() {
         </div>
 
         {/* Footer Message */}
-        <div className="text-center mt-8">
-          <p className="text-muted-foreground text-sm">
+        <div className="text-center mt-6 md:mt-8 px-4 md:px-0">
+          <p className="text-muted-foreground text-sm md:text-sm leading-relaxed">
             I typically respond within 24 hours. Looking forward to hearing from
             you! 🚀
           </p>
