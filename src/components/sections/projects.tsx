@@ -33,13 +33,18 @@ const projects = [
   {
     title: "Shamshersons - Quality Piano Works",
     description:
-      "Full-stack web application for a family-owned piano repair and restoration business, featuring responsive React frontend with dynamic content management. Includes admin dashboard for editing pages, contact forms via EmailJS, and image management with Firebase Storage. Built with React, Firebase (Auth, Firestore, Storage), TinyMCE for rich text editing, deployed on Cloudflare Pages.",
+      "Full-stack web application for a family-owned piano repair and restoration business, featuring modern React 19 architecture with custom hooks (e.g., useFirebaseContent), context providers for global state, and real-time data synchronization via Firebase. Includes drag-and-drop CMS with TinyMCE rich text editing, automated image optimization (Sharp), lazy loading, error boundaries, and SEO optimization (React Helmet). Demonstrates advanced component design, performance optimization, and production-ready build tooling.",
     technologies: [
       { name: "Full-Stack", icon: "🌐" },
-      { name: "React", icon: "⚛️" },
+      { name: "React 19", icon: "⚛️" },
+      { name: "Custom Hooks", icon: "🔗" },
+      { name: "Context API", icon: "📡" },
       { name: "Firebase", icon: "🔥" },
-      { name: "EmailJS", icon: "📧" },
+      { name: "Drag & Drop (@dnd-kit)", icon: "🎯" },
+      { name: "Image Optimization", icon: "🖼️" },
+      { name: "SEO (React Helmet)", icon: "�" },
       { name: "TinyMCE", icon: "📝" },
+      { name: "EmailJS", icon: "📧" },
       { name: "Cloudflare Pages", icon: "☁️" },
     ],
     images: [
@@ -59,11 +64,12 @@ const projects = [
   {
     title: "Elegant Wedding Website (Light & Dark Themes)",
     description:
-      "Luxury wedding invitation website for Livia & Jaskaran's celebration on October 23, 2025, featuring elegant design with gold accents in light theme and sophisticated dark theme, smooth animations, and interactive elements. Includes sections for events, venue details, RSVP form, countdown timer, and photo gallery, built to provide guests with a seamless digital experience reflecting Sikh wedding traditions.",
+      "Luxury wedding invitation website featuring React hooks for state management, Framer Motion animations, and dynamic theme switching (light/dark). Includes interactive RSVP form with Google Sheets integration, real-time countdown timer, and responsive photo gallery. Demonstrates advanced UI/UX design with smooth transitions, accessibility features, and cross-browser compatibility.",
     technologies: [
       { name: "React", icon: "⚛️" },
       { name: "React Router DOM", icon: "🛣️" },
       { name: "Styled Components", icon: "🎨" },
+      { name: "Framer Motion", icon: "🎭" },
       { name: "React Scroll", icon: "📜" },
       { name: "React Icons", icon: "🔗" },
       { name: "React Image Gallery", icon: "🖼️" },
@@ -82,7 +88,7 @@ const projects = [
   {
     title: "YouTube Video Downloader",
     description:
-      "Desktop application for downloading YouTube videos in various formats and qualities, featuring real-time progress tracking and download history. Built with Electron for cross-platform compatibility, React for UI, yt-dlp for video extraction, Node.js for backend, Python scripts for dependency installation.",
+      "Cross-platform desktop application built with Electron and React, featuring real-time progress tracking, download history, and multi-format video support. Integrates yt-dlp for extraction, ffmpeg for processing, and Python scripts for automation. Showcases full-stack development with Node.js backend, advanced UI components, and cross-platform compatibility.",
     technologies: [
       { name: "Electron", icon: "⚡" },
       { name: "React", icon: "⚛️" },

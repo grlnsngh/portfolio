@@ -23,6 +23,8 @@ const techCategories = [
       { name: "React", icon: "⚛️" },
       { name: "TypeScript", icon: "🔷" },
       { name: "Redux", icon: "🔄" },
+      { name: "Custom Hooks", icon: "🔗" },
+      { name: "Context API", icon: "📡" },
       { name: "Framer Motion", icon: "🎭" },
     ],
   },
@@ -31,6 +33,7 @@ const techCategories = [
     icon: Palette,
     technologies: [
       { name: "Tailwind CSS", icon: "🎨" },
+      { name: "Styled Components", icon: "🎨" },
       { name: "Bootstrap", icon: "🅱️" },
       { name: "Chakra UI", icon: "🌈" },
       { name: "Hero UI", icon: "🦸" },
@@ -43,6 +46,7 @@ const techCategories = [
     technologies: [
       { name: "HTML/CSS/JS", icon: "🌐" },
       { name: "Node.js", icon: "🟢" },
+      { name: "Firebase", icon: "🔥" },
       { name: "RESTful APIs", icon: "🔗" },
       { name: "UI/UX Design", icon: "🎯" },
     ],
@@ -54,6 +58,7 @@ const techCategories = [
       { name: "Webpack", icon: "📦" },
       { name: "Vite", icon: "⚡" },
       { name: "Babel", icon: "🏗️" },
+      { name: "Image Optimization", icon: "🖼️" },
       { name: "Husky & Lint Staged", icon: "🐶" },
     ],
   },
@@ -64,6 +69,7 @@ const techCategories = [
       { name: "Jest Testing", icon: "🧪" },
       { name: "Storybook", icon: "📚" },
       { name: "React Optimization", icon: "🚀" },
+      { name: "Error Handling", icon: "⚠️" },
       { name: "i18n Localization", icon: "🌍" },
     ],
   },
@@ -73,6 +79,7 @@ const techCategories = [
     technologies: [
       { name: "Git & GitHub", icon: "📚" },
       { name: "Vercel", icon: "▲" },
+      { name: "Cloudflare Pages", icon: "☁️" },
     ],
   },
 ];
