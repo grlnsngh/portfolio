@@ -56,9 +56,9 @@ const contactInfo = [
   {
     icon: MapPin,
     label: "Location",
-    value: "Remote / Worldwide",
+    value: "Remote / GTA, Canada",
     href: "#",
-    description: "Available for remote work",
+    description: "Prefer remote, open to hybrid and in-office",
   },
   {
     icon: Clock,
