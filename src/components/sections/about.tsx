@@ -41,7 +41,7 @@ const timeline = [
   },
   {
     year: "Jan-Mar 2022",
-    title: "Software Developer",
+    title: "Intermediate Software Developer",
     company: "Creative Realities",
     type: "work",
     description:
