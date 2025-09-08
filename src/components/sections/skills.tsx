@@ -26,6 +26,7 @@ const techCategories = [
       { name: "Custom Hooks", icon: "🔗" },
       { name: "Context API", icon: "📡" },
       { name: "Framer Motion", icon: "🎭" },
+      { name: "Asynchronous State Management", icon: "⚡" },
     ],
   },
   {
@@ -49,6 +50,7 @@ const techCategories = [
       { name: "Node.js", icon: "🟢" },
       { name: "Firebase", icon: "🔥" },
       { name: "RESTful APIs", icon: "🔗" },
+      { name: "Third-Party API Integration", icon: "🔗" },
       { name: "UI/UX Design", icon: "🎯" },
     ],
   },
@@ -61,6 +63,7 @@ const techCategories = [
       { name: "Babel", icon: "🏗️" },
       { name: "Image Optimization", icon: "🖼️" },
       { name: "Web Vitals", icon: "📈" },
+      { name: "Cross-Platform Development", icon: "🌍" },
       { name: "Husky & Lint Staged", icon: "🐶" },
     ],
   },

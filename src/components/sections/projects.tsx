@@ -93,16 +93,22 @@ const projects = [
   {
     title: "YouTube Video Downloader",
     description:
-      "Cross-platform desktop application built with Electron and React, featuring real-time progress tracking, download history, and multi-format video support. Integrates yt-dlp for extraction, ffmpeg for processing, and Python scripts for automation. Showcases full-stack development with Node.js backend, advanced UI components, and cross-platform compatibility.",
+      "Cross-platform desktop application built with Electron and React, featuring modular component architecture with custom hooks (useDownloader.js, useDownloadHistory.js) for state management and asynchronous operations. Includes real-time progress tracking, IPC communication via electronService.js, integration with yt-dlp and ffmpeg for video processing, and Python scripts for automation. Demonstrates advanced React patterns, UI/UX design with error handling, cross-platform compatibility, and full-stack development bridging front-end and Node.js backend.",
     technologies: [
       { name: "Electron", icon: "⚡" },
       { name: "React", icon: "⚛️" },
+      { name: "React Hooks", icon: "🔗" },
+      { name: "Electron IPC", icon: "🔄" },
       { name: "yt-dlp", icon: "📥" },
       { name: "ffmpeg", icon: "🎬" },
       { name: "Node.js", icon: "🟢" },
       { name: "Python", icon: "🐍" },
       { name: "JavaScript", icon: "💛" },
       { name: "HTML/CSS", icon: "🌐" },
+      { name: "CSS Modules", icon: "🎨" },
+      { name: "Asynchronous State Management", icon: "⚡" },
+      { name: "Cross-Platform Development", icon: "🌍" },
+      { name: "Third-Party API Integration", icon: "🔗" },
     ],
     images: ["/images/youtube-downloader-preview.webp"],
     imageHint: "YouTube downloader app",
