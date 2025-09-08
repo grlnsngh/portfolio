@@ -64,16 +64,21 @@ const projects = [
   {
     title: "Elegant Wedding Website (Light & Dark Themes)",
     description:
-      "Luxury wedding invitation website featuring React hooks for state management, Framer Motion animations, and dynamic theme switching (light/dark). Includes interactive RSVP form with Google Sheets integration, real-time countdown timer, and responsive photo gallery. Demonstrates advanced UI/UX design with smooth transitions, accessibility features, and cross-browser compatibility.",
+      "Luxury wedding invitation website built with React 19, featuring custom hooks (e.g., useImagePreloader for performance optimization), advanced state management with useState/useEffect, and real-time countdown timer. Includes lazy loading, web-vitals integration for performance monitoring, interactive modal galleries, Google Sheets API for RSVP, and cultural sensitivity for Sikh wedding traditions. Demonstrates modern React architecture, memory management, accessibility, error handling, and production-ready development practices with Jest and React Testing Library.",
     technologies: [
-      { name: "React", icon: "⚛️" },
+      { name: "React 19", icon: "⚛️" },
+      { name: "Custom Hooks", icon: "🔗" },
       { name: "React Router DOM", icon: "🛣️" },
       { name: "Styled Components", icon: "🎨" },
       { name: "Framer Motion", icon: "🎭" },
       { name: "React Scroll", icon: "📜" },
       { name: "React Icons", icon: "🔗" },
       { name: "React Image Gallery", icon: "🖼️" },
-      { name: "Google Sheets Integration", icon: "📊" },
+      { name: "Google Sheets API", icon: "📊" },
+      { name: "Web Vitals", icon: "📈" },
+      { name: "Jest", icon: "🧪" },
+      { name: "React Testing Library", icon: "🧪" },
+      { name: "CSS Modules", icon: "🎨" },
     ],
     images: [
       "/images/girl-side-wedding-invite.webp",

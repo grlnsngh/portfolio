@@ -34,6 +34,7 @@ const techCategories = [
     technologies: [
       { name: "Tailwind CSS", icon: "🎨" },
       { name: "Styled Components", icon: "🎨" },
+      { name: "CSS Modules", icon: "🎨" },
       { name: "Bootstrap", icon: "🅱️" },
       { name: "Chakra UI", icon: "🌈" },
       { name: "Hero UI", icon: "🦸" },
@@ -59,6 +60,7 @@ const techCategories = [
       { name: "Vite", icon: "⚡" },
       { name: "Babel", icon: "🏗️" },
       { name: "Image Optimization", icon: "🖼️" },
+      { name: "Web Vitals", icon: "📈" },
       { name: "Husky & Lint Staged", icon: "🐶" },
     ],
   },
@@ -67,6 +69,7 @@ const techCategories = [
     icon: TestTube,
     technologies: [
       { name: "Jest Testing", icon: "🧪" },
+      { name: "React Testing Library", icon: "🧪" },
       { name: "Storybook", icon: "📚" },
       { name: "React Optimization", icon: "🚀" },
       { name: "Error Handling", icon: "⚠️" },
