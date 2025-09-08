@@ -1,6 +1,6 @@
 {
-  "name": "ReactfolioX - Front-End Developer Portfolio",
-  "short_name": "ReactfolioX",
+  "name": "Portfolio - Front-End Developer Portfolio",
+  "short_name": "Portfolio",
   "description": "A portfolio for a front-end React developer showcasing modern web development skills",
   "start_url": "/",
   "display": "standalone",
