@@ -3,6 +3,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Portfolio",
@@ -91,6 +92,7 @@ export default function RootLayout({
           <div className="relative flex">{children}</div>
           <Toaster />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );
