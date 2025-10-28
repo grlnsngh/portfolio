@@ -28,6 +28,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 const projects = [
   {
@@ -217,6 +218,7 @@ export function Projects() {
   const [currentProjectImages, setCurrentProjectImages] = useState<string[]>(
     []
   );
+  const [isMounted, setIsMounted] = useState(false);
 
   // Touch gesture state
   const [touchStart, setTouchStart] = useState<number | null>(null);
@@ -225,6 +227,11 @@ export function Projects() {
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
+
+  useEffect(() => {
+    setIsMounted(true);
+    return () => setIsMounted(false);
+  }, []);
 
   // Show first 3 projects in main grid, rest in modal
   const highlightedProjects = projects.slice(0, 3);
@@ -988,112 +995,115 @@ export function Projects() {
       </div>
 
       {/* Fullscreen Image Viewer */}
-      {fullscreenImage && (
-        <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
-            {/* Close Button */}
-            <button
-              onClick={closeFullscreen}
-              className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
-            >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
-
-            {/* Main Image */}
-            <div
-              className="relative w-full h-full flex items-center justify-center"
-              onTouchStart={onTouchStart}
-              onTouchMove={onTouchMove}
-              onTouchEnd={() => onTouchEnd()}
-            >
-              <div className="relative w-full h-full flex items-center justify-center">
-                {currentProjectImages.map((image, index) => (
-                  <Image
-                    key={`fullscreen-${index}`}
-                    src={image}
-                    alt={`Fullscreen view ${index + 1}`}
-                    width={1920}
-                    height={1080}
-                    className={`absolute max-w-full max-h-full object-contain transition-all duration-500 ease-in-out ${
-                      index === fullscreenIndex
-                        ? "translate-x-0 opacity-100 scale-100"
-                        : index < fullscreenIndex
-                        ? "-translate-x-full opacity-0 scale-95"
-                        : "translate-x-full opacity-0 scale-95"
-                    }`}
-                    style={{
-                      zIndex: index === fullscreenIndex ? 10 : 5,
-                    }}
-                  />
-                ))}
-              </div>
-
-              {/* Navigation Arrows */}
-              {currentProjectImages.length > 1 && (
-                <>
-                  <button
-                    onClick={prevFullscreenImage}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+      {isMounted && fullscreenImage
+        ? createPortal(
+            <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4">
+              <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
+                {/* Close Button */}
+                <button
+                  onClick={closeFullscreen}
+                  className="absolute top-4 right-4 z-50 bg-black/40 hover:bg-black/50 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
-                    <ChevronLeft className="w-8 h-8" />
-                  </button>
-                  <button
-                    onClick={nextFullscreenImage}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
-                  >
-                    <ChevronRight className="w-8 h-8" />
-                  </button>
-                </>
-              )}
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                </button>
 
-              {/* Image Counter */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
-                {fullscreenIndex + 1} / {currentProjectImages.length}
-              </div>
-
-              {/* Thumbnail Navigation */}
-              {currentProjectImages.length > 1 && (
-                <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 max-w-2xl overflow-x-auto p-2">
-                  {currentProjectImages.map((img, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setFullscreenIndex(index);
-                        setFullscreenImage(img);
-                      }}
-                      className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
-                        index === fullscreenIndex
-                          ? "border-white scale-110"
-                          : "border-white/30 hover:border-white/60"
-                      }`}
-                    >
+                {/* Main Image */}
+                <div
+                  className="relative w-full h-full flex items-center justify-center"
+                  onTouchStart={onTouchStart}
+                  onTouchMove={onTouchMove}
+                  onTouchEnd={() => onTouchEnd()}
+                >
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    {currentProjectImages.map((image, index) => (
                       <Image
-                        src={img}
-                        alt={`Thumbnail ${index + 1}`}
-                        width={64}
-                        height={64}
-                        className="w-full h-full object-cover"
+                        key={`fullscreen-${index}`}
+                        src={image}
+                        alt={`Fullscreen view ${index + 1}`}
+                        width={1920}
+                        height={1080}
+                        className={`absolute max-w-full max-h-full object-contain transition-all duration-500 ease-in-out ${
+                          index === fullscreenIndex
+                            ? "translate-x-0 opacity-100 scale-100"
+                            : index < fullscreenIndex
+                            ? "-translate-x-full opacity-0 scale-95"
+                            : "translate-x-full opacity-0 scale-95"
+                        }`}
+                        style={{
+                          zIndex: index === fullscreenIndex ? 10 : 5,
+                        }}
                       />
-                    </button>
-                  ))}
+                    ))}
+                  </div>
+
+                  {/* Navigation Arrows */}
+                  {currentProjectImages.length > 1 && (
+                    <>
+                      <button
+                        onClick={prevFullscreenImage}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+                      >
+                        <ChevronLeft className="w-8 h-8" />
+                      </button>
+                      <button
+                        onClick={nextFullscreenImage}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+                      >
+                        <ChevronRight className="w-8 h-8" />
+                      </button>
+                    </>
+                  )}
+
+                  {/* Image Counter */}
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
+                    {fullscreenIndex + 1} / {currentProjectImages.length}
+                  </div>
+
+                  {/* Thumbnail Navigation */}
+                  {currentProjectImages.length > 1 && (
+                    <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 max-w-2xl overflow-x-auto p-2">
+                      {currentProjectImages.map((img, index) => (
+                        <button
+                          key={index}
+                          onClick={() => {
+                            setFullscreenIndex(index);
+                            setFullscreenImage(img);
+                          }}
+                          className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
+                            index === fullscreenIndex
+                              ? "border-white scale-110"
+                              : "border-white/30 hover:border-white/60"
+                          }`}
+                        >
+                          <Image
+                            src={img}
+                            alt={`Thumbnail ${index + 1}`}
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-cover"
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+              </div>
+            </div>,
+            document.body
+          )
+        : null}
     </TooltipProvider>
   );
 }
