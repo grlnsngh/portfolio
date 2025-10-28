@@ -31,6 +31,60 @@ import { useState, useEffect, useRef } from "react";
 
 const projects = [
   {
+    title: "Briza UI React - Modern Component Library",
+    description:
+      "A modern, lightweight React UI component library built with TypeScript and Vite. Features a comprehensive design system with theme support, accessible form components (Button, Input, Select, Checkbox, Radio), and extensive customization options. Includes 15+ production-ready components with tree-shaking support, zero dependencies (only React as peer), WCAG 2.1 AA accessibility standards, and complete Storybook documentation. Demonstrates advanced TypeScript patterns, component architecture, and modern build tooling.",
+    technologies: [
+      { name: "TypeScript", icon: "📘" },
+      { name: "React 18", icon: "⚛️" },
+      { name: "Vite", icon: "⚡" },
+      { name: "Storybook", icon: "📖" },
+      { name: "Theme System", icon: "🎨" },
+      { name: "Accessibility", icon: "♿" },
+      { name: "Tree-shakeable", icon: "🌳" },
+      { name: "CSS Modules", icon: "🎨" },
+      { name: "Design Tokens", icon: "🎯" },
+      { name: "Custom Hooks", icon: "🔗" },
+      { name: "ESLint", icon: "✅" },
+      { name: "Vitest", icon: "🧪" },
+      { name: "Playwright", icon: "🎭" },
+      { name: "NPM Package", icon: "📦" },
+    ],
+    images: ["/images/briza-ui-preview.svg"],
+    imageHint: "React UI component library",
+    link: "https://grlnsngh.github.io/briza-ui-react/",
+    github: "https://github.com/grlnsngh/briza-ui-react",
+    featured: true,
+    date: "2025",
+  },
+  {
+    title: "Briza UI Performance Analytics Dashboard",
+    description:
+      "A sophisticated React application designed to provide real-time performance monitoring and analytics for the briza-ui-react component library. Features comprehensive performance tracking with Core Web Vitals (LCP, CLS, FCP, INP, TTFB) monitoring, React Profiler API integration, memory usage tracking, and re-render detection. Includes interactive data visualization with Recharts (line charts, bar charts, treemaps), dark/light theme system, responsive mobile-first design, and demo mode with mock data. Built with React 19 concurrent features, TanStack Query for server state, Zustand for state management, and TypeScript strict mode.",
+    technologies: [
+      { name: "React 19", icon: "⚛️" },
+      { name: "TypeScript", icon: "📘" },
+      { name: "Vite", icon: "⚡" },
+      { name: "React Router", icon: "🛣️" },
+      { name: "TanStack Query", icon: "🔄" },
+      { name: "Zustand", icon: "🐻" },
+      { name: "Recharts", icon: "📊" },
+      { name: "Framer Motion", icon: "🎭" },
+      { name: "Web Vitals", icon: "📈" },
+      { name: "React Profiler", icon: "⏱️" },
+      { name: "Briza UI", icon: "🎨" },
+      { name: "Vitest", icon: "🧪" },
+      { name: "Performance API", icon: "🚀" },
+      { name: "Context API", icon: "📡" },
+    ],
+    images: ["/images/briza-dashboard-preview.svg"],
+    imageHint: "performance analytics dashboard",
+    link: "https://briza-ui-react-dashboard.vercel.app/",
+    github: "https://github.com/grlnsngh/briza-ui-react-dashboard",
+    featured: false,
+    date: "2025",
+  },
+  {
     title: "Shamshersons - Quality Piano Works",
     description:
       "Full-stack web application for a family-owned piano repair and restoration business, featuring modern React 19 architecture with custom hooks (e.g., useFirebaseContent), context providers for global state, and real-time data synchronization via Firebase. Includes drag-and-drop CMS with TinyMCE rich text editing, automated image optimization (Sharp), lazy loading, error boundaries, and SEO optimization (React Helmet). Demonstrates advanced component design, performance optimization, and production-ready build tooling.",
@@ -58,7 +112,7 @@ const projects = [
     imageHint: "piano repair website",
     link: "https://shamshersons.pages.dev/",
     github: "#",
-    featured: true,
+    featured: false,
     date: "2024",
   },
   {
@@ -117,6 +171,33 @@ const projects = [
     featured: false,
     date: "2024",
   },
+  {
+    title: "Pianoverse - Inventory Management App",
+    description:
+      "Comprehensive cross-platform mobile inventory management application for pianos, built with React Native and Expo. Features multi-category management (rentable, events, on sale, sold, warehouse), real-time data synchronization with Appwrite backend, password reset system hosted on GitHub Pages, and production-ready mobile architecture. Includes React Native Paper UI components, Redux Toolkit for state management, Expo Router for navigation, image picker and manipulation, push notifications, and date/time picker. Demonstrates full-stack mobile development, API integration, and cross-platform compatibility (iOS, Android, Web).",
+    technologies: [
+      { name: "React Native", icon: "📱" },
+      { name: "Expo", icon: "🔷" },
+      { name: "TypeScript", icon: "📘" },
+      { name: "Appwrite", icon: "🔥" },
+      { name: "Redux Toolkit", icon: "🔴" },
+      { name: "Expo Router", icon: "🛣️" },
+      { name: "React Native Paper", icon: "🎨" },
+      { name: "Tailwind CSS", icon: "🎨" },
+      { name: "Expo Image", icon: "🖼️" },
+      { name: "Expo Notifications", icon: "🔔" },
+      { name: "React Native Charts", icon: "📊" },
+      { name: "GitHub Pages", icon: "📄" },
+      { name: "Cross-Platform", icon: "🌍" },
+      { name: "Jest", icon: "🧪" },
+    ],
+    images: ["/images/pianoverse-preview.svg"],
+    imageHint: "piano inventory management mobile app",
+    link: "https://grlnsngh.github.io/pianoverse/",
+    github: "https://github.com/grlnsngh/pianoverse",
+    featured: false,
+    date: "2025",
+  },
 ];
 
 export function Projects() {
@@ -139,6 +220,10 @@ export function Projects() {
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
+
+  // Show first 3 projects in main grid, rest in modal
+  const highlightedProjects = projects.slice(0, 3);
+  const secondaryProjects = projects.slice(3);
 
   const nextImage = (projectTitle: string, imagesLength: number) => {
     setCurrentImageIndexes((prev) => ({
@@ -271,7 +356,7 @@ export function Projects() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {projects.map((project, index) => {
+            {highlightedProjects.map((project, index) => {
               const currentImageIndex = currentImageIndexes[project.title] || 0;
               const dialogImageIndex = dialogImageIndexes[project.title] || 0;
               const currentImage = project.images[currentImageIndex];
@@ -656,6 +741,156 @@ export function Projects() {
               );
             })}
           </div>
+
+          {secondaryProjects.length > 0 && (
+            <div className="mt-6 md:mt-8 flex justify-center">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-primary/20 px-5 hover:border-primary/40 hover:bg-primary/10 transition-all duration-300"
+                  >
+                    Browse additional projects
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-3xl w-[95vw]">
+                  <DialogHeader className="space-y-2">
+                    <DialogTitle>Additional Projects</DialogTitle>
+                    <DialogDescription>
+                      Quick snapshots of other builds without crowding the main
+                      layout.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    {secondaryProjects.map((project) => (
+                      <Tooltip key={`secondary-${project.title}`}>
+                        <TooltipTrigger asChild>
+                          <Card className="border border-border/60 bg-card/70 backdrop-blur overflow-hidden hover:border-primary/40 transition-all duration-300 cursor-help">
+                            <div className="flex flex-col sm:flex-row gap-4">
+                              {/* Project Image */}
+                              <div className="relative w-full sm:w-48 h-40 sm:h-auto flex-shrink-0">
+                                <Image
+                                  src={project.images[0]}
+                                  alt={`Preview of ${project.title}`}
+                                  width={400}
+                                  height={300}
+                                  className="w-full h-full object-cover"
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+                              </div>
+
+                              {/* Project Content */}
+                              <div className="p-4 flex-1 space-y-3">
+                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                  <h4 className="text-base font-semibold leading-tight">
+                                    {project.title}
+                                  </h4>
+                                  <Badge variant="secondary" className="w-fit">
+                                    {project.date}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                  {project.description}
+                                </p>
+                                <div className="flex flex-wrap gap-2">
+                                  {project.technologies
+                                    .slice(0, 3)
+                                    .map((tech) => (
+                                      <Badge
+                                        key={`${project.title}-${tech.name}`}
+                                        variant="outline"
+                                        className="text-xs border-primary/20"
+                                      >
+                                        <span className="mr-1">
+                                          {tech.icon}
+                                        </span>
+                                        {tech.name}
+                                      </Badge>
+                                    ))}
+                                  {project.technologies.length > 3 && (
+                                    <Badge
+                                      variant="outline"
+                                      className="text-xs border-dashed border-primary/30"
+                                    >
+                                      +{project.technologies.length - 3}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  <Button
+                                    asChild
+                                    size="sm"
+                                    className="bg-primary/90 text-primary-foreground hover:bg-primary"
+                                  >
+                                    <Link
+                                      href={project.link}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                    >
+                                      <ExternalLink className="w-4 h-4 mr-1" />
+                                      Live Demo
+                                    </Link>
+                                  </Button>
+                                  {project.github !== "#" && (
+                                    <Button
+                                      asChild
+                                      size="sm"
+                                      variant="outline"
+                                      className="border-primary/30 hover:border-primary/50"
+                                    >
+                                      <Link
+                                        href={project.github}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                      >
+                                        <Github className="w-4 h-4 mr-1" />
+                                        Source
+                                      </Link>
+                                    </Button>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </Card>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          side="bottom"
+                          className="max-w-md p-4 space-y-3"
+                        >
+                          <div>
+                            <p className="text-xs font-semibold text-primary mb-1">
+                              Description
+                            </p>
+                            <p className="text-xs leading-relaxed">
+                              {project.description}
+                            </p>
+                          </div>
+                          <div>
+                            <p className="text-xs font-semibold text-primary mb-2">
+                              Complete Tech Stack
+                            </p>
+                            <div className="flex flex-wrap gap-1.5">
+                              {project.technologies.map((tech) => (
+                                <Badge
+                                  key={`tooltip-${project.title}-${tech.name}`}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  <span className="mr-1">{tech.icon}</span>
+                                  {tech.name}
+                                </Badge>
+                              ))}
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    ))}
+                  </div>
+                </DialogContent>
+              </Dialog>
+            </div>
+          )}
 
           {/* Call to action */}
           <div className="text-center mt-8 md:mt-12">
