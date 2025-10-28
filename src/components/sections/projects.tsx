@@ -50,7 +50,7 @@ const projects = [
       { name: "Playwright", icon: "🎭" },
       { name: "NPM Package", icon: "📦" },
     ],
-    images: ["/images/briza-ui-preview.svg"],
+    images: ["/images/briza-ui-preview.webp"],
     imageHint: "React UI component library",
     link: "https://grlnsngh.github.io/briza-ui-react/",
     github: "https://github.com/grlnsngh/briza-ui-react",
@@ -77,7 +77,7 @@ const projects = [
       { name: "Performance API", icon: "🚀" },
       { name: "Context API", icon: "📡" },
     ],
-    images: ["/images/briza-dashboard-preview.svg"],
+    images: ["/images/briza-dashboard-preview.webp"],
     imageHint: "performance analytics dashboard",
     link: "https://briza-ui-react-dashboard.vercel.app/",
     github: "https://github.com/grlnsngh/briza-ui-react-dashboard",
@@ -191,7 +191,12 @@ const projects = [
       { name: "Cross-Platform", icon: "🌍" },
       { name: "Jest", icon: "🧪" },
     ],
-    images: ["/images/pianoverse-preview.svg"],
+    images: [
+      "/images/pianoverse-preview-1.webp",
+      "/images/pianoverse-preview-2.webp",
+      "/images/pianoverse-preview-3.webp",
+      "/images/pianoverse-preview-4.webp",
+    ],
     imageHint: "piano inventory management mobile app",
     link: "https://grlnsngh.github.io/pianoverse/",
     github: "https://github.com/grlnsngh/pianoverse",
@@ -398,7 +403,7 @@ export function Projects() {
                   {/* Image Gallery */}
                   <div
                     ref={touchRef}
-                    className="relative h-48 md:h-56 overflow-hidden cursor-pointer group/image"
+                    className="relative aspect-square overflow-hidden cursor-pointer group/image"
                     onClick={() =>
                       openFullscreen(project.images, dialogImageIndex)
                     }
@@ -415,7 +420,7 @@ export function Projects() {
                           src={image}
                           alt={`Screenshot of ${project.title} - ${index + 1}`}
                           width={1280}
-                          height={720}
+                          height={1280}
                           data-ai-hint={project.imageHint}
                           className={`absolute inset-0 object-cover w-full h-full transform transition-all duration-500 ease-in-out ${
                             index === currentImageIndex
@@ -574,7 +579,7 @@ export function Projects() {
                           <div className="relative">
                             {/* Enhanced Image Gallery in Dialog */}
                             <div
-                              className="relative h-48 sm:h-64 md:h-80 overflow-hidden rounded-t-lg"
+                              className="relative aspect-video overflow-hidden rounded-t-lg"
                               onTouchStart={onTouchStart}
                               onTouchMove={onTouchMove}
                               onTouchEnd={() =>
@@ -591,7 +596,7 @@ export function Projects() {
                                     }`}
                                     width={1280}
                                     height={720}
-                                    className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out ${
+                                    className={`absolute inset-0 w-full h-full object-contain bg-muted transition-all duration-500 ease-in-out ${
                                       index === dialogImageIndex
                                         ? "translate-x-0 opacity-100 scale-100"
                                         : index < dialogImageIndex
@@ -763,129 +768,200 @@ export function Projects() {
                     </DialogDescription>
                   </DialogHeader>
                   <div className="space-y-4">
-                    {secondaryProjects.map((project) => (
-                      <Tooltip key={`secondary-${project.title}`}>
-                        <TooltipTrigger asChild>
-                          <Card className="border border-border/60 bg-card/70 backdrop-blur overflow-hidden hover:border-primary/40 transition-all duration-300 cursor-help">
-                            <div className="flex flex-col sm:flex-row gap-4">
-                              {/* Project Image */}
-                              <div className="relative w-full sm:w-48 h-40 sm:h-auto flex-shrink-0">
-                                <Image
-                                  src={project.images[0]}
-                                  alt={`Preview of ${project.title}`}
-                                  width={400}
-                                  height={300}
-                                  className="w-full h-full object-cover"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-                              </div>
+                    {secondaryProjects.map((project) => {
+                      const secondaryImageIndex =
+                        currentImageIndexes[project.title] || 0;
 
-                              {/* Project Content */}
-                              <div className="p-4 flex-1 space-y-3">
-                                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                                  <h4 className="text-base font-semibold leading-tight">
-                                    {project.title}
-                                  </h4>
-                                  <Badge variant="secondary" className="w-fit">
-                                    {project.date}
-                                  </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                                  {project.description}
-                                </p>
-                                <div className="flex flex-wrap gap-2">
-                                  {project.technologies
-                                    .slice(0, 3)
-                                    .map((tech) => (
-                                      <Badge
-                                        key={`${project.title}-${tech.name}`}
-                                        variant="outline"
-                                        className="text-xs border-primary/20"
-                                      >
-                                        <span className="mr-1">
-                                          {tech.icon}
-                                        </span>
-                                        {tech.name}
-                                      </Badge>
+                      return (
+                        <Tooltip key={`secondary-${project.title}`}>
+                          <TooltipTrigger asChild>
+                            <Card className="border border-border/60 bg-card/70 backdrop-blur overflow-hidden hover:border-primary/40 transition-all duration-300 cursor-help">
+                              <div className="flex flex-col sm:flex-row gap-4">
+                                {/* Project Image */}
+                                <div className="relative w-full sm:w-48 aspect-square sm:aspect-auto flex-shrink-0">
+                                  <div className="relative w-full h-full">
+                                    {project.images.map((image, index) => (
+                                      <Image
+                                        key={`secondary-${project.title}-${index}`}
+                                        src={image}
+                                        alt={`Preview of ${project.title} - ${
+                                          index + 1
+                                        }`}
+                                        width={400}
+                                        height={400}
+                                        className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out ${
+                                          index === secondaryImageIndex
+                                            ? "translate-x-0 opacity-100 scale-100"
+                                            : index < secondaryImageIndex
+                                            ? "-translate-x-full opacity-0 scale-95"
+                                            : "translate-x-full opacity-0 scale-95"
+                                        }`}
+                                        style={{
+                                          zIndex:
+                                            index === secondaryImageIndex
+                                              ? 10
+                                              : 5,
+                                        }}
+                                      />
                                     ))}
-                                  {project.technologies.length > 3 && (
-                                    <Badge
-                                      variant="outline"
-                                      className="text-xs border-dashed border-primary/30"
-                                    >
-                                      +{project.technologies.length - 3}
-                                    </Badge>
+                                  </div>
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+
+                                  {/* Navigation for multiple images */}
+                                  {project.images.length > 1 && (
+                                    <>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          prevImage(
+                                            project.title,
+                                            project.images.length
+                                          );
+                                        }}
+                                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
+                                      >
+                                        <ChevronLeft className="w-4 h-4" />
+                                      </button>
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          nextImage(
+                                            project.title,
+                                            project.images.length
+                                          );
+                                        }}
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
+                                      >
+                                        <ChevronRight className="w-4 h-4" />
+                                      </button>
+
+                                      {/* Image Indicators */}
+                                      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1.5 z-20">
+                                        {project.images.map((_, imgIndex) => (
+                                          <div
+                                            key={imgIndex}
+                                            className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                                              imgIndex === secondaryImageIndex
+                                                ? "bg-white scale-125"
+                                                : "bg-white/60 hover:bg-white/80"
+                                            }`}
+                                          />
+                                        ))}
+                                      </div>
+                                    </>
                                   )}
                                 </div>
-                                <div className="flex flex-wrap gap-2">
-                                  <Button
-                                    asChild
-                                    size="sm"
-                                    className="bg-primary/90 text-primary-foreground hover:bg-primary"
-                                  >
-                                    <Link
-                                      href={project.link}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
+
+                                {/* Project Content */}
+                                <div className="p-4 flex-1 space-y-3">
+                                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                                    <h4 className="text-base font-semibold leading-tight">
+                                      {project.title}
+                                    </h4>
+                                    <Badge
+                                      variant="secondary"
+                                      className="w-fit"
                                     >
-                                      <ExternalLink className="w-4 h-4 mr-1" />
-                                      Live Demo
-                                    </Link>
-                                  </Button>
-                                  {project.github !== "#" && (
+                                      {project.date}
+                                    </Badge>
+                                  </div>
+                                  <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+                                    {project.description}
+                                  </p>
+                                  <div className="flex flex-wrap gap-2">
+                                    {project.technologies
+                                      .slice(0, 3)
+                                      .map((tech) => (
+                                        <Badge
+                                          key={`${project.title}-${tech.name}`}
+                                          variant="outline"
+                                          className="text-xs border-primary/20"
+                                        >
+                                          <span className="mr-1">
+                                            {tech.icon}
+                                          </span>
+                                          {tech.name}
+                                        </Badge>
+                                      ))}
+                                    {project.technologies.length > 3 && (
+                                      <Badge
+                                        variant="outline"
+                                        className="text-xs border-dashed border-primary/30"
+                                      >
+                                        +{project.technologies.length - 3}
+                                      </Badge>
+                                    )}
+                                  </div>
+                                  <div className="flex flex-wrap gap-2">
                                     <Button
                                       asChild
                                       size="sm"
-                                      variant="outline"
-                                      className="border-primary/30 hover:border-primary/50"
+                                      className="bg-primary/90 text-primary-foreground hover:bg-primary"
                                     >
                                       <Link
-                                        href={project.github}
+                                        href={project.link}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                       >
-                                        <Github className="w-4 h-4 mr-1" />
-                                        Source
+                                        <ExternalLink className="w-4 h-4 mr-1" />
+                                        Live Demo
                                       </Link>
                                     </Button>
-                                  )}
+                                    {project.github !== "#" && (
+                                      <Button
+                                        asChild
+                                        size="sm"
+                                        variant="outline"
+                                        className="border-primary/30 hover:border-primary/50"
+                                      >
+                                        <Link
+                                          href={project.github}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          <Github className="w-4 h-4 mr-1" />
+                                          Source
+                                        </Link>
+                                      </Button>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
+                            </Card>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="bottom"
+                            className="max-w-md p-4 space-y-3"
+                          >
+                            <div>
+                              <p className="text-xs font-semibold text-primary mb-1">
+                                Description
+                              </p>
+                              <p className="text-xs leading-relaxed">
+                                {project.description}
+                              </p>
                             </div>
-                          </Card>
-                        </TooltipTrigger>
-                        <TooltipContent
-                          side="bottom"
-                          className="max-w-md p-4 space-y-3"
-                        >
-                          <div>
-                            <p className="text-xs font-semibold text-primary mb-1">
-                              Description
-                            </p>
-                            <p className="text-xs leading-relaxed">
-                              {project.description}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-xs font-semibold text-primary mb-2">
-                              Complete Tech Stack
-                            </p>
-                            <div className="flex flex-wrap gap-1.5">
-                              {project.technologies.map((tech) => (
-                                <Badge
-                                  key={`tooltip-${project.title}-${tech.name}`}
-                                  variant="secondary"
-                                  className="text-xs"
-                                >
-                                  <span className="mr-1">{tech.icon}</span>
-                                  {tech.name}
-                                </Badge>
-                              ))}
+                            <div>
+                              <p className="text-xs font-semibold text-primary mb-2">
+                                Complete Tech Stack
+                              </p>
+                              <div className="flex flex-wrap gap-1.5">
+                                {project.technologies.map((tech) => (
+                                  <Badge
+                                    key={`tooltip-${project.title}-${tech.name}`}
+                                    variant="secondary"
+                                    className="text-xs"
+                                  >
+                                    <span className="mr-1">{tech.icon}</span>
+                                    {tech.name}
+                                  </Badge>
+                                ))}
+                              </div>
                             </div>
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    ))}
+                          </TooltipContent>
+                        </Tooltip>
+                      );
+                    })}
                   </div>
                 </DialogContent>
               </Dialog>
