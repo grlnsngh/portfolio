@@ -257,10 +257,12 @@ function CodeRain() {
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
     setIsVisible(true);
+    setMounted(true);
 
     // Mobile detection
     const checkMobile = () => {
@@ -471,7 +473,7 @@ export function Hero() {
               {/* Terminal Header */}
               <div
                 className={`px-4 py-2 flex items-center gap-2 ${
-                  theme === "dark"
+                  !mounted || theme === "dark"
                     ? "bg-gray-800"
                     : "bg-gray-200 border-b border-gray-300"
                 }`}
@@ -481,7 +483,9 @@ export function Hero() {
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
                 <span
                   className={`text-sm ml-2 font-mono ${
-                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    !mounted || theme === "dark"
+                      ? "text-gray-300"
+                      : "text-gray-700"
                   }`}
                 >
                   gurleen@portfolio ~
@@ -491,12 +495,14 @@ export function Hero() {
               {/* Terminal Body */}
               <div
                 className={`h-full p-4 font-mono text-sm overflow-hidden ${
-                  theme === "dark" ? "bg-gray-900" : "bg-gray-100"
+                  !mounted || theme === "dark" ? "bg-gray-900" : "bg-gray-100"
                 }`}
               >
                 <div
                   className={`mb-2 ${
-                    theme === "dark" ? "text-green-400" : "text-green-600"
+                    !mounted || theme === "dark"
+                      ? "text-green-400"
+                      : "text-green-600"
                   }`}
                 >
                   Welcome to Gurleen's Terminal
@@ -505,7 +511,9 @@ export function Hero() {
                 {/* Command History */}
                 <div
                   className={`space-y-1 ${
-                    theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    !mounted || theme === "dark"
+                      ? "text-gray-300"
+                      : "text-gray-700"
                   }`}
                 >
                   <div>
@@ -514,7 +522,9 @@ export function Hero() {
                   </div>
                   <div
                     className={`pl-4 ${
-                      theme === "dark" ? "text-yellow-300" : "text-yellow-600"
+                      !mounted || theme === "dark"
+                        ? "text-yellow-300"
+                        : "text-yellow-600"
                     }`}
                   >
                     gurleen-singh
@@ -526,7 +536,9 @@ export function Hero() {
                   </div>
                   <div
                     className={`pl-4 ${
-                      theme === "dark" ? "text-cyan-300" : "text-cyan-600"
+                      !mounted || theme === "dark"
+                        ? "text-cyan-300"
+                        : "text-cyan-600"
                     }`}
                   >
                     react/ nextjs/ typescript/ tailwind/
@@ -538,7 +550,9 @@ export function Hero() {
                   </div>
                   <div
                     className={`pl-4 ${
-                      theme === "dark" ? "text-green-300" : "text-green-600"
+                      !mounted || theme === "dark"
+                        ? "text-green-300"
+                        : "text-green-600"
                     }`}
                   >
                     Frontend Developer | React Specialist
@@ -561,7 +575,9 @@ export function Hero() {
                       speed={70}
                       repeat={Infinity}
                       className={
-                        theme === "dark" ? "text-white" : "text-gray-900"
+                        !mounted || theme === "dark"
+                          ? "text-white"
+                          : "text-gray-900"
                       }
                       cursor={true}
                     />
@@ -573,14 +589,18 @@ export function Hero() {
                   <span className="text-blue-400">$ </span>
                   <span
                     className={
-                      theme === "dark" ? "text-white" : "text-gray-900"
+                      !mounted || theme === "dark"
+                        ? "text-white"
+                        : "text-gray-900"
                     }
                   >
                     ./start-portfolio.sh
                   </span>
                   <span
                     className={`animate-pulse ml-1 ${
-                      theme === "dark" ? "text-white" : "text-gray-900"
+                      !mounted || theme === "dark"
+                        ? "text-white"
+                        : "text-gray-900"
                     }`}
                   >
                     █
@@ -593,7 +613,7 @@ export function Hero() {
                 <Badge
                   variant="secondary"
                   className={`shadow-lg ${
-                    theme === "dark"
+                    !mounted || theme === "dark"
                       ? "bg-gray-800 text-green-400 border-green-400/20"
                       : "bg-white text-green-600 border-green-600/20"
                   }`}
