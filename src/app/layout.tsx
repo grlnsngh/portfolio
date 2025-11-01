@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,16 +8,6 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Portfolio",
   description: "A portfolio for a front-end React developer.",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-    userScalable: true,
-  },
-  themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "hsl(220 15% 96%)" },
-    { media: "(prefers-color-scheme: dark)", color: "hsl(220 9% 23%)" },
-  ],
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -26,6 +16,17 @@ export const metadata: Metadata = {
   formatDetection: {
     telephone: false,
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "hsl(220 15% 96%)" },
+    { media: "(prefers-color-scheme: dark)", color: "hsl(220 9% 23%)" },
+  ],
 };
 
 export default function RootLayout({
