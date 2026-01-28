@@ -390,7 +390,7 @@ export function Hero() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
             <Link
-              href="https://docs.google.com/document/d/1II-c7dAnWmCHFwufcvelgGKLqrZeAQwc/edit?usp=sharing&ouid=113873223317665441845&rtpof=true&sd=true"
+              href="https://drive.google.com/file/d/11HFzrpw2mk3vBorxbhvaeMrmte2Uw8ys/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
             >
