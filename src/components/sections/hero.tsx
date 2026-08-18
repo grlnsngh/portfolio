@@ -634,7 +634,7 @@ export function Hero() {
               style={{ animationDelay: "1s" }}
             />
             <div
-              className="absolute top-1/2 -right-8 w-4 h-4 bg-primary/20 rounded-full animate-pulse"
+              className="hidden sm:block absolute top-1/2 -right-8 w-4 h-4 bg-primary/20 rounded-full animate-pulse"
               style={{ animationDelay: "1.5s" }}
             />
           </div>
