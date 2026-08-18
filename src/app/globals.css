@@ -208,8 +208,11 @@
 
 /* Mobile app-like experience */
 @media (max-width: 767px) {
-  /* Ensure sections take full viewport height */
-  section {
+  /* Ensure sections take full viewport height. fullpage.js's
+     responsiveWidth hands sections off as plain elements with the
+     `.section` class below this breakpoint, so match both selectors. */
+  section,
+  .section {
     min-height: 100vh !important;
     min-height: 100dvh !important; /* Use dynamic viewport height on mobile */
   }
@@ -222,6 +225,16 @@
   /* Adjust main content for mobile nav */
   main {
     padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  /* scrollIntoView() targets these ids directly (mobile nav taps); without
+     this the sticky header (h-16 = 64px) covers each section's heading. */
+  #hero,
+  #about,
+  #projects,
+  #skills,
+  #contact {
+    scroll-margin-top: 4rem;
   }
 
   /* Smooth scrolling between sections */

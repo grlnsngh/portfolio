@@ -157,11 +157,15 @@ export function About() {
               </Card>
 
               {/* Floating Stats */}
-              <div className="absolute -top-4 -right-2 sm:-right-4 lg:-right-8 space-y-2">
+              {/* Below lg these wrap into a normal 2-up grid so they can't
+                  render past the viewport edge on narrow phones; the
+                  absolute floating layout is restored at lg where there's
+                  room beside the card. */}
+              <div className="mt-4 grid grid-cols-2 gap-2 lg:mt-0 lg:absolute lg:-top-4 lg:-right-8 lg:block lg:space-y-2">
                 {stats.map((stat, index) => (
                   <Card
                     key={stat.label}
-                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200 mr-2 sm:mr-0"
+                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-2">

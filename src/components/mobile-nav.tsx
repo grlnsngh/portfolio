@@ -21,7 +21,7 @@ export function MobileNav({ activeSection, onSectionChange }: MobileNavProps) {
   };
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t">
+    <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t">
       <div className="flex items-center justify-around px-2 py-2">
         {navLinks.map((link) => (
           <button
