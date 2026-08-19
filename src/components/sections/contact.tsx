@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -92,6 +93,7 @@ const socialLinks = [
 
 export function Contact() {
   const { toast } = useToast();
+  const honeypotRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -103,17 +105,33 @@ export function Contact() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("New contact form submission:", values);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...values,
+          website: honeypotRef.current?.value ?? "",
+        }),
+      });
 
-    // Simulate network delay
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+      if (!res.ok) {
+        throw new Error("Request failed");
+      }
 
-    toast({
-      title: "Message Sent! 🎉",
-      description:
-        "Thank you for reaching out. I'll get back to you within 24 hours.",
-    });
-    form.reset();
+      toast({
+        title: "Message sent",
+        description:
+          "Thank you for reaching out. I'll get back to you within 24 hours.",
+      });
+      form.reset();
+    } catch {
+      toast({
+        variant: "destructive",
+        title: "Could not send message",
+        description: "Please email grlnsngh@gmail.com directly instead.",
+      });
+    }
   }
 
   return (
@@ -239,6 +257,15 @@ export function Contact() {
                     onSubmit={form.handleSubmit(onSubmit)}
                     className="space-y-5 md:space-y-5"
                   >
+                    <input
+                      ref={honeypotRef}
+                      type="text"
+                      name="website"
+                      tabIndex={-1}
+                      autoComplete="off"
+                      aria-hidden="true"
+                      className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden"
+                    />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4">
                       <FormField
                         control={form.control}
