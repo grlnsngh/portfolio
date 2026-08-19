@@ -79,7 +79,7 @@ const timeline = [
 
 export function About() {
   return (
-    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
+    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-safe-center">
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Career Timeline Section */}
