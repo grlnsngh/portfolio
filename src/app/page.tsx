@@ -9,8 +9,21 @@ import { Skills } from "@/components/sections/skills";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/mobile-nav";
+import { cn } from "@/lib/utils";
+
+// Below this width fullpage.js disables itself (see responsiveWidth below)
+// and the same sections become a normal, natively-scrolling document.
+const MOBILE_BREAKPOINT = 768;
 
 const anchors = ["hero", "about", "projects", "skills", "contact"];
+
+const sections = [
+  { id: "hero", Component: Hero, tinted: false },
+  { id: "about", Component: About, tinted: true },
+  { id: "projects", Component: Projects, tinted: false },
+  { id: "skills", Component: Skills, tinted: true },
+  { id: "contact", Component: Contact, tinted: false },
+];
 
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -19,7 +32,7 @@ const FullpageWrapper = () => {
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
     };
 
     checkMobile();
@@ -27,11 +40,12 @@ const FullpageWrapper = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Track active section on mobile scroll
+  // Below the breakpoint fullpage.js hands off to native scrolling, so
+  // active-section tracking has to come from IntersectionObserver instead
+  // of fullpage's onLeave callback.
   useEffect(() => {
     if (!isMobile) return;
 
-    const sections = ["hero", "about", "projects", "skills", "contact"];
     const observerOptions = {
       root: null,
       rootMargin: "-50% 0px -50% 0px",
@@ -41,15 +55,13 @@ const FullpageWrapper = () => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const sectionId = entry.target.id;
-          setActiveSection(sectionId);
+          setActiveSection(entry.target.id);
         }
       });
     }, observerOptions);
 
-    // Observe all sections
-    sections.forEach((section) => {
-      const element = document.getElementById(section);
+    sections.forEach(({ id }) => {
+      const element = document.getElementById(id);
       if (element) {
         observer.observe(element);
       }
@@ -77,53 +89,11 @@ const FullpageWrapper = () => {
     }
   };
 
-  if (isMobile) {
-    return (
-      <div className="flex flex-col min-h-screen">
-        <Header
-          activeSection={activeSection}
-          onSectionChange={handleSectionChange}
-        />
-        <main className="flex-1 overflow-y-auto">
-          <section
-            id="hero"
-            className="min-h-screen flex items-center justify-center"
-          >
-            <Hero />
-          </section>
-          <section
-            id="about"
-            className="min-h-screen flex items-center justify-center bg-secondary/20"
-          >
-            <About />
-          </section>
-          <section
-            id="projects"
-            className="min-h-screen flex items-center justify-center"
-          >
-            <Projects />
-          </section>
-          <section
-            id="skills"
-            className="min-h-screen flex items-center justify-center bg-secondary/20"
-          >
-            <Skills />
-          </section>
-          <section
-            id="contact"
-            className="min-h-screen flex items-center justify-center"
-          >
-            <Contact />
-          </section>
-        </main>
-        <MobileNav
-          activeSection={activeSection}
-          onSectionChange={handleSectionChange}
-        />
-      </div>
-    );
-  }
-
+  // A single tree serves both breakpoints. Below MOBILE_BREAKPOINT,
+  // fullpage.js's `responsiveWidth` disables the plugin and these become
+  // plain, natively-scrolling <div> sections; Sidebar/MobileNav visibility
+  // is handled purely by CSS (md: variants) so there is no server/client
+  // markup mismatch and no duplicate tree to keep in sync.
   return (
     <>
       <Sidebar
@@ -135,40 +105,45 @@ const FullpageWrapper = () => {
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
         />
-        <ReactFullpage
-          anchors={anchors}
-          onLeave={onLeave}
-          credits={{ enabled: false }}
-          licenseKey={"gplv3-license"}
-          navigation={true}
-          render={({ state, fullpageApi: api }) => {
-            fullpageApiRef.current = api;
-            // Expose API to window for components that need it
-            if (typeof window !== "undefined") {
-              (window as any).fullpage_api = api;
-            }
-            return (
-              <ReactFullpage.Wrapper>
-                <div className="section min-h-screen flex items-center justify-center">
-                  <Hero />
-                </div>
-                <div className="section min-h-screen flex items-center justify-center bg-secondary/20">
-                  <About />
-                </div>
-                <div className="section min-h-screen flex items-center justify-center">
-                  <Projects />
-                </div>
-                <div className="section min-h-screen flex items-center justify-center bg-secondary/20">
-                  <Skills />
-                </div>
-                <div className="section min-h-screen flex items-center justify-center">
-                  <Contact />
-                </div>
-              </ReactFullpage.Wrapper>
-            );
-          }}
-        />
+        <main>
+          <ReactFullpage
+            anchors={anchors}
+            onLeave={onLeave}
+            credits={{ enabled: false }}
+            licenseKey={"gplv3-license"}
+            navigation={true}
+            scrollOverflow={true}
+            responsiveWidth={MOBILE_BREAKPOINT}
+            render={({ fullpageApi: api }) => {
+              fullpageApiRef.current = api;
+              // Expose API to window for components that need it
+              if (typeof window !== "undefined") {
+                (window as any).fullpage_api = api;
+              }
+              return (
+                <ReactFullpage.Wrapper>
+                  {sections.map(({ id, Component, tinted }) => (
+                    <div
+                      key={id}
+                      id={id}
+                      className={cn(
+                        "section min-h-screen flex items-center justify-center",
+                        tinted && "bg-secondary/20"
+                      )}
+                    >
+                      <Component />
+                    </div>
+                  ))}
+                </ReactFullpage.Wrapper>
+              );
+            }}
+          />
+        </main>
       </div>
+      <MobileNav
+        activeSection={activeSection}
+        onSectionChange={handleSectionChange}
+      />
     </>
   );
 };

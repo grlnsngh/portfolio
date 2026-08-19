@@ -356,7 +356,7 @@ export function Projects() {
 
   return (
     <TooltipProvider>
-      <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
+      <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-safe-center">
         <div className="w-full">
           <div className="text-center mb-6 md:mb-12">
             <h2 className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">

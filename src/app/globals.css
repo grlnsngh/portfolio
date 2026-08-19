@@ -206,10 +206,24 @@
   transition: transform 0.3s ease-out;
 }
 
+/* Like `items-center`, but when the centered content is taller than this
+   container it aligns to the start instead of overflowing symmetrically
+   off both edges. Tailwind's `items-center` utility doesn't support
+   arbitrary values, so this can't be expressed as `items-[safe_center]`.
+   Needed on fullpage.js's scrollOverflow containers: those can only be
+   scrolled forward from 0, so an even top/bottom overflow permanently
+   hides whatever spills above the fold. */
+.items-safe-center {
+  align-items: safe center;
+}
+
 /* Mobile app-like experience */
 @media (max-width: 767px) {
-  /* Ensure sections take full viewport height */
-  section {
+  /* Ensure sections take full viewport height. fullpage.js's
+     responsiveWidth hands sections off as plain elements with the
+     `.section` class below this breakpoint, so match both selectors. */
+  section,
+  .section {
     min-height: 100vh !important;
     min-height: 100dvh !important; /* Use dynamic viewport height on mobile */
   }
@@ -222,6 +236,16 @@
   /* Adjust main content for mobile nav */
   main {
     padding-bottom: 80px; /* Space for bottom nav */
+  }
+
+  /* scrollIntoView() targets these ids directly (mobile nav taps); without
+     this the sticky header (h-16 = 64px) covers each section's heading. */
+  #hero,
+  #about,
+  #projects,
+  #skills,
+  #contact {
+    scroll-margin-top: 4rem;
   }
 
   /* Smooth scrolling between sections */

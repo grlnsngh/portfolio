@@ -79,7 +79,7 @@ const timeline = [
 
 export function About() {
   return (
-    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-center">
+    <div className="container mx-auto px-6 md:px-10 py-6 md:py-12 h-full flex items-safe-center">
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Career Timeline Section */}
@@ -157,11 +157,15 @@ export function About() {
               </Card>
 
               {/* Floating Stats */}
-              <div className="absolute -top-4 -right-2 sm:-right-4 lg:-right-8 space-y-2">
+              {/* Below lg these wrap into a normal 2-up grid so they can't
+                  render past the viewport edge on narrow phones; the
+                  absolute floating layout is restored at lg where there's
+                  room beside the card. */}
+              <div className="mt-4 grid grid-cols-2 gap-2 lg:mt-0 lg:absolute lg:-top-4 lg:-right-8 lg:block lg:space-y-2">
                 {stats.map((stat, index) => (
                   <Card
                     key={stat.label}
-                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200 mr-2 sm:mr-0"
+                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="flex items-center gap-2">
