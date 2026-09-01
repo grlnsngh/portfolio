@@ -2,7 +2,7 @@
 
 A **cutting-edge, mobile-first portfolio website** built with Next.js 15, featuring advanced mobile optimizations, PWA capabilities, and enterprise-level performance enhancements.
 
-![Portfolio Preview](https://img.shields.io/badge/Next.js-15.3.3-black)
+![Portfolio Preview](https://img.shields.io/badge/Next.js-15-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4.1-38B2AC)
 ![PWA](https://img.shields.io/badge/PWA-Ready-green)
@@ -76,7 +76,7 @@ A **cutting-edge, mobile-first portfolio website** built with Next.js 15, featur
 
 ### **Core Framework**
 
-- **Next.js 15.3.3** - React framework with App Router
+- **Next.js 15** - React framework with App Router
 - **React 18.3.1** - UI library with concurrent features
 - **TypeScript 5.0** - Type-safe JavaScript
 
@@ -165,7 +165,7 @@ portfolio/
 
 4. **Open your browser**
    ```
-   http://localhost:9002
+   http://localhost:9000
    ```
 
 ### Build for Production
@@ -185,7 +185,7 @@ npm run lint     # Run ESLint
 npm run typecheck # Run TypeScript type checking
 ```
 
-## � Mobile Testing
+## 📱 Mobile Testing
 
 ### Device Testing
 

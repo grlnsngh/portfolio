@@ -67,9 +67,6 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-  .section {
-    /* Let fullpage.js handle the styling */
-  }
 }
 
 /* Fullpage.js Navigation Dots Styling */

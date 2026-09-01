@@ -14,20 +14,9 @@ const nextConfig: NextConfig = {
   images: {
     // Serve modern formats to browsers that advertise support.
     formats: ['image/avif', 'image/webp'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+    // All images are local to /public. remotePatterns for placehold.co and
+    // picsum.photos were left over from scaffolding and nothing referenced
+    // them; each one is a host the optimizer would fetch and re-serve.
   },
   // Trims the icon barrel import down to only the icons actually used
   // instead of pulling the whole module graph in development.
