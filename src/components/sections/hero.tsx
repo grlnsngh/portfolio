@@ -1,7 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
 import {
   Github,
   Linkedin,
@@ -14,17 +13,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
 import { TypeAnimation } from "react-type-animation";
 import { useTheme } from "next-themes";
-
-declare global {
-  interface Window {
-    fullpage_api?: {
-      moveTo: (section: string) => void;
-    };
-  }
-}
 
 const highlights = [
   { icon: Code, text: "Clean Code", color: "text-blue-500" },
@@ -112,7 +102,7 @@ function CodeRain() {
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    const { width, height } = canvas;
+    const { width, height } = canvas.getBoundingClientRect();
 
     // Fewer drops for mobile, more for desktop
     const dropCount = width < 768 ? 15 : width < 1024 ? 25 : 35;
@@ -124,72 +114,74 @@ function CodeRain() {
       y: Math.random() * height,
       speed: 1 + Math.random() * 2, // Increased speed from 0.5-2 to 1-3
       opacity: 0.1 + Math.random() * 0.3, // Very low opacity
-      size: 10 + Math.random() * 4, // Smaller text
+      size: 10 + Math.floor(Math.random() * 5), // Smaller text
     }));
+  }, []);
+
+  // Resolving --primary is a forced style read, so it is done once per
+  // frame (and re-read when the theme flips) instead of once per drop.
+  const colorRef = useRef<string>("hsl(217 91% 60%)");
+
+  const readPrimaryColor = useCallback(() => {
+    const value = getComputedStyle(document.documentElement)
+      .getPropertyValue("--primary")
+      .trim();
+    colorRef.current = value ? `hsl(${value})` : "hsl(217 91% 60%)";
   }, []);
 
   const animate = useCallback(
     (currentTime: number) => {
-      if (!canvasRef.current || !isVisibleRef.current) {
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
+      animationRef.current = requestAnimationFrame(animate);
+
+      if (!canvasRef.current || !isVisibleRef.current) return;
+
+      // Throttle animation to 30fps for better performance
+      if (currentTime - lastTimeRef.current < 33) return;
 
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Throttle animation to 30fps for better performance
-      if (currentTime - lastTimeRef.current < 33) {
-        animationRef.current = requestAnimationFrame(animate);
-        return;
-      }
+      // Advance positions by elapsed time rather than a fixed step, so the
+      // rain falls at the same rate whichever frame rate we actually get.
+      const delta = lastTimeRef.current
+        ? Math.min((currentTime - lastTimeRef.current) / 33, 3)
+        : 1;
       lastTimeRef.current = currentTime;
 
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const { width, height } = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, width, height);
 
-      // Update and draw drops
+      ctx.fillStyle = colorRef.current;
+      ctx.textAlign = "center";
+
+      let lastSize = 0;
+
       dropsRef.current.forEach((drop) => {
-        // Update position
-        drop.y += drop.speed;
+        drop.y += drop.speed * delta;
 
         // Reset drop when it goes off screen
-        if (drop.y > canvas.height + 20) {
+        if (drop.y > height + 20) {
           drop.y = -20;
-          drop.x = Math.random() * canvas.width;
+          drop.x = Math.random() * width;
           drop.char = codeChars[Math.floor(Math.random() * codeChars.length)];
           drop.opacity = 0.1 + Math.random() * 0.3;
         }
 
-        // Set text style based on theme
-        let primaryColor;
-        try {
-          primaryColor = getComputedStyle(document.documentElement)
-            .getPropertyValue("--primary")
-            .trim();
-          // Ensure we have a valid color value
-          if (!primaryColor) {
-            primaryColor = theme === "dark" ? "217 91% 60%" : "217 91% 60%";
-          }
-        } catch (error) {
-          // Fallback color
-          primaryColor = "217 91% 60%";
+        ctx.globalAlpha = drop.opacity;
+        // Assigning ctx.font re-parses the font shorthand, so only do it
+        // when the size actually changes.
+        if (drop.size !== lastSize) {
+          ctx.font = `${drop.size}px monospace`;
+          lastSize = drop.size;
         }
 
-        ctx.fillStyle = `hsl(${primaryColor})`;
-        ctx.globalAlpha = drop.opacity;
-        ctx.font = `${drop.size}px monospace`;
-        ctx.textAlign = "center";
-
-        // Draw the character
         ctx.fillText(drop.char, drop.x, drop.y);
       });
 
       ctx.globalAlpha = 1;
-      animationRef.current = requestAnimationFrame(animate);
     },
-    [theme],
+    [],
   );
 
   const handleResize = useCallback(() => {
@@ -198,9 +190,13 @@ function CodeRain() {
     const canvas = canvasRef.current;
     const rect = canvas.getBoundingClientRect();
 
-    // Set canvas size to match container
-    canvas.width = rect.width;
-    canvas.height = rect.height;
+    // Back the canvas with the device pixel ratio so the glyphs are not
+    // upscaled from a CSS-pixel-sized bitmap on HiDPI screens, and scale the
+    // context so drawing code can keep working in CSS pixels.
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(rect.width * dpr);
+    canvas.height = Math.round(rect.height * dpr);
+    canvas.getContext("2d")?.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Reinitialize drops with new dimensions
     initializeDrops();
@@ -210,14 +206,20 @@ function CodeRain() {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Visitors who ask for reduced motion get a static, empty backdrop
+    // rather than a permanently running rAF loop.
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (reducedMotion.matches) return;
+
     // Initial setup
     handleResize();
+    readPrimaryColor();
 
     // Start animation
     animationRef.current = requestAnimationFrame(animate);
 
     // Setup resize listener with debouncing
-    let resizeTimeout: NodeJS.Timeout;
+    let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
     const debouncedResize = () => {
       clearTimeout(resizeTimeout);
       resizeTimeout = setTimeout(handleResize, 150);
@@ -240,7 +242,13 @@ function CodeRain() {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearTimeout(resizeTimeout);
     };
-  }, [animate, handleResize]);
+  }, [animate, handleResize, readPrimaryColor]);
+
+  // next-themes swaps the `.dark` class, which changes --primary; re-read it
+  // once here rather than on every drawn glyph.
+  useEffect(() => {
+    readPrimaryColor();
+  }, [theme, readPrimaryColor]);
 
   return (
     <canvas
