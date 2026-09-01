@@ -277,6 +277,12 @@ export function Contact() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
+                    // zod owns validation and renders the styled FormMessage.
+                    // Without this, type="email" makes the browser block
+                    // submit with its own native bubble and the styled
+                    // message for that field never appears, while the other
+                    // fields still show theirs.
+                    noValidate
                     className="space-y-5 md:space-y-5"
                   >
                     <input
