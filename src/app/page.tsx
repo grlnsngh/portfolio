@@ -10,12 +10,20 @@ import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/mobile-nav";
 import { cn } from "@/lib/utils";
+import type { fullpageApi, Item } from "@fullpage/react-fullpage";
 
 // Below this width fullpage.js disables itself (see responsiveWidth below)
 // and the same sections become a normal, natively-scrolling document.
 const MOBILE_BREAKPOINT = 768;
 
 const anchors = ["hero", "about", "projects", "skills", "contact"];
+
+// fullpage.js refuses to share a name between an `anchors` entry and an
+// element id — it logs "data-anchor tags can not have the same value as any
+// `id` element" for every section and the two navigation mechanisms fight
+// over the hash. The anchors stay bare (so URLs remain /#about) and the
+// elements the mobile code path looks up get their own prefixed ids.
+const sectionElementId = (anchor: string) => `section-${anchor}`;
 
 const sections = [
   { id: "hero", Component: Hero, tinted: false },
@@ -28,16 +36,16 @@ const sections = [
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [isMobile, setIsMobile] = useState(false);
-  const fullpageApiRef = useRef<any>(null);
+  const fullpageApiRef = useRef<fullpageApi | null>(null);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
+    const query = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const update = (e: MediaQueryList | MediaQueryListEvent) =>
+      setIsMobile(e.matches);
 
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    update(query);
+    query.addEventListener("change", update);
+    return () => query.removeEventListener("change", update);
   }, []);
 
   // Below the breakpoint fullpage.js hands off to native scrolling, so
@@ -55,13 +63,13 @@ const FullpageWrapper = () => {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
+          setActiveSection(entry.target.id.replace(/^section-/, ""));
         }
       });
     }, observerOptions);
 
     sections.forEach(({ id }) => {
-      const element = document.getElementById(id);
+      const element = document.getElementById(sectionElementId(id));
       if (element) {
         observer.observe(element);
       }
@@ -72,15 +80,15 @@ const FullpageWrapper = () => {
     };
   }, [isMobile]);
 
-  const onLeave = (origin: any, destination: any, direction: any) => {
-    setActiveSection(destination.anchor);
+  const onLeave = (_origin: Item, destination: Item) => {
+    setActiveSection(String(destination.anchor));
   };
 
   const handleSectionChange = (section: string) => {
     if (isMobile) {
       setActiveSection(section);
       // Smooth scroll to section on mobile
-      const element = document.getElementById(section);
+      const element = document.getElementById(sectionElementId(section));
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
@@ -118,14 +126,14 @@ const FullpageWrapper = () => {
               fullpageApiRef.current = api;
               // Expose API to window for components that need it
               if (typeof window !== "undefined") {
-                (window as any).fullpage_api = api;
+                window.fullpage_api = api;
               }
               return (
                 <ReactFullpage.Wrapper>
                   {sections.map(({ id, Component, tinted }) => (
                     <div
                       key={id}
-                      id={id}
+                      id={sectionElementId(id)}
                       className={cn(
                         "section min-h-screen flex items-center justify-center",
                         tinted && "bg-secondary/20"

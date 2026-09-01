@@ -285,7 +285,7 @@ export function Hero() {
   const handleContactClick = () => {
     if (isMobile) {
       // Mobile: smooth scroll to contact section
-      const element = document.getElementById("contact");
+      const element = document.getElementById("section-contact");
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
@@ -300,7 +300,7 @@ export function Hero() {
   const scrollToNext = () => {
     if (isMobile) {
       // Mobile: smooth scroll to about section
-      const element = document.getElementById("about");
+      const element = document.getElementById("section-about");
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
       }
@@ -345,7 +345,7 @@ export function Hero() {
                     WebkitTextStroke: "2px hsl(var(--primary))",
                   }}
                 >
-                  I'm Gurleen
+                  I’m Gurleen
                 </span>
               </h1>
               <div className="h-16 flex items-center justify-center lg:justify-start">
@@ -377,7 +377,7 @@ export function Hero() {
           {/* Description */}
           <p className="font-body text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto lg:mx-0 leading-relaxed">
             I create exceptional digital experiences that combine beautiful
-            design with powerful functionality. Let's build something amazing
+            design with powerful functionality. Let’s build something amazing
             together.
           </p>
 
@@ -416,7 +416,7 @@ export function Hero() {
               onClick={handleContactClick}
               className="w-full sm:w-auto min-h-[48px] text-base font-medium hover:bg-primary hover:text-primary-foreground transition-colors"
             >
-              Let's Work Together
+              Let’s Work Together
             </Button>
           </div>
 
@@ -513,7 +513,7 @@ export function Hero() {
                       : "text-green-600"
                   }`}
                 >
-                  Welcome to Gurleen's Terminal
+                  Welcome to Gurleen’s Terminal
                 </div>
 
                 {/* Command History */}
