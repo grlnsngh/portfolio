@@ -7,14 +7,6 @@ import { navLinks } from "./sidebar";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 
-declare global {
-  interface Window {
-    fullpage_api?: {
-      moveTo: (section: string) => void;
-    };
-  }
-}
-
 interface HeaderProps {
   activeSection: string;
   onSectionChange: (section: string) => void;

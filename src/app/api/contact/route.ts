@@ -16,8 +16,23 @@ const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 const hits = new Map<string, number[]>();
 
+// Without this the map keeps one key per IP that ever hit the route, for as
+// long as the instance lives — entries were filtered but never removed.
+function evictExpired(now: number) {
+  for (const [key, timestamps] of hits) {
+    if (timestamps.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) {
+      hits.delete(key);
+    }
+  }
+}
+
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+
+  // Sweeping on every request is fine at this volume: the map is bounded by
+  // the number of distinct IPs seen within a single 10-minute window.
+  evictExpired(now);
+
   const timestamps = (hits.get(ip) ?? []).filter(
     (t) => now - t < RATE_LIMIT_WINDOW_MS
   );
@@ -31,7 +46,15 @@ export async function POST(req: Request) {
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
   if (isRateLimited(ip)) {
-    return NextResponse.json({ error: "Too many requests" }, { status: 429 });
+    return NextResponse.json(
+      { error: "Too many requests" },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(Math.ceil(RATE_LIMIT_WINDOW_MS / 1000)),
+        },
+      }
+    );
   }
 
   const body = await req.json().catch(() => null);
@@ -62,7 +85,9 @@ export async function POST(req: Request) {
       from: "Portfolio Contact <onboarding@resend.dev>",
       to: ["grlnsngh@gmail.com"],
       reply_to: email,
-      subject: `Portfolio contact from ${name}`,
+      // Subject lines are a header field: newlines in attacker-controlled
+      // input are the classic header-injection vector, so collapse them.
+      subject: `Portfolio contact from ${name.replace(/[\r\n]+/g, " ")}`,
       text: `From: ${name} <${email}>\n\n${message}`,
     }),
   });
