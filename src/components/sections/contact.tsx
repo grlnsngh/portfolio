@@ -26,7 +26,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 import {
   Mail,
-  Phone,
   MapPin,
   Github,
   Linkedin,
@@ -38,12 +37,25 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
+// Bounds mirror the server schema in src/app/api/contact/route.ts. Keeping
+// them in sync means over-long input is caught inline instead of coming back
+// as a generic request failure.
 const formSchema = z.object({
-  name: z.string().min(2, { message: "Name must be at least 2 characters." }),
-  email: z.string().email({ message: "Please enter a valid email." }),
+  name: z
+    .string()
+    .trim()
+    .min(2, { message: "Name must be at least 2 characters." })
+    .max(100, { message: "Name must be under 100 characters." }),
+  email: z
+    .string()
+    .trim()
+    .email({ message: "Please enter a valid email." })
+    .max(200, { message: "Email must be under 200 characters." }),
   message: z
     .string()
-    .min(10, { message: "Message must be at least 10 characters." }),
+    .trim()
+    .min(10, { message: "Message must be at least 10 characters." })
+    .max(5000, { message: "Message must be under 5000 characters." }),
 });
 
 const contactInfo = [
@@ -75,7 +87,7 @@ const socialLinks = [
     icon: Github,
     label: "GitHub",
     href: "https://github.com/grlnsngh",
-    color: "hover:text-gray-900",
+    color: "hover:text-foreground",
   },
   {
     icon: Linkedin,
@@ -115,8 +127,18 @@ export function Contact() {
         }),
       });
 
+      if (res.status === 429) {
+        toast({
+          variant: "destructive",
+          title: "Too many messages",
+          description:
+            "You have sent a few already. Please try again in a few minutes.",
+        });
+        return;
+      }
+
       if (!res.ok) {
-        throw new Error("Request failed");
+        throw new Error(`Request failed with status ${res.status}`);
       }
 
       toast({
@@ -141,7 +163,7 @@ export function Contact() {
         <div className="text-center mb-8 md:mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 md:mb-4">
             <Sparkles className="w-4 h-4" />
-            Let's Connect
+            Let’s Connect
           </div>
           <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 md:mb-3">
             Ready to{" "}
@@ -150,7 +172,7 @@ export function Contact() {
             </span>
           </h2>
           <p className="text-muted-foreground text-lg md:text-base max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
-            I'm always excited to discuss new opportunities, collaborate on
+            I’m always excited to discuss new opportunities, collaborate on
             projects, or just have a friendly chat about technology and
             innovation.
           </p>
@@ -231,7 +253,7 @@ export function Contact() {
             <div className="flex justify-center pt-2">
               <Badge
                 variant="secondary"
-                className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 text-xs md:text-sm min-h-[36px] md:min-h-0 flex items-center"
+                className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs md:text-sm min-h-[36px] md:min-h-0 flex items-center"
               >
                 <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mr-2" />
                 Available for new projects
@@ -247,7 +269,7 @@ export function Contact() {
                   Send a Message
                 </CardTitle>
                 <CardDescription className="text-base md:text-base">
-                  Fill out the form below and I'll get back to you as soon as
+                  Fill out the form below and I’ll get back to you as soon as
                   possible
                 </CardDescription>
               </CardHeader>
@@ -255,6 +277,12 @@ export function Contact() {
                 <Form {...form}>
                   <form
                     onSubmit={form.handleSubmit(onSubmit)}
+                    // zod owns validation and renders the styled FormMessage.
+                    // Without this, type="email" makes the browser block
+                    // submit with its own native bubble and the styled
+                    // message for that field never appears, while the other
+                    // fields still show theirs.
+                    noValidate
                     className="space-y-5 md:space-y-5"
                   >
                     <input
@@ -263,7 +291,10 @@ export function Contact() {
                       name="website"
                       tabIndex={-1}
                       autoComplete="off"
-                      aria-hidden="true"
+                      // Not aria-hidden: that would be a focusable element
+                      // hidden from assistive tech. Screen readers announce
+                      // it and are told to skip it instead.
+                      aria-label="Leave this field empty"
                       className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden"
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-4">
@@ -277,6 +308,7 @@ export function Contact() {
                             </FormLabel>
                             <FormControl>
                               <Input
+                                autoComplete="name"
                                 placeholder="Your full name"
                                 {...field}
                                 className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"
@@ -296,6 +328,9 @@ export function Contact() {
                             </FormLabel>
                             <FormControl>
                               <Input
+                                type="email"
+                                inputMode="email"
+                                autoComplete="email"
                                 placeholder="your.email@example.com"
                                 {...field}
                                 className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"

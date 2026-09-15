@@ -1,13 +1,78 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
+import { siteConfig } from "@/lib/site";
+
+// Self-hosted at build time, so there is no render-blocking round trip to
+// fonts.googleapis.com and no third-party connection on the critical path.
+// `display: swap` keeps text visible while the face loads.
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  variable: "--font-body",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  display: "swap",
+  variable: "--font-headline",
+});
 
 export const metadata: Metadata = {
-  title: "Portfolio",
-  description: "A portfolio for a front-end React developer.",
+  // Required for the relative OG/canonical URLs below to resolve.
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: `${siteConfig.name} — ${siteConfig.role}`,
+    template: `%s — ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  keywords: [
+    "Gurleen Singh",
+    "Front End Developer",
+    "React Developer",
+    "Next.js Developer",
+    "React Native Developer",
+    "TypeScript",
+    "Portfolio",
+    "Toronto",
+    "Canada",
+  ],
+  authors: [{ name: siteConfig.name, url: siteConfig.url }],
+  creator: siteConfig.name,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_CA",
+    url: siteConfig.url,
+    siteName: `${siteConfig.name} — Portfolio`,
+    title: `${siteConfig.name} — ${siteConfig.role}`,
+    description: siteConfig.description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${siteConfig.name} — ${siteConfig.role}`,
+    description: siteConfig.description,
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+  manifest: "/manifest.json",
   icons: {
     icon: [
       { url: "/favicon.svg", type: "image/svg+xml" },
@@ -21,21 +86,47 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Portfolio",
+    title: siteConfig.name,
   },
+  applicationName: `${siteConfig.name} — Portfolio`,
   formatDetection: {
     telephone: false,
+  },
+  other: {
+    "msapplication-TileColor": "#1e293b",
+    "msapplication-config": "/browserconfig.xml",
   },
 };
 
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  // Pinch-zoom stays available: capping it or disabling user scaling is a
+  // WCAG 1.4.4 failure.
   maximumScale: 5,
   userScalable: true,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "hsl(220 15% 96%)" },
     { media: "(prefers-color-scheme: dark)", color: "hsl(220 9% 23%)" },
+  ],
+};
+
+// Structured data so search results can show the person rather than just a
+// page title.
+const personJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: siteConfig.name,
+  url: siteConfig.url,
+  jobTitle: siteConfig.role,
+  email: `mailto:${siteConfig.email}`,
+  sameAs: [siteConfig.github, siteConfig.linkedin],
+  knowsAbout: [
+    "React",
+    "Next.js",
+    "TypeScript",
+    "React Native",
+    "Front-End Development",
   ],
 };
 
@@ -45,54 +136,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn(inter.variable, spaceGrotesk.variable)}
+    >
       <head>
-        <meta
-          name="viewport"
-          content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes"
-        />
-        <meta name="theme-color" content="hsl(220 15% 96%)" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="Portfolio" />
-        <meta name="format-detection" content="telephone=no" />
-        <link rel="manifest" href="/manifest.json" />
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="icon" href="/favicon-32x32.png" sizes="32x32" type="image/png" />
-        <link rel="icon" href="/favicon-16x16.png" sizes="16x16" type="image/png" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap"
-          rel="stylesheet"
-        />
-        <link rel="dns-prefetch" href="//picsum.photos" />
-        <link rel="preload" href="/favicon.svg" as="image" />
-        <meta name="mobile-web-app-capable" content="yes" />
-        <meta name="application-name" content="Portfolio" />
-        <meta name="msapplication-TileColor" content="#1e293b" />
-        <meta name="msapplication-config" content="/browserconfig.xml" />
         <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
-                    });
-                });
-              }
-            `,
-          }}
+          type="application/ld+json"
+          // Serialised object literal defined above — no user input reaches it.
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
       </head>
       <body className={cn("font-body antialiased")}>
@@ -106,7 +159,25 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
         <Analytics />
+        <ServiceWorkerRegistration />
       </body>
     </html>
+  );
+}
+
+// Registered after load so it never competes with the initial render. Kept
+// out of <head> because a blocking inline script there delays first paint.
+function ServiceWorkerRegistration() {
+  return (
+    <script
+      dangerouslySetInnerHTML={{
+        __html: `
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('/sw.js').catch(function () {});
+  });
+}`,
+      }}
+    />
   );
 }

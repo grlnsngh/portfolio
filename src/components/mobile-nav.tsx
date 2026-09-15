@@ -1,14 +1,7 @@
 "use client";
-import { Home, User, Folder, Mail, Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { anchor: "hero", label: "Home", icon: Home },
-  { anchor: "about", label: "About", icon: User },
-  { anchor: "projects", label: "Projects", icon: Folder },
-  { anchor: "skills", label: "Skills", icon: Star },
-  { anchor: "contact", label: "Contact", icon: Mail },
-];
+// Shared with the desktop sidebar so the two navigations cannot drift apart.
+import { navLinks } from "./sidebar";
 
 interface MobileNavProps {
   activeSection: string;

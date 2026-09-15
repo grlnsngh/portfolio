@@ -1,3 +1,4 @@
+"use client";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -97,7 +98,7 @@ const projects = [
       { name: "Firebase", icon: "🔥" },
       { name: "Drag & Drop (@dnd-kit)", icon: "🎯" },
       { name: "Image Optimization", icon: "🖼️" },
-      { name: "SEO (React Helmet)", icon: "�" },
+      { name: "SEO (React Helmet)", icon: "🔍" },
       { name: "TinyMCE", icon: "📝" },
       { name: "EmailJS", icon: "📧" },
       { name: "Cloudflare Pages", icon: "☁️" },
@@ -223,7 +224,6 @@ export function Projects() {
   // Touch gesture state
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
-  const touchRef = useRef<HTMLDivElement>(null);
 
   // Minimum swipe distance (in px)
   const minSwipeDistance = 50;
@@ -334,9 +334,9 @@ export function Projects() {
 
   // Keyboard navigation
   useEffect(() => {
-    const handleKeyPress = (e: KeyboardEvent) => {
-      if (!fullscreenImage) return;
+    if (!fullscreenImage) return;
 
+    const handleKeyPress = (e: KeyboardEvent) => {
       switch (e.key) {
         case "ArrowLeft":
           prevFullscreenImage();
@@ -352,7 +352,37 @@ export function Projects() {
 
     document.addEventListener("keydown", handleKeyPress);
     return () => document.removeEventListener("keydown", handleKeyPress);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fullscreenImage, fullscreenIndex, currentProjectImages]);
+
+  // The viewer is a fixed overlay, so without this the page (and fullpage.js
+  // on desktop) keeps scrolling underneath it. Restores whatever overflow the
+  // document had rather than assuming "".
+  useEffect(() => {
+    if (!fullscreenImage) return;
+
+    const { body } = document;
+    const previousOverflow = body.style.overflow;
+    body.style.overflow = "hidden";
+
+    return () => {
+      body.style.overflow = previousOverflow;
+    };
+  }, [fullscreenImage]);
+
+  // Return focus to where it was when the overlay closes, so keyboard users
+  // are not dropped back at the top of the document.
+  const restoreFocusRef = useRef<HTMLElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!fullscreenImage) return;
+
+    restoreFocusRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+
+    return () => restoreFocusRef.current?.focus();
+  }, [fullscreenImage]);
 
   return (
     <TooltipProvider>
@@ -371,8 +401,6 @@ export function Projects() {
             {highlightedProjects.map((project, index) => {
               const currentImageIndex = currentImageIndexes[project.title] || 0;
               const dialogImageIndex = dialogImageIndexes[project.title] || 0;
-              const currentImage = project.images[currentImageIndex];
-              const dialogImage = project.images[dialogImageIndex];
 
               return (
                 <Card
@@ -381,9 +409,7 @@ export function Projects() {
                     project.featured
                       ? "ring-2 ring-primary/30 shadow-primary/20"
                       : "hover:ring-1 hover:ring-primary/20"
-                  } animate-in fade-in slide-in-from-bottom-${
-                    index % 2 === 0 ? "left" : "right"
-                  }`}
+                  } animate-in fade-in slide-in-from-bottom`}
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   {/* Featured Badge */}
@@ -409,7 +435,6 @@ export function Projects() {
 
                   {/* Image Gallery */}
                   <div
-                    ref={touchRef}
                     className="relative aspect-square overflow-hidden cursor-pointer group/image"
                     onClick={() =>
                       openFullscreen(project.images, dialogImageIndex)
@@ -421,23 +446,41 @@ export function Projects() {
                     }
                   >
                     <div className="relative w-full h-full">
-                      {project.images.map((image, index) => (
+                      {project.images.map((image, imageIndex) => (
                         <Image
-                          key={`${project.title}-${index}`}
+                          key={`${project.title}-${imageIndex}`}
                           src={image}
-                          alt={`Screenshot of ${project.title} - ${index + 1}`}
+                          alt={`Screenshot of ${project.title} - ${
+                            imageIndex + 1
+                          }`}
                           width={1280}
                           height={1280}
+                          // Cards are at most a third of a 1400px container,
+                          // so without this the browser is handed the full
+                          // 1280w source for a ~430px slot.
+                          sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
+                          // The first frame of the first card is the LCP
+                          // candidate for this section; the rest of the
+                          // carousel is offscreen until the user advances it.
+                          priority={index === 0 && imageIndex === 0}
+                          loading={
+                            index === 0 && imageIndex === 0
+                              ? undefined
+                              : "lazy"
+                          }
                           data-ai-hint={project.imageHint}
                           className={`absolute inset-0 object-cover w-full h-full transform transition-all duration-500 ease-in-out ${
-                            index === currentImageIndex
+                            imageIndex === currentImageIndex
                               ? "translate-x-0 opacity-100 scale-100"
-                              : index < currentImageIndex
+                              : imageIndex < currentImageIndex
                               ? "-translate-x-full opacity-0 scale-95"
                               : "translate-x-full opacity-0 scale-95"
                           }`}
+                          // Frames that are not showing are inert for
+                          // assistive tech and excluded from hit testing.
+                          aria-hidden={imageIndex !== currentImageIndex}
                           style={{
-                            zIndex: index === currentImageIndex ? 10 : 5,
+                            zIndex: imageIndex === currentImageIndex ? 10 : 5,
                           }}
                         />
                       ))}
@@ -496,6 +539,7 @@ export function Projects() {
                             e.stopPropagation();
                             prevImage(project.title, project.images.length);
                           }}
+                          aria-label={`Previous image of ${project.title}`}
                           className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronLeft className="w-4 h-4" />
@@ -505,6 +549,7 @@ export function Projects() {
                             e.stopPropagation();
                             nextImage(project.title, project.images.length);
                           }}
+                          aria-label={`Next image of ${project.title}`}
                           className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronRight className="w-4 h-4" />
@@ -603,6 +648,9 @@ export function Projects() {
                                     }`}
                                     width={1280}
                                     height={720}
+                                    sizes="(min-width: 896px) 896px, 95vw"
+                                    loading="lazy"
+                                    aria-hidden={index !== dialogImageIndex}
                                     className={`absolute inset-0 w-full h-full object-contain bg-muted transition-all duration-500 ease-in-out ${
                                       index === dialogImageIndex
                                         ? "translate-x-0 opacity-100 scale-100"
@@ -630,6 +678,7 @@ export function Projects() {
                                         project.images.length
                                       );
                                     }}
+                                    aria-label="Previous image"
                                     className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronLeft className="w-5 h-5" />
@@ -642,6 +691,7 @@ export function Projects() {
                                         project.images.length
                                       );
                                     }}
+                                    aria-label="Next image"
                                     className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronRight className="w-5 h-5" />
@@ -796,6 +846,11 @@ export function Projects() {
                                         }`}
                                         width={400}
                                         height={400}
+                                        sizes="(min-width: 640px) 192px, 90vw"
+                                        loading="lazy"
+                                        aria-hidden={
+                                          index !== secondaryImageIndex
+                                        }
                                         className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-in-out ${
                                           index === secondaryImageIndex
                                             ? "translate-x-0 opacity-100 scale-100"
@@ -825,6 +880,7 @@ export function Projects() {
                                             project.images.length
                                           );
                                         }}
+                                        aria-label={`Previous image of ${project.title}`}
                                         className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
                                       >
                                         <ChevronLeft className="w-4 h-4" />
@@ -837,6 +893,7 @@ export function Projects() {
                                             project.images.length
                                           );
                                         }}
+                                        aria-label={`Next image of ${project.title}`}
                                         className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
                                       >
                                         <ChevronRight className="w-4 h-4" />
@@ -997,11 +1054,25 @@ export function Projects() {
       {/* Fullscreen Image Viewer */}
       {isMounted && fullscreenImage
         ? createPortal(
-            <div className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4">
+            <div
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Image ${fullscreenIndex + 1} of ${
+                currentProjectImages.length
+              }`}
+              // Clicking the backdrop dismisses, but clicks that bubble up
+              // from the image or controls inside must not.
+              onClick={(e) => {
+                if (e.target === e.currentTarget) closeFullscreen();
+              }}
+              className="fixed inset-0 z-50 bg-black/95 backdrop-blur-sm flex items-center justify-center p-4"
+            >
               <div className="relative max-w-7xl max-h-full w-full h-full flex items-center justify-center">
                 {/* Close Button */}
                 <button
+                  ref={closeButtonRef}
                   onClick={closeFullscreen}
+                  aria-label="Close image viewer"
                   className="absolute top-4 right-4 z-50 bg-black/40 hover:bg-black/50 text-white p-3 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
                 >
                   <svg
@@ -1034,6 +1105,12 @@ export function Projects() {
                         alt={`Fullscreen view ${index + 1}`}
                         width={1920}
                         height={1080}
+                        sizes="100vw"
+                        // Only the frame actually on screen is worth
+                        // fetching at full size; neighbours load when the
+                        // user navigates to them.
+                        loading={index === fullscreenIndex ? undefined : "lazy"}
+                        aria-hidden={index !== fullscreenIndex}
                         className={`absolute max-w-full max-h-full object-contain transition-all duration-500 ease-in-out ${
                           index === fullscreenIndex
                             ? "translate-x-0 opacity-100 scale-100"
@@ -1053,12 +1130,14 @@ export function Projects() {
                     <>
                       <button
                         onClick={prevFullscreenImage}
+                        aria-label="Previous image"
                         className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
                       >
                         <ChevronLeft className="w-8 h-8" />
                       </button>
                       <button
                         onClick={nextFullscreenImage}
+                        aria-label="Next image"
                         className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
                       >
                         <ChevronRight className="w-8 h-8" />
@@ -1081,6 +1160,8 @@ export function Projects() {
                             setFullscreenIndex(index);
                             setFullscreenImage(img);
                           }}
+                          aria-label={`View image ${index + 1}`}
+                          aria-current={index === fullscreenIndex}
                           className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 ${
                             index === fullscreenIndex
                               ? "border-white scale-110"
@@ -1092,6 +1173,8 @@ export function Projects() {
                             alt={`Thumbnail ${index + 1}`}
                             width={64}
                             height={64}
+                            sizes="64px"
+                            loading="lazy"
                             className="w-full h-full object-cover"
                           />
                         </button>

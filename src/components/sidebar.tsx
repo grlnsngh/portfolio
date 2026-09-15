@@ -16,14 +16,6 @@ export const navLinks = [
   { anchor: "contact", label: "Contact", icon: Mail },
 ];
 
-declare global {
-  interface Window {
-    fullpage_api?: {
-      moveTo: (section: string) => void;
-    };
-  }
-}
-
 interface SidebarProps {
   activeSection: string;
   onSectionChange: (section: string) => void;
