@@ -510,7 +510,7 @@ export function Hero() {
                   className={`mb-2 ${
                     !mounted || theme === "dark"
                       ? "text-green-400"
-                      : "text-green-600"
+                      : "text-green-700"
                   }`}
                 >
                   Welcome to Gurleen’s Terminal
@@ -532,7 +532,7 @@ export function Hero() {
                     className={`pl-4 ${
                       !mounted || theme === "dark"
                         ? "text-yellow-300"
-                        : "text-yellow-600"
+                        : "text-yellow-800"
                     }`}
                   >
                     gurleen-singh
@@ -546,7 +546,7 @@ export function Hero() {
                     className={`pl-4 ${
                       !mounted || theme === "dark"
                         ? "text-cyan-300"
-                        : "text-cyan-600"
+                        : "text-cyan-700"
                     }`}
                   >
                     react/ nextjs/ typescript/ tailwind/
@@ -560,13 +560,19 @@ export function Hero() {
                     className={`pl-4 ${
                       !mounted || theme === "dark"
                         ? "text-green-300"
-                        : "text-green-600"
+                        : "text-green-700"
                     }`}
                   >
                     Frontend Developer | React Specialist
                   </div>
 
-                  <div className="mt-3">
+                  <div
+                    className={`mt-3 ${
+                      !mounted || theme === "dark"
+                        ? "text-white"
+                        : "text-gray-900"
+                    }`}
+                  >
                     <span className="text-blue-400">$ </span>
                     <TypeAnimation
                       sequence={[
@@ -582,11 +588,6 @@ export function Hero() {
                       wrapper="span"
                       speed={70}
                       repeat={Infinity}
-                      className={
-                        !mounted || theme === "dark"
-                          ? "text-white"
-                          : "text-gray-900"
-                      }
                       cursor={true}
                     />
                   </div>

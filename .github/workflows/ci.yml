@@ -1,0 +1,43 @@
+name: CI
+
+# Gates every PR and every push to main. Without this, a file importing three
+# nonexistent modules shipped to main unnoticed, because nothing ever ran
+# `typecheck` — next.config.ts had ignoreBuildErrors set at the time.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# A new push to a PR makes the in-flight run obsolete.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      # `npm ci` honours the lockfile exactly, so CI builds what the repo
+      # pins rather than resolving fresh ranges.
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Lint
+        run: npm run lint
+
+      # next build also runs both gates, but the explicit steps above fail
+      # faster and report which one broke.
+      - name: Build
+        run: npm run build

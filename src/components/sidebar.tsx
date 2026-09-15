@@ -35,12 +35,14 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
               <TooltipTrigger asChild>
                 <button
                   onClick={() => handleNavClick(link.anchor)}
+                  aria-current={activeSection === link.anchor ? "true" : undefined}
                   className={cn(
                     "group p-3 rounded-full text-primary-foreground/70 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground relative",
                     activeSection === link.anchor && "text-primary-foreground"
                   )}
                 >
-                  <link.icon className="h-6 w-6" />
+                  <link.icon className="h-6 w-6" aria-hidden="true" />
+                  <span className="sr-only">{link.label}</span>
                   {activeSection === link.anchor && (
                     <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-primary-foreground rounded-full" />
                   )}
