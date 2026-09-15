@@ -80,6 +80,37 @@ const FullpageWrapper = () => {
     };
   }, [isMobile]);
 
+  // fullpage.js builds its own internal scroll containers for sections
+  // taller than the viewport and gives them tabindex="-1", so a keyboard
+  // user cannot focus them and therefore cannot scroll them with the arrow
+  // keys (axe: scrollable-region-focusable). Promote them to tabindex="0"
+  // as they appear. fullpage rebuilds these on resize, hence the observer
+  // rather than a one-shot pass.
+  useEffect(() => {
+    if (isMobile) return;
+
+    const promote = () => {
+      document
+        .querySelectorAll<HTMLElement>('.fp-overflow[tabindex="-1"]')
+        // Guard on "-1" so writing tabindex here cannot re-trigger the
+        // observer into a loop.
+        .forEach((el) => {
+          el.tabIndex = 0;
+        });
+    };
+
+    promote();
+
+    const observer = new MutationObserver(promote);
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+      attributeFilter: ["tabindex"],
+    });
+
+    return () => observer.disconnect();
+  }, [isMobile]);
+
   const onLeave = (_origin: Item, destination: Item) => {
     setActiveSection(String(destination.anchor));
   };

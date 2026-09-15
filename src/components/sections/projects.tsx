@@ -520,7 +520,10 @@ export function Projects() {
                                 target="_blank"
                                 rel="noopener noreferrer"
                               >
-                                <Github className="w-5 h-5" />
+                                <Github className="w-5 h-5" aria-hidden="true" />
+                                <span className="sr-only">
+                                  View source code for {project.title}
+                                </span>
                               </Link>
                             </Button>
                           </TooltipTrigger>

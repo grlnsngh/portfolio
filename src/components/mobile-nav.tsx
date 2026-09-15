@@ -20,6 +20,7 @@ export function MobileNav({ activeSection, onSectionChange }: MobileNavProps) {
           <button
             key={link.anchor}
             onClick={() => handleNavClick(link.anchor)}
+            aria-current={activeSection === link.anchor ? "true" : undefined}
             className={cn(
               "flex flex-col items-center justify-center p-2 rounded-lg transition-all duration-200 min-h-[48px] min-w-[48px]",
               activeSection === link.anchor
