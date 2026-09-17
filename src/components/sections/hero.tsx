@@ -96,6 +96,7 @@ function CodeRain() {
   const animationRef = useRef<number>();
   const lastTimeRef = useRef<number>(0);
   const isVisibleRef = useRef<boolean>(true);
+  const onScreenRef = useRef<boolean>(true);
   const { theme } = useTheme();
 
   const initializeDrops = useCallback(() => {
@@ -215,8 +216,19 @@ function CodeRain() {
     handleResize();
     readPrimaryColor();
 
-    // Start animation
-    animationRef.current = requestAnimationFrame(animate);
+    const start = () => {
+      if (animationRef.current == null) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+    const stop = () => {
+      if (animationRef.current != null) {
+        cancelAnimationFrame(animationRef.current);
+        animationRef.current = undefined;
+      }
+    };
+
+    start();
 
     // Setup resize listener with debouncing
     let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
@@ -228,16 +240,31 @@ function CodeRain() {
     // Setup visibility change listener for performance
     const handleVisibilityChange = () => {
       isVisibleRef.current = !document.hidden;
+      if (document.hidden) stop();
+      else if (onScreenRef.current) start();
     };
+
+    // Hiding the tab stopped the drawing but left the rAF loop waking every
+    // frame, and scrolling to another section did not even do that — the hero
+    // kept animating a canvas nobody could see. Tear the loop down whenever
+    // the hero leaves the viewport and pick it up again on return.
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        onScreenRef.current = entry.isIntersecting;
+        if (entry.isIntersecting && !document.hidden) start();
+        else stop();
+      },
+      { threshold: 0 }
+    );
+    observer.observe(canvas);
 
     window.addEventListener("resize", debouncedResize);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     // Cleanup
     return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
+      stop();
+      observer.disconnect();
       window.removeEventListener("resize", debouncedResize);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
       clearTimeout(resizeTimeout);
@@ -313,7 +340,7 @@ export function Hero() {
   };
 
   return (
-    <section className="relative w-full min-h-screen flex items-center justify-center p-4 sm:p-6 lg:pr-20 xl:pr-24 overflow-hidden">
+    <section className="relative w-full min-h-full flex items-safe-center justify-center p-4 sm:p-6 lg:pr-20 xl:pr-24 overflow-hidden">
       {/* Code Rain Background */}
       <div className="absolute inset-0 z-0">
         <CodeRain />
@@ -348,7 +375,7 @@ export function Hero() {
                   I’m Gurleen
                 </span>
               </h1>
-              <div className="h-16 flex items-center justify-center lg:justify-start">
+              <div className="min-h-16 flex items-center justify-center lg:justify-start">
                 <h2 className="font-headline text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-muted-foreground">
                   <TypeAnimation
                     sequence={[
@@ -477,10 +504,10 @@ export function Hero() {
             <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
 
             {/* Terminal Container */}
-            <div className="relative w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mb-20 lg:mb-0">
+            <div className="relative flex flex-col w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mb-20 lg:mb-0">
               {/* Terminal Header */}
               <div
-                className={`px-4 py-2 flex items-center gap-2 ${
+                className={`shrink-0 px-4 py-2 flex items-center gap-2 ${
                   !mounted || theme === "dark"
                     ? "bg-gray-800"
                     : "bg-gray-200 border-b border-gray-300"
@@ -502,7 +529,7 @@ export function Hero() {
 
               {/* Terminal Body */}
               <div
-                className={`h-full p-4 font-mono text-sm overflow-hidden ${
+                className={`flex-1 min-h-0 p-4 font-mono text-sm overflow-hidden ${
                   !mounted || theme === "dark" ? "bg-gray-900" : "bg-gray-100"
                 }`}
               >

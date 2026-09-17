@@ -157,7 +157,7 @@ export function Contact() {
   }
 
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden pt-12 pb-4 md:py-16 lg:py-20">
+    <div className="relative w-full min-h-full flex items-safe-center justify-center overflow-hidden py-8 md:py-10">
       <div className="container mx-auto max-w-6xl relative z-10 px-4 md:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-8 md:mb-8">

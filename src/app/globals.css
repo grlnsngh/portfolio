@@ -29,6 +29,21 @@
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    /* Heights of the fixed header and of the bottom nav shown below the
+       desktop breakpoint. Every rule that keeps content clear of that chrome
+       reads these instead of repeating a magic number. */
+    --header-h: 4rem;
+    --bottom-nav-h: 4rem;
+  }
+
+  /* On a notched phone each bar grows by the inset it pads itself with, or
+     the offsets derived from these come up short. */
+  @supports (padding: max(0px)) {
+    :root {
+      --header-h: calc(4rem + env(safe-area-inset-top, 0px));
+      --bottom-nav-h: calc(4rem + env(safe-area-inset-bottom, 0px));
+    }
   }
   .dark {
     --background: 220 9% 23%;
@@ -66,6 +81,88 @@
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Nothing here is meant to scroll sideways; without this a single
+       over-wide child becomes a horizontal scrollbar on phones. `clip` rather
+       than `hidden` so <body> does not become a scroll container, which would
+       break the fixed header and bottom nav. */
+    overflow-x: clip;
+  }
+
+  /* The two fixed bars. Their heights are the offsets every other rule works
+     from, so they own the variables rather than re-deriving them. */
+  .site-header {
+    height: var(--header-h);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .site-bottom-nav {
+    height: var(--bottom-nav-h);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Layout geometry
+
+   The header is `fixed`, so it takes no space in the flow and every section
+   gets the whole viewport. Each scrolling context then reserves the header
+   strip for itself:
+
+     >= 1024px  fullpage.js owns the scrolling; the reserve goes on
+                .fp-overflow, the element fullpage actually scrolls.
+     <  1024px  fullpage.js disables itself (responsiveWidth) and the document
+                scrolls natively; the reserve goes on <main>.
+
+   Keep 1024 in sync with DESKTOP_BREAKPOINT in src/app/page.tsx, which is what
+   fullpage.js is handed as `responsiveWidth`.
+   --------------------------------------------------------------------------- */
+
+@media (min-width: 1024px) {
+  /* fullpage stacks all five sections inside <main> and slides them with a
+     transform, so <main>'s content is ~5 viewports tall. fullpage's own
+     `body { overflow: hidden }` still leaves <body> programmatically
+     scrollable, which lets a native anchor jump or a focus scroll into an
+     off-screen section move <body> underneath the transform and desync the
+     page. `clip` makes it unscrollable rather than merely hidden. */
+  main {
+    overflow: clip;
+  }
+
+  .fp-overflow {
+    /* fullpage sets a pixel height on .fp-section but leaves .fp-overflow at
+       `max-height: 100vh`. height:100% makes the section the percentage basis,
+       so `min-h-full` on section content resolves to the genuinely visible
+       area (section height minus the header strip). With 100vh as the basis
+       every section was 64px taller than the space it had, and that bottom
+       64px sat below the fold, unreachable. */
+    height: 100%;
+    padding-top: var(--header-h);
+  }
+}
+
+@media (max-width: 1023.98px) {
+  main {
+    padding-top: var(--header-h);
+    padding-bottom: var(--bottom-nav-h);
+  }
+
+  /* fullpage.js's own `.fp-scrollable .fp-section` rule forces min-height:100vh
+     in responsive mode, which ignores the header and the bottom nav. Same idea
+     minus the chrome, on dvh so mobile browser toolbars do not cut it off.
+     Centring is safe here because this is a min-height: content taller than the
+     box grows the section rather than overflowing it. */
+  .section {
+    min-height: calc(100dvh - var(--header-h) - var(--bottom-nav-h)) !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* scrollIntoView() targets these directly (bottom-nav taps); without this
+       the fixed header covers each section's heading. */
+    scroll-margin-top: var(--header-h);
+  }
+
+  html {
+    scroll-behavior: smooth;
   }
 }
 
@@ -129,53 +226,6 @@
   align-items: safe center;
 }
 
-/* Mobile app-like experience */
-@media (max-width: 767px) {
-  /* Ensure sections take full viewport height. fullpage.js's
-     responsiveWidth hands sections off as plain elements with the
-     `.section` class below this breakpoint, so match both selectors. */
-  section,
-  .section {
-    min-height: 100vh !important;
-    min-height: 100dvh !important; /* Use dynamic viewport height on mobile */
-  }
-
-  /* Prevent internal scrolling in sections */
-  section > div {
-    overflow: hidden;
-  }
-
-  /* Adjust main content for mobile nav */
-  main {
-    padding-bottom: 80px; /* Space for bottom nav */
-  }
-
-  /* scrollIntoView() targets these ids directly (mobile nav taps); without
-     this the sticky header (h-16 = 64px) covers each section's heading. */
-  #section-hero,
-  #section-about,
-  #section-projects,
-  #section-skills,
-  #section-contact {
-    scroll-margin-top: 4rem;
-  }
-
-  /* Smooth scrolling between sections */
-  html {
-    scroll-behavior: smooth;
-  }
-
-  /* Hide scrollbar on mobile for cleaner look */
-  ::-webkit-scrollbar {
-    display: none;
-  }
-
-  body {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-}
-
 /* Touch-friendly interactions */
 @media (hover: none) and (pointer: coarse) {
   /* Remove hover effects on touch devices */
@@ -202,10 +252,14 @@
   }
 }
 
-/* Safe area support for devices with notches */
+/* Keep content clear of side notches. The two bars carry their own top/bottom
+   insets, and --header-h / --bottom-nav-h already include them. */
 @supports (padding: max(0px)) {
-  header {
-    padding-top: max(0px, env(safe-area-inset-top));
+  @media (max-width: 1023.98px) {
+    main {
+      padding-left: env(safe-area-inset-left, 0px);
+      padding-right: env(safe-area-inset-right, 0px);
+    }
   }
 }
 
@@ -237,4 +291,32 @@
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* A section taller than the viewport scrolls inside itself. fullpage ships a
+   hard-coded black thumb for that scrollbar; make it follow the theme and stay
+   quiet until the section is hovered. */
+.fp-overflow {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(var(--foreground) / 0.25) transparent;
+}
+
+.fp-scroll-mac .fp-overflow::-webkit-scrollbar {
+  width: 10px;
+  background-color: transparent;
+}
+
+.fp-scroll-mac .fp-overflow::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.fp-scroll-mac .fp-overflow::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--foreground) / 0.2);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+.fp-scroll-mac .fp-overflow:hover::-webkit-scrollbar-thumb {
+  background-color: hsl(var(--foreground) / 0.35);
 }

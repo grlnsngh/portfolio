@@ -27,7 +27,7 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   };
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-20 hidden md:flex flex-col items-center justify-center py-8 z-50 bg-primary text-primary-foreground">
+    <aside className="fixed top-0 left-0 h-screen w-20 hidden lg:flex flex-col items-center justify-center py-8 z-50 bg-primary text-primary-foreground">
       <nav className="flex flex-col items-center gap-8">
         <TooltipProvider>
           {navLinks.map((link) => (
