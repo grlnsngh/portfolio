@@ -200,9 +200,9 @@ export function Contact() {
                       <info.icon className="w-4 h-4 text-primary" />
                     </div>
                     <div className="min-w-0 flex-1">
-                      <h4 className="font-medium text-sm md:text-sm text-foreground">
+                      <h3 className="font-medium text-sm md:text-sm text-foreground">
                         {info.label}
-                      </h4>
+                      </h3>
                       <p className="text-sm md:text-sm text-muted-foreground mb-1">
                         {info.description}
                       </p>

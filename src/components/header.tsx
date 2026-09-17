@@ -2,7 +2,12 @@
 import { Logo } from "@/components/logo";
 import { Menu } from "lucide-react";
 import { Button } from "./ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { navLinks } from "./sidebar";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
@@ -41,6 +46,11 @@ export function Header({ activeSection, onSectionChange }: HeaderProps) {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right" className="w-[280px] sm:w-[320px]">
+                {/* Radix points aria-labelledby at a title it expects every
+                    dialog to render; without one the panel has no accessible
+                    name and screen readers announce it bare. The panel is
+                    visually self-explanatory, so keep it for assistive tech. */}
+                <SheetTitle className="sr-only">Site navigation</SheetTitle>
                 <nav className="grid gap-4 sm:gap-6 text-lg font-medium mt-8">
                   {navLinks.map((link) => (
                     <button
