@@ -14,7 +14,11 @@ import type { fullpageApi, Item } from "@fullpage/react-fullpage";
 
 // Below this width fullpage.js disables itself (see responsiveWidth below)
 // and the same sections become a normal, natively-scrolling document.
-const MOBILE_BREAKPOINT = 768;
+// Tablets belong on that side of the line: between 768px and 1023px every
+// section's content is taller than one viewport, so fullpage could only show
+// them behind an inner scrollbar. Keep in sync with the 1024px media queries
+// in globals.css and the `lg:` variants on Sidebar/MobileNav/Header.
+const DESKTOP_BREAKPOINT = 1024;
 
 const anchors = ["hero", "about", "projects", "skills", "contact"];
 
@@ -35,13 +39,13 @@ const sections = [
 
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
-  const [isMobile, setIsMobile] = useState(false);
+  const [isNativeScroll, setIsNativeScroll] = useState(false);
   const fullpageApiRef = useRef<fullpageApi | null>(null);
 
   useEffect(() => {
-    const query = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
+    const query = window.matchMedia(`(max-width: ${DESKTOP_BREAKPOINT - 1}px)`);
     const update = (e: MediaQueryList | MediaQueryListEvent) =>
-      setIsMobile(e.matches);
+      setIsNativeScroll(e.matches);
 
     update(query);
     query.addEventListener("change", update);
@@ -52,7 +56,7 @@ const FullpageWrapper = () => {
   // active-section tracking has to come from IntersectionObserver instead
   // of fullpage's onLeave callback.
   useEffect(() => {
-    if (!isMobile) return;
+    if (!isNativeScroll) return;
 
     const observerOptions = {
       root: null,
@@ -78,7 +82,7 @@ const FullpageWrapper = () => {
     return () => {
       observer.disconnect();
     };
-  }, [isMobile]);
+  }, [isNativeScroll]);
 
   // fullpage.js builds its own internal scroll containers for sections
   // taller than the viewport and gives them tabindex="-1", so a keyboard
@@ -87,7 +91,7 @@ const FullpageWrapper = () => {
   // as they appear. fullpage rebuilds these on resize, hence the observer
   // rather than a one-shot pass.
   useEffect(() => {
-    if (isMobile) return;
+    if (isNativeScroll) return;
 
     const promote = () => {
       document
@@ -109,16 +113,36 @@ const FullpageWrapper = () => {
     });
 
     return () => observer.disconnect();
-  }, [isMobile]);
+  }, [isNativeScroll]);
 
-  const onLeave = (_origin: Item, destination: Item) => {
+  // A section taller than the viewport scrolls inside itself, and wheel events
+  // that land while fullpage is mid-transition drag the incoming section's
+  // scroller to the bottom — so you arrive below its heading, having skipped
+  // the top. Place it explicitly instead: entering from above starts at the
+  // top, entering from below starts at the bottom, so the content reads
+  // continuously whichever way you are going.
+  const placeIncomingScroll = (destination: Item, direction: string) => {
+    const scroller =
+      destination?.item?.querySelector<HTMLElement>(".fp-overflow");
+    if (!scroller) return;
+    scroller.scrollTop = direction === "up" ? scroller.scrollHeight : 0;
+  };
+
+  const onLeave = (_origin: Item, destination: Item, direction: string) => {
     setActiveSection(String(destination.anchor));
+    placeIncomingScroll(destination, direction);
+  };
+
+  // onLeave runs before the slide; run it again once the section has landed so
+  // momentum arriving during the transition cannot leave it part-scrolled.
+  const afterLoad = (_origin: Item, destination: Item, direction: string) => {
+    if (direction) placeIncomingScroll(destination, direction);
   };
 
   const handleSectionChange = (section: string) => {
-    if (isMobile) {
+    if (isNativeScroll) {
       setActiveSection(section);
-      // Smooth scroll to section on mobile
+      // Native scrolling below the desktop breakpoint
       const element = document.getElementById(sectionElementId(section));
       if (element) {
         element.scrollIntoView({ behavior: "smooth" });
@@ -128,10 +152,10 @@ const FullpageWrapper = () => {
     }
   };
 
-  // A single tree serves both breakpoints. Below MOBILE_BREAKPOINT,
+  // A single tree serves both breakpoints. Below DESKTOP_BREAKPOINT,
   // fullpage.js's `responsiveWidth` disables the plugin and these become
   // plain, natively-scrolling <div> sections; Sidebar/MobileNav visibility
-  // is handled purely by CSS (md: variants) so there is no server/client
+  // is handled purely by CSS (lg: variants) so there is no server/client
   // markup mismatch and no duplicate tree to keep in sync.
   return (
     <>
@@ -139,7 +163,7 @@ const FullpageWrapper = () => {
         activeSection={activeSection}
         onSectionChange={handleSectionChange}
       />
-      <div className="flex flex-col flex-1 md:ml-20">
+      <div className="flex flex-col flex-1 lg:ml-20">
         <Header
           activeSection={activeSection}
           onSectionChange={handleSectionChange}
@@ -148,11 +172,12 @@ const FullpageWrapper = () => {
           <ReactFullpage
             anchors={anchors}
             onLeave={onLeave}
+            afterLoad={afterLoad}
             credits={{ enabled: false }}
             licenseKey={"gplv3-license"}
             navigation={true}
             scrollOverflow={true}
-            responsiveWidth={MOBILE_BREAKPOINT}
+            responsiveWidth={DESKTOP_BREAKPOINT}
             render={({ fullpageApi: api }) => {
               fullpageApiRef.current = api;
               // Expose API to window for components that need it
@@ -166,7 +191,13 @@ const FullpageWrapper = () => {
                       key={id}
                       id={sectionElementId(id)}
                       className={cn(
-                        "section min-h-screen flex items-center justify-center",
+                        // No min-h-screen / centring here: above the
+                        // breakpoint fullpage sizes the section itself and
+                        // .fp-overflow does the centring, below it globals.css
+                        // sizes .section to the viewport minus the chrome.
+                        // Hard-coding 100vh made every section overflow by the
+                        // height of the header.
+                        "section",
                         tinted && "bg-secondary/20"
                       )}
                     >

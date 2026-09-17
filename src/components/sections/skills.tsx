@@ -92,7 +92,7 @@ const techCategories = [
 
 export function Skills() {
   return (
-    <div className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-12 md:py-16 lg:py-20">
+    <div className="relative w-full min-h-full flex items-safe-center justify-center overflow-hidden py-8 md:py-10">
       <div className="container mx-auto max-w-7xl relative z-10">
         {/* Header */}
         <div className="text-center mb-8 md:mb-8 px-4 md:px-0">

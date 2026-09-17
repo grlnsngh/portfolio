@@ -18,12 +18,17 @@ export function Header({ activeSection, onSectionChange }: HeaderProps) {
   };
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-16 items-center justify-between px-4 sm:px-6">
+    // Fixed rather than sticky: in the flow this header took 65px off the top
+    // of every fullpage.js section, pushing each section's last 65px below the
+    // fold where it could not be scrolled to. Space for it is reserved in
+    // globals.css — on .fp-overflow above the desktop breakpoint and on <main>
+    // below it. `lg:left-20` clears the desktop sidebar.
+    <header className="site-header fixed top-0 left-0 right-0 lg:left-20 z-40 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-full items-center justify-between px-4 sm:px-6">
         <Logo />
         <div className="flex items-center gap-2">
           <ThemeToggle />
-          <div className="hidden md:block">
+          <div className="hidden lg:block">
             <Sheet>
               <SheetTrigger asChild>
                 <Button
