@@ -16,6 +16,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { useTheme } from "next-themes";
 import { goToSection } from "@/lib/navigation";
+import { Screen } from "@/components/screen";
 
 const highlights = [
   { icon: Code, text: "Clean Code", color: "text-blue-500" },
@@ -308,6 +309,7 @@ export function Hero() {
   const scrollToNext = () => goToSection("about");
 
   return (
+    <Screen anchor="hero" group="hero">
     <section className="relative w-full min-h-full flex items-safe-center justify-center p-4 sm:p-6 lg:pr-20 xl:pr-24 overflow-hidden">
       {/* Code Rain Background */}
       <div className="absolute inset-0 z-0">
@@ -672,5 +674,6 @@ export function Hero() {
         </Button>
       </div>
     </section>
+    </Screen>
   );
 }

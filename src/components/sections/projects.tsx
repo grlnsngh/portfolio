@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SwipeArea } from "@/components/ui/swipe-area";
+import { Screen } from "@/components/screen";
 import {
   Tooltip,
   TooltipContent,
@@ -349,58 +350,71 @@ export function Projects() {
     return () => restoreFocusRef.current?.focus();
   }, [fullscreenImage]);
 
+  // Projects is a screen per featured project, then one for the rest. All three
+  // cards side by side plus the heading came to ~1,040px, more than a laptop
+  // viewport (~650px) can show without scrolling inside the section; one
+  // project per screen puts a big preview beside its details instead, which
+  // spends the laptop's width rather than its height. In native scroll
+  // (phones, tablets) the panels simply stack.
   return (
     <TooltipProvider>
-      <div className="container mx-auto w-full min-h-full px-4 sm:px-6 md:px-10 py-8 md:py-10 flex items-safe-center">
-        <div className="w-full">
-          <div className="text-center mb-6 md:mb-12">
-            <h2 className="font-headline text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4">
-              Featured Projects
-            </h2>
-            <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-              A showcase of my recent work and technical expertise
-            </p>
-          </div>
+      {highlightedProjects.map((project, index) => {
+        const currentImageIndex = currentImageIndexes[project.title] || 0;
+        const dialogImageIndex = dialogImageIndexes[project.title] || 0;
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-            {highlightedProjects.map((project, index) => {
-              const currentImageIndex = currentImageIndexes[project.title] || 0;
-              const dialogImageIndex = dialogImageIndexes[project.title] || 0;
+        return (
+          <Screen
+            key={project.title}
+            anchor={index === 0 ? "projects" : `projects-${index + 1}`}
+            group="projects"
+            continuation={index > 0}
+          >
+            <div className="container mx-auto w-full min-h-full px-4 sm:px-6 md:px-10 py-8 md:py-10 flex items-safe-center">
+              <div className="w-full space-y-4 lg:space-y-5">
+                {/* The page heading sits on the first project only. Later
+                    panels get a quiet running head on desktop (where each is
+                    its own screen) and nothing on phones/tablets, where they
+                    read straight on from the one above. */}
+                {index === 0 ? (
+                  <div className="text-center lg:text-left mb-6 lg:mb-0 lg:flex lg:items-end lg:justify-between lg:gap-6">
+                    <div>
+                      <h2 className="font-headline text-2xl md:text-4xl font-bold tracking-tight mb-2">
+                        Featured Projects
+                      </h2>
+                      <p className="text-muted-foreground text-lg max-w-2xl mx-auto lg:mx-0">
+                        A showcase of my recent work and technical expertise
+                      </p>
+                    </div>
+                    <span className="hidden lg:block text-sm text-muted-foreground tabular-nums">
+                      {String(index + 1).padStart(2, "0")} /{" "}
+                      {String(highlightedProjects.length).padStart(2, "0")}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="hidden lg:flex lg:items-end lg:justify-between lg:gap-6">
+                    <p className="font-headline text-4xl font-bold tracking-tight">
+                      Featured Projects
+                    </p>
+                    <span className="text-sm text-muted-foreground tabular-nums">
+                      {String(index + 1).padStart(2, "0")} /{" "}
+                      {String(highlightedProjects.length).padStart(2, "0")}
+                    </span>
+                  </div>
+                )}
 
-              return (
                 <Card
-                  key={project.title}
-                  className={`group relative overflow-hidden border-0 bg-card/50 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:shadow-primary/10 ${
+                  className={`group relative overflow-hidden border-0 bg-card/50 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 hover:shadow-primary/10 md:max-w-2xl md:mx-auto lg:max-w-none lg:grid lg:grid-cols-[1.15fr_1fr] ${
                     project.featured
                       ? "ring-2 ring-primary/30 shadow-primary/20"
                       : "hover:ring-1 hover:ring-primary/20"
-                  } animate-in fade-in slide-in-from-bottom fill-mode-backwards md:max-lg:last:odd:col-span-2 md:max-lg:last:odd:w-[calc(50%-1rem)] md:max-lg:last:odd:justify-self-center`}
-                  style={{ animationDelay: `${index * 150}ms` }}
+                  }`}
                 >
-                  {/* Featured Badge */}
-                  {project.featured && (
-                    <div className="absolute top-4 left-4 z-20">
-                      <Badge
-                        variant="default"
-                        className="bg-primary text-primary-foreground shadow-lg"
-                      >
-                        <Star className="w-3 h-3 mr-1" />
-                        Featured
-                      </Badge>
-                    </div>
-                  )}
-
-                  {/* Date Badge */}
-                  <div className="absolute top-4 right-4 z-20">
-                    <Badge variant="secondary" className="shadow-lg">
-                      <Calendar className="w-3 h-3 mr-1" />
-                      {project.date}
-                    </Badge>
-                  </div>
-
                   {/* Image Gallery */}
                   <SwipeArea
-                    className="relative aspect-square overflow-hidden cursor-pointer group/image"
+                    // 4:3 on phones, 16:9 on tablets, and on desktop no ratio at
+                    // all: it fills the left column to the height of the
+                    // details beside it (min-h keeps it from collapsing).
+                    className="relative aspect-[4/3] md:aspect-video lg:aspect-auto lg:min-h-[19rem] overflow-hidden cursor-pointer group/image"
                     onClick={() =>
                       openFullscreen(project.images, dialogImageIndex)
                     }
@@ -421,10 +435,11 @@ export function Projects() {
                           }`}
                           width={1280}
                           height={1280}
-                          // Cards are at most a third of a 1400px container,
-                          // so without this the browser is handed the full
-                          // 1280w source for a ~430px slot.
-                          sizes="(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 90vw"
+                          // The preview is ~55% of the panel on desktop, one
+                          // 672px column on tablets and the full width on
+                          // phones; without this the browser is handed the
+                          // full 1280w source for a ~600px slot.
+                          sizes="(min-width: 1024px) 55vw, (min-width: 768px) 672px, 90vw"
                           // The first frame of the first card is the LCP
                           // candidate for this section; the rest of the
                           // carousel is offscreen until the user advances it.
@@ -550,12 +565,31 @@ export function Projects() {
                     )}
                   </SwipeArea>
 
-                  <div className="p-6 space-y-4">
+                  <div className="p-6 lg:p-8 space-y-4 lg:flex lg:flex-col lg:justify-center">
+                    {/* These two used to float over the image corners; beside
+                        the title they cannot collide with the preview's own
+                        controls, whatever its width. */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      {project.featured && (
+                        <Badge
+                          variant="default"
+                          className="bg-primary text-primary-foreground"
+                        >
+                          <Star className="w-3 h-3 mr-1" />
+                          Featured
+                        </Badge>
+                      )}
+                      <Badge variant="secondary">
+                        <Calendar className="w-3 h-3 mr-1" />
+                        {project.date}
+                      </Badge>
+                    </div>
+
                     <div className="space-y-2">
                       <h3 className="text-xl md:text-2xl font-bold group-hover:text-primary transition-colors duration-300 leading-tight">
                         {project.title}
                       </h3>
-                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 leading-relaxed">
+                      <p className="text-muted-foreground text-sm md:text-base line-clamp-3 lg:line-clamp-5 leading-relaxed">
                         {project.description}
                       </p>
                     </div>
@@ -791,31 +825,28 @@ export function Projects() {
                     </div>
                   </div>
                 </Card>
-              );
-            })}
-          </div>
+              </div>
+            </div>
+          </Screen>
+        );
+      })}
 
-          {secondaryProjects.length > 0 && (
-            <div className="mt-6 md:mt-8 flex justify-center">
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="rounded-full border-primary/20 px-5 hover:border-primary/40 hover:bg-primary/10 transition-all duration-300"
-                  >
-                    Browse additional projects
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-3xl w-[95vw]">
-                  <DialogHeader className="space-y-2">
-                    <DialogTitle>Additional Projects</DialogTitle>
-                    <DialogDescription>
-                      Quick snapshots of other builds without crowding the main
-                      layout.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <div className="space-y-4">
+      {secondaryProjects.length > 0 && (
+        <Screen anchor="projects-more" group="projects" continuation>
+          <div className="container mx-auto w-full min-h-full px-4 sm:px-6 md:px-10 py-8 md:py-10 flex items-safe-center">
+            <div className="w-full space-y-4 lg:space-y-5">
+              <div className="text-center lg:text-left mb-2 lg:mb-0">
+                <h2 className="font-headline text-2xl md:text-4xl font-bold tracking-tight mb-2">
+                  More Projects
+                </h2>
+                <p className="text-muted-foreground text-lg max-w-2xl mx-auto lg:mx-0 short:lg:hidden">
+                  Quick snapshots of other builds
+                </p>
+              </div>
+
+              {/* Beside each other on desktop (image above details), and as
+                  image-left rows below it, as they were in the old dialog. */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
                     {secondaryProjects.map((project) => {
                       const secondaryImageIndex =
                         currentImageIndexes[project.title] || 0;
@@ -824,9 +855,9 @@ export function Projects() {
                         <Tooltip key={`secondary-${project.title}`}>
                           <TooltipTrigger asChild>
                             <Card className="border border-border/60 bg-card/70 backdrop-blur overflow-hidden hover:border-primary/40 transition-all duration-300 cursor-help">
-                              <div className="flex flex-col sm:flex-row gap-4">
+                              <div className="flex flex-col sm:flex-row lg:flex-col gap-4">
                                 {/* Project Image */}
-                                <div className="relative w-full sm:w-48 aspect-square sm:aspect-auto flex-shrink-0">
+                                <div className="relative w-full sm:w-48 lg:w-full aspect-video sm:aspect-auto lg:aspect-[2/1] short:lg:aspect-[5/2] flex-shrink-0">
                                   <div className="relative w-full h-full">
                                     {project.images.map((image, index) => (
                                       <Image
@@ -837,7 +868,7 @@ export function Projects() {
                                         }`}
                                         width={400}
                                         height={400}
-                                        sizes="(min-width: 640px) 192px, 90vw"
+                                        sizes="(min-width: 1024px) 30vw, (min-width: 640px) 192px, 90vw"
                                         loading="lazy"
                                         aria-hidden={
                                           index !== secondaryImageIndex
@@ -908,7 +939,7 @@ export function Projects() {
                                 </div>
 
                                 {/* Project Content */}
-                                <div className="p-4 flex-1 space-y-3">
+                                <div className="p-4 flex-1 space-y-3 short:lg:space-y-2">
                                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                                     <h4 className="text-base font-semibold leading-tight">
                                       {project.title}
@@ -1017,30 +1048,28 @@ export function Projects() {
                         </Tooltip>
                       );
                     })}
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-          )}
+              </div>
 
-          {/* Call to action */}
-          <div className="text-center mt-8 md:mt-12">
-            <p className="text-muted-foreground mb-4 md:mb-6 text-sm md:text-base">
-              Interested in seeing more of my work?
-            </p>
-            <Button asChild size="sm" className="md:size-lg">
-              <Link
-                href="https://github.com/grlnsngh"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <Github className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                View All Projects on GitHub
-              </Link>
-            </Button>
+              {/* Call to action */}
+              <div className="text-center pt-2 lg:pt-1">
+                <p className="text-muted-foreground mb-4 text-sm md:text-base short:lg:hidden">
+                  Interested in seeing more of my work?
+                </p>
+                <Button asChild size="sm" className="md:size-lg">
+                  <Link
+                    href="https://github.com/grlnsngh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Github className="w-4 h-4 md:w-5 md:h-5 mr-2" />
+                    View All Projects on GitHub
+                  </Link>
+                </Button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </Screen>
+      )}
 
       {/* Fullscreen Image Viewer */}
       {isMounted && fullscreenImage

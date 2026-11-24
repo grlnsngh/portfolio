@@ -9,31 +9,20 @@ import { Skills } from "@/components/sections/skills";
 import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/mobile-nav";
-import { cn } from "@/lib/utils";
 import {
   DESKTOP_BREAKPOINT,
+  MIN_FULLPAGE_HEIGHT,
   NATIVE_SCROLL_QUERY,
-  SECTION_ANCHORS,
   goToSection,
-  sectionElementId,
 } from "@/lib/navigation";
 import type { Item } from "@fullpage/react-fullpage";
 
-// Below DESKTOP_BREAKPOINT fullpage.js disables itself (see responsiveWidth
-// below) and the same sections become a normal, natively-scrolling document.
-// Tablets belong on that side of the line: between 768px and 1023px every
-// section's content is taller than one viewport, so fullpage could only show
-// them behind an inner scrollbar. The constant and the navigation helper live
-// in src/lib/navigation.ts so the hero's buttons agree with this file.
-const anchors = [...SECTION_ANCHORS];
-
-const sections = [
-  { id: "hero", Component: Hero, tinted: false },
-  { id: "about", Component: About, tinted: true },
-  { id: "projects", Component: Projects, tinted: false },
-  { id: "skills", Component: Skills, tinted: true },
-  { id: "contact", Component: Contact, tinted: false },
-];
+// The page is a list of *screens*, and a nav item can span several of them
+// (About is two, Projects is four). Each <Screen> declares its own anchor and
+// the nav group it belongs to, so this file no longer keeps a parallel list of
+// section ids: the highlight is read straight off the DOM.
+const groupOf = (el: Element | null | undefined, fallback: string) =>
+  (el as HTMLElement | null | undefined)?.dataset?.group ?? fallback;
 
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
@@ -49,44 +38,38 @@ const FullpageWrapper = () => {
     return () => query.removeEventListener("change", update);
   }, []);
 
-  // Below the breakpoint fullpage.js hands off to native scrolling, so
-  // active-section tracking has to come from IntersectionObserver instead
-  // of fullpage's onLeave callback.
+  // In native scroll fullpage.js has handed off to the browser, so
+  // active-section tracking has to come from IntersectionObserver instead of
+  // fullpage's onLeave callback.
   useEffect(() => {
     if (!isNativeScroll) return;
 
-    const observerOptions = {
-      root: null,
-      rootMargin: "-50% 0px -50% 0px",
-      threshold: 0,
-    };
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(groupOf(entry.target, "hero"));
+          }
+        });
+      },
+      { root: null, rootMargin: "-50% 0px -50% 0px", threshold: 0 }
+    );
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id.replace(/^section-/, ""));
-        }
-      });
-    }, observerOptions);
+    document
+      .querySelectorAll<HTMLElement>(".section[data-group]")
+      .forEach((screen) => observer.observe(screen));
 
-    sections.forEach(({ id }) => {
-      const element = document.getElementById(sectionElementId(id));
-      if (element) {
-        observer.observe(element);
-      }
-    });
-
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [isNativeScroll]);
 
-  // fullpage.js builds its own internal scroll containers for sections
-  // taller than the viewport and gives them tabindex="-1", so a keyboard
-  // user cannot focus them and therefore cannot scroll them with the arrow
-  // keys (axe: scrollable-region-focusable). Promote them to tabindex="0"
-  // as they appear. fullpage rebuilds these on resize, hence the observer
-  // rather than a one-shot pass.
+  // Safety net only. Screens are laid out to fit the viewport, so in normal use
+  // fullpage never builds a scroller that can actually scroll. If a window is
+  // unusually short (but still above MIN_FULLPAGE_HEIGHT), fullpage falls back
+  // to an inner scroller; it gives that scroller tabindex="-1", which leaves a
+  // keyboard user unable to scroll it with the arrow keys (axe:
+  // scrollable-region-focusable). Promote them to tabindex="0" as they appear.
+  // fullpage rebuilds these on resize, hence the observer rather than a
+  // one-shot pass.
   useEffect(() => {
     if (isNativeScroll) return;
 
@@ -112,12 +95,10 @@ const FullpageWrapper = () => {
     return () => observer.disconnect();
   }, [isNativeScroll]);
 
-  // A section taller than the viewport scrolls inside itself, and wheel events
-  // that land while fullpage is mid-transition drag the incoming section's
-  // scroller to the bottom — so you arrive below its heading, having skipped
-  // the top. Place it explicitly instead: entering from above starts at the
-  // top, entering from below starts at the bottom, so the content reads
-  // continuously whichever way you are going.
+  // Same safety net: if a screen does overflow, wheel events that land while
+  // fullpage is mid-transition drag the incoming screen's scroller to the
+  // bottom, so you arrive below its heading. Place it explicitly: entering
+  // from above starts at the top, entering from below starts at the bottom.
   const placeIncomingScroll = (destination: Item, direction: string) => {
     const scroller =
       destination?.item?.querySelector<HTMLElement>(".fp-overflow");
@@ -126,13 +107,16 @@ const FullpageWrapper = () => {
   };
 
   const onLeave = (_origin: Item, destination: Item, direction: string) => {
-    setActiveSection(String(destination.anchor));
+    setActiveSection(groupOf(destination.item, String(destination.anchor)));
     placeIncomingScroll(destination, direction);
   };
 
-  // onLeave runs before the slide; run it again once the section has landed so
+  // onLeave runs before the slide; run it again once the screen has landed so
   // momentum arriving during the transition cannot leave it part-scrolled.
+  // afterLoad also fires for the initial load, which is what makes a deep link
+  // such as /#career highlight its nav item instead of staying on "Home".
   const afterLoad = (_origin: Item, destination: Item, direction: string) => {
+    setActiveSection(groupOf(destination.item, String(destination.anchor)));
     if (direction) placeIncomingScroll(destination, direction);
   };
 
@@ -143,11 +127,12 @@ const FullpageWrapper = () => {
     goToSection(section);
   };
 
-  // A single tree serves both breakpoints. Below DESKTOP_BREAKPOINT,
-  // fullpage.js's `responsiveWidth` disables the plugin and these become
-  // plain, natively-scrolling <div> sections; Sidebar/MobileNav visibility
-  // is handled purely by CSS (lg: variants) so there is no server/client
-  // markup mismatch and no duplicate tree to keep in sync.
+  // A single tree serves every viewport. When the viewport is narrower than
+  // DESKTOP_BREAKPOINT or shorter than MIN_FULLPAGE_HEIGHT, fullpage.js's
+  // `responsiveWidth` / `responsiveHeight` disable the plugin and the screens
+  // become plain, natively-scrolling <div>s; Sidebar/MobileNav visibility is
+  // handled purely by CSS (lg: variants) so there is no server/client markup
+  // mismatch and no duplicate tree to keep in sync.
   return (
     <>
       <Sidebar
@@ -161,7 +146,6 @@ const FullpageWrapper = () => {
         />
         <main>
           <ReactFullpage
-            anchors={anchors}
             onLeave={onLeave}
             afterLoad={afterLoad}
             credits={{ enabled: false }}
@@ -169,6 +153,7 @@ const FullpageWrapper = () => {
             navigation={true}
             scrollOverflow={true}
             responsiveWidth={DESKTOP_BREAKPOINT}
+            responsiveHeight={MIN_FULLPAGE_HEIGHT}
             render={({ fullpageApi: api }) => {
               // Published on window so goToSection() (src/lib/navigation.ts)
               // can drive fullpage.js from anywhere in the tree.
@@ -177,24 +162,13 @@ const FullpageWrapper = () => {
               }
               return (
                 <ReactFullpage.Wrapper>
-                  {sections.map(({ id, Component, tinted }) => (
-                    <div
-                      key={id}
-                      id={sectionElementId(id)}
-                      className={cn(
-                        // No min-h-screen / centring here: above the
-                        // breakpoint fullpage sizes the section itself and
-                        // .fp-overflow does the centring, below it globals.css
-                        // sizes .section to the viewport minus the chrome.
-                        // Hard-coding 100vh made every section overflow by the
-                        // height of the header.
-                        "section",
-                        tinted && "bg-secondary/20"
-                      )}
-                    >
-                      <Component />
-                    </div>
-                  ))}
+                  {/* Each of these renders one or more <Screen>s, which are the
+                      <div class="section"> children fullpage.js looks for. */}
+                  <Hero />
+                  <About />
+                  <Projects />
+                  <Skills />
+                  <Contact />
                 </ReactFullpage.Wrapper>
               );
             }}

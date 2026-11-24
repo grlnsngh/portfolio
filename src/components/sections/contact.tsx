@@ -24,6 +24,7 @@ import {
   CardDescription,
 } from "../ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Screen } from "@/components/screen";
 import {
   Mail,
   MapPin,
@@ -157,15 +158,21 @@ export function Contact() {
   }
 
   return (
+    <Screen anchor="contact" group="contact">
     <div className="relative w-full min-h-full flex items-safe-center justify-center overflow-hidden py-8 md:py-10">
       <div className="container mx-auto max-w-6xl relative z-10 px-4 md:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 md:mb-4">
+        {/* Header. On a desktop screen under ~1000px tall (every laptop, and a
+            1080p monitor in a normal browser window) the pill, the "Follow Me"
+            heading, a couple of descriptions and the footer line (which repeats
+            "Response Time" from the info card) give way, so the form and the
+            ways to reach out fit one screen without scrolling inside it. The
+            full design returns on taller viewports. */}
+        <div className="text-center mb-8 lg:mb-5">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 tight:lg:hidden">
             <Sparkles className="w-4 h-4" />
             Let’s Connect
           </div>
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 lg:mb-3">
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl tight:lg:text-4xl font-bold tracking-tight mb-4 lg:mb-3">
             Ready to <span className="text-gradient">Work Together?</span>
           </h2>
           {/* Compact sizing starts at lg, where fullpage.js has to fit this in
@@ -178,22 +185,24 @@ export function Contact() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-6">
           {/* Contact Information */}
-          <div className="lg:col-span-1 space-y-4 md:space-y-4">
+          <div className="lg:col-span-1 space-y-4 lg:space-y-3">
             <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-4 px-4 md:px-6">
+              <CardHeader className="pb-4 lg:pb-2 px-4 md:px-6">
                 <CardTitle className="flex items-center gap-2 text-lg md:text-lg">
                   <MessageSquare className="w-5 h-5 text-primary" />
                   Contact Info
                 </CardTitle>
-                <CardDescription>Multiple ways to reach out</CardDescription>
+                <CardDescription className="tight:lg:hidden">
+                  Multiple ways to reach out
+                </CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4 px-4 md:px-6">
+              <CardContent className="space-y-4 lg:space-y-1 px-4 md:px-6">
                 {contactInfo.map((info, index) => (
                   <div
                     key={info.label}
-                    className="flex items-start gap-3 p-3 md:p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left fill-mode-backwards min-h-[60px] lg:min-h-0"
+                    className="flex items-start gap-3 p-3 lg:p-2 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left fill-mode-backwards min-h-[60px] lg:min-h-0"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="p-2 md:p-2 bg-primary/10 rounded-lg flex-shrink-0">
@@ -203,7 +212,7 @@ export function Contact() {
                       <h3 className="font-medium text-sm md:text-sm text-foreground">
                         {info.label}
                       </h3>
-                      <p className="text-sm md:text-sm text-muted-foreground mb-1">
+                      <p className="text-sm lg:text-xs text-muted-foreground mb-1 lg:mb-0">
                         {info.description}
                       </p>
                       {info.href !== "#" ? (
@@ -226,11 +235,13 @@ export function Contact() {
 
             {/* Social Links */}
             <Card className="shadow-lg border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="pb-4 px-4 md:px-6">
+              {/* Visually dropped (not removed: assistive tech still gets the
+                  label) when the screen is short; the icons say what they are. */}
+              <CardHeader className="pb-4 px-4 md:px-6 tight:lg:sr-only">
                 <CardTitle className="text-lg">Follow Me</CardTitle>
                 <CardDescription>Connect on social platforms</CardDescription>
               </CardHeader>
-              <CardContent className="px-4 md:px-6">
+              <CardContent className="px-4 md:px-6 tight:lg:pt-4 tight:lg:pb-4">
                 <div className="flex gap-3 md:gap-3 justify-center lg:justify-start">
                   {socialLinks.map((social, index) => (
                     <Link
@@ -250,7 +261,9 @@ export function Contact() {
             </Card>
 
             {/* Status Badge */}
-            <div className="flex justify-center pt-2">
+            {/* Gives way on laptop-height screens; the hero already says the
+                same thing and "Response Time" above covers the rest. */}
+            <div className="flex justify-center pt-2 lg:pt-0 short:lg:hidden">
               <Badge
                 variant="secondary"
                 className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs md:text-sm flex items-center"
@@ -264,11 +277,11 @@ export function Contact() {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <Card className="shadow-xl border-0 bg-card/50 backdrop-blur-sm">
-              <CardHeader className="text-center pb-6 px-4 md:px-6">
-                <CardTitle className="text-2xl md:text-2xl font-bold">
+              <CardHeader className="text-center pb-6 lg:pb-3 px-4 md:px-6">
+                <CardTitle className="text-2xl lg:text-xl font-bold">
                   Send a Message
                 </CardTitle>
-                <CardDescription className="text-base md:text-base">
+                <CardDescription className="text-base lg:text-sm">
                   Fill out the form below and I’ll get back to you as soon as
                   possible
                 </CardDescription>
@@ -283,7 +296,7 @@ export function Contact() {
                     // message for that field never appears, while the other
                     // fields still show theirs.
                     noValidate
-                    className="space-y-5 md:space-y-5"
+                    className="space-y-5 lg:space-y-3"
                   >
                     <input
                       ref={honeypotRef}
@@ -354,7 +367,7 @@ export function Contact() {
                             <Textarea
                               placeholder="Tell me about your project, ideas, or just say hello..."
                               {...field}
-                              rows={5}
+                              rows={4}
                               className="text-base lg:text-sm resize-none focus:ring-2 focus:ring-primary/20 min-h-[120px] lg:min-h-0"
                             />
                           </FormControl>
@@ -388,7 +401,7 @@ export function Contact() {
         </div>
 
         {/* Footer Message */}
-        <div className="text-center mt-6 md:mt-8 px-4 md:px-0">
+        <div className="text-center mt-6 md:mt-8 px-4 md:px-0 tight:lg:hidden">
           <p className="text-muted-foreground text-sm md:text-sm leading-relaxed">
             I typically respond within 24 hours. Looking forward to hearing from
             you! 🚀
@@ -396,5 +409,6 @@ export function Contact() {
         </div>
       </div>
     </div>
+    </Screen>
   );
 }
