@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { TypeAnimation } from "react-type-animation";
 import { useTheme } from "next-themes";
+import { goToSection } from "@/lib/navigation";
 
 const highlights = [
   { icon: Code, text: "Clean Code", color: "text-blue-500" },
@@ -291,53 +292,20 @@ function CodeRain() {
 
 export function Hero() {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { theme } = useTheme();
 
   useEffect(() => {
     setIsVisible(true);
     setMounted(true);
-
-    // Mobile detection
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  const handleContactClick = () => {
-    if (isMobile) {
-      // Mobile: smooth scroll to contact section
-      const element = document.getElementById("section-contact");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      // Desktop: use fullpage API
-      if (window.fullpage_api) {
-        window.fullpage_api.moveTo("contact");
-      }
-    }
-  };
-
-  const scrollToNext = () => {
-    if (isMobile) {
-      // Mobile: smooth scroll to about section
-      const element = document.getElementById("section-about");
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      // Desktop: use fullpage API
-      if (window.fullpage_api) {
-        window.fullpage_api.moveTo("about");
-      }
-    }
-  };
+  // goToSection picks fullpage.js or native scrolling from the same
+  // breakpoint the page uses. This used to decide with its own `< 768px`
+  // check, so on a tablet (768-1023px, where fullpage.js is switched off) the
+  // buttons called into a disabled fullpage and landed on the wrong section.
+  const handleContactClick = () => goToSection("contact");
+  const scrollToNext = () => goToSection("about");
 
   return (
     <section className="relative w-full min-h-full flex items-safe-center justify-center p-4 sm:p-6 lg:pr-20 xl:pr-24 overflow-hidden">
@@ -351,7 +319,7 @@ export function Hero() {
       <div className="container mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center max-w-7xl relative z-10">
         {/* Content Section */}
         <div
-          className={`lg:col-span-7 space-y-6 text-center lg:text-left transition-all duration-1000 ${
+          className={`lg:col-span-7 space-y-6 short:lg:space-y-4 text-center lg:text-left transition-all duration-1000 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
@@ -365,7 +333,7 @@ export function Hero() {
               <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-muted-foreground font-medium">
                 Hi
               </p>
-              <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold tracking-tighter leading-tight">
+              <h1 className="font-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl short:lg:text-6xl short:xl:text-7xl font-bold tracking-tighter leading-tight">
                 <span
                   className="text-transparent font-bold hover:text-primary transition-colors duration-300"
                   style={{
@@ -413,7 +381,10 @@ export function Hero() {
             {highlights.map((highlight, index) => (
               <div
                 key={highlight.text}
-                className={`flex items-center gap-2 px-3 py-2 bg-background/50 backdrop-blur-sm rounded-lg border animate-in fade-in slide-in-from-bottom duration-500`}
+                // fill-mode-backwards holds the "from" keyframe during the
+                // stagger delay; without it each badge showed in its final
+                // state, then snapped back to invisible and faded in.
+                className={`flex items-center gap-2 px-3 py-2 bg-background/50 backdrop-blur-sm rounded-lg border animate-in fade-in slide-in-from-bottom duration-500 fill-mode-backwards`}
                 style={{ animationDelay: `${index * 200}ms` }}
               >
                 <highlight.icon className={`w-4 h-4 ${highlight.color}`} />
@@ -423,20 +394,24 @@ export function Hero() {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4">
-            <Link
-              href="https://docs.google.com/document/d/1II-c7dAnWmCHFwufcvelgGKLqrZeAQwc/edit?usp=sharing&ouid=113873223317665441845&rtpof=true&sd=true"
-              target="_blank"
-              rel="noopener noreferrer"
+          <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start pt-4 short:lg:pt-0">
+            {/* asChild: the anchor itself is the button. Wrapping a <button>
+                in an <a> is invalid HTML and gave keyboard users two tab
+                stops for one control. */}
+            <Button
+              asChild
+              size="lg"
+              className="w-full sm:w-auto min-h-[48px] text-base font-medium group"
             >
-              <Button
-                size="lg"
-                className="w-full sm:w-auto min-h-[48px] text-base font-medium group"
+              <Link
+                href="https://docs.google.com/document/d/1II-c7dAnWmCHFwufcvelgGKLqrZeAQwc/edit?usp=sharing&ouid=113873223317665441845&rtpof=true&sd=true"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Download className="w-4 h-4 mr-2 group-hover:translate-y-[-2px] transition-transform" />
                 Download CV
-              </Button>
-            </Link>
+              </Link>
+            </Button>
             <Button
               size="lg"
               variant="outline"
@@ -448,48 +423,51 @@ export function Hero() {
           </div>
 
           {/* Social Links */}
-          <div className="flex items-center justify-center lg:justify-start gap-4 pt-6">
+          <div className="flex items-center justify-center lg:justify-start gap-4 pt-6 short:lg:pt-2">
             <span className="text-sm text-muted-foreground mr-2">
               Find me on:
             </span>
-            <Link
-              href="https://github.com/grlnsngh"
-              target="_blank"
-              rel="noopener noreferrer"
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
             >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
+              <Link
+                href="https://github.com/grlnsngh"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Github className="h-5 w-5" />
                 <span className="sr-only">GitHub</span>
-              </Button>
-            </Link>
-            <Link
-              href="https://www.linkedin.com/in/grlnsngh/"
-              target="_blank"
-              rel="noopener noreferrer"
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
             >
-              <Button
-                variant="ghost"
-                size="icon"
-                className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
+              <Link
+                href="https://www.linkedin.com/in/grlnsngh/"
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Linkedin className="h-5 w-5" />
                 <span className="sr-only">LinkedIn</span>
-              </Button>
-            </Link>
-            <Link href="mailto:grlnsngh@gmail.com">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
-              >
+              </Link>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              size="icon"
+              className="min-h-[44px] min-w-[44px] hover:bg-primary/10 hover:text-primary transition-colors"
+            >
+              <Link href="mailto:grlnsngh@gmail.com">
                 <Mail className="h-5 w-5" />
                 <span className="sr-only">Email</span>
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         </div>
 
@@ -499,12 +477,16 @@ export function Hero() {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          <div className="relative group">
+          <div className="relative group lg:w-full lg:max-w-[420px]">
             {/* Background Glow */}
             <div className="hidden lg:block absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-[50px] blur-2xl scale-110 group-hover:scale-125 transition-transform duration-500" />
 
             {/* Terminal Container */}
-            <div className="relative flex flex-col w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-[420px] lg:h-[520px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mb-20 lg:mb-0">
+            {/* From lg up the terminal fills its grid column (capped at 420px)
+                instead of a fixed 420px: in the 5/12 column at 1024-1100px
+                that fixed width was wider than the column, spilled sideways
+                over the intro paragraph and clipped the second CTA. */}
+            <div className="relative flex flex-col w-72 h-80 sm:w-80 sm:h-96 md:w-96 md:h-[450px] lg:w-full lg:h-[520px] short:lg:h-[460px] rounded-[25px] lg:rounded-[40px] overflow-hidden shadow-2xl transform hover:scale-105 transition-all duration-500 mb-20 lg:mb-0">
               {/* Terminal Header */}
               <div
                 className={`shrink-0 px-4 py-2 flex items-center gap-2 ${

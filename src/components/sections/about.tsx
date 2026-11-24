@@ -19,6 +19,13 @@ const stats = [
   { icon: Zap, value: "50+", label: "React Components" },
 ];
 
+const expertiseAreas = [
+  { icon: Code, title: "React/Next.js", subtitle: "Web apps & SSR" },
+  { icon: Smartphone, title: "React Native", subtitle: "Cross-platform" },
+  { icon: Zap, title: "Mobile Dev", subtitle: "Native apps" },
+  { icon: Briefcase, title: "Components", subtitle: "Storybook" },
+];
+
 const timeline = [
   {
     year: "2022-Present",
@@ -72,10 +79,14 @@ export function About() {
     <div className="container mx-auto w-full min-h-full px-4 sm:px-6 md:px-10 py-8 md:py-10 flex items-safe-center">
       <div className="w-full">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Career Timeline Section */}
-          <div className="lg:col-span-5">
+          {/* Career Timeline Section. Visually second on phones and tablets
+              (order-2) so the section opens with its own heading and intro
+              rather than a card of dates; first again once there are two
+              columns. DOM order is unchanged, so reading order for assistive
+              tech and the desktop layout are as before. */}
+          <div className="order-2 lg:order-1 lg:col-span-5">
             <div className="relative">
-              <Card className="overflow-hidden shadow-2xl hover:shadow-primary/20 max-w-sm mx-auto lg:mx-0 group">
+              <Card className="overflow-hidden shadow-2xl hover:shadow-primary/20 max-w-md lg:max-w-sm mx-auto lg:mx-0 group">
                 <div className="p-6 space-y-4">
                   <div className="text-center mb-6">
                     <h3 className="text-xl font-bold mb-2">Career Journey</h3>
@@ -145,38 +156,11 @@ export function About() {
                   </div>
                 </div>
               </Card>
-
-              {/* Floating Stats */}
-              {/* Below lg these wrap into a normal 2-up grid so they can't
-                  render past the viewport edge on narrow phones; the
-                  absolute floating layout is restored at lg where there's
-                  room beside the card. */}
-              <div className="mt-4 grid grid-cols-2 gap-2 lg:mt-0 lg:absolute lg:-top-4 lg:-right-8 lg:block lg:space-y-2">
-                {stats.map((stat, index) => (
-                  <Card
-                    key={stat.label}
-                    className="p-2 shadow-md animate-in slide-in-from-right hover:shadow-lg transition-shadow duration-200"
-                    style={{ animationDelay: `${index * 100}ms` }}
-                  >
-                    <div className="flex items-center gap-2">
-                      <stat.icon className="w-3 h-3 text-primary flex-shrink-0" />
-                      <div className="text-left">
-                        <div className="text-xs font-bold text-primary">
-                          {stat.value}
-                        </div>
-                        <div className="text-[10px] text-muted-foreground leading-tight">
-                          {stat.label}
-                        </div>
-                      </div>
-                    </div>
-                  </Card>
-                ))}
-              </div>
             </div>
           </div>
 
           {/* Content Section */}
-          <div className="lg:col-span-7 space-y-6">
+          <div className="order-1 lg:order-2 lg:col-span-7 space-y-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
@@ -184,9 +168,7 @@ export function About() {
                 </div>
                 <div>
                   <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight">
-                    <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                      About Me
-                    </span>
+                    <span className="text-gradient">About Me</span>
                   </h2>
                   <p className="text-muted-foreground text-lg">
                     Front End Developer
@@ -228,48 +210,54 @@ export function About() {
               </div>
             </div>
 
-            {/* Expertise Areas */}
+            {/* At a glance. These used to float over the timeline card
+                (absolute, offset into the column gap), which at 1024-1280px
+                covered the card's title and first entries. In the content
+                column - the shorter of the two - they cost the section no
+                height at all. */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+              {stats.map((stat, index) => (
+                <Card
+                  key={stat.label}
+                  className="p-3 shadow-md animate-in fade-in slide-in-from-bottom fill-mode-backwards hover:shadow-lg transition-shadow duration-200"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <stat.icon className="w-4 h-4 text-primary flex-shrink-0" />
+                    <div className="text-left">
+                      <div className="text-base font-bold leading-none text-primary">
+                        {stat.value}
+                      </div>
+                      <div className="mt-1 text-xs text-muted-foreground leading-tight">
+                        {stat.label}
+                      </div>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Expertise Areas. A 2x2 grid on phones: four across left each
+                tile ~65px wide at 320px, too narrow for its own label. */}
             <div className="space-y-3">
               <h3 className="text-lg font-semibold text-center">
                 Expertise Areas
               </h3>
-              <div className="flex justify-between gap-2 overflow-x-auto">
-                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
-                  <Code className="w-6 h-6 text-primary" />
-                  <span className="text-xs font-medium text-center">
-                    React/Next.js
-                  </span>
-                  <span className="text-[10px] text-muted-foreground text-center">
-                    Web apps & SSR
-                  </span>
-                </div>
-                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
-                  <Smartphone className="w-6 h-6 text-primary" />
-                  <span className="text-xs font-medium text-center">
-                    React Native
-                  </span>
-                  <span className="text-[10px] text-muted-foreground text-center">
-                    Cross-platform
-                  </span>
-                </div>
-                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
-                  <Zap className="w-6 h-6 text-primary" />
-                  <span className="text-xs font-medium text-center">
-                    Mobile Dev
-                  </span>
-                  <span className="text-[10px] text-muted-foreground text-center">
-                    Native apps
-                  </span>
-                </div>
-                <div className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 flex-1 min-w-0 min-h-[80px]">
-                  <Briefcase className="w-6 h-6 text-primary" />
-                  <span className="text-xs font-medium text-center">
-                    Components
-                  </span>
-                  <span className="text-[10px] text-muted-foreground text-center">
-                    Storybook
-                  </span>
-                </div>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {expertiseAreas.map((area) => (
+                  <div
+                    key={area.title}
+                    className="flex flex-col items-center justify-center space-y-1 p-3 rounded-lg bg-primary/5 hover:bg-primary/10 transition-colors duration-300 min-w-0 min-h-[80px]"
+                  >
+                    <area.icon className="w-6 h-6 text-primary" />
+                    <span className="text-xs font-medium text-center">
+                      {area.title}
+                    </span>
+                    <span className="text-xs text-muted-foreground text-center">
+                      {area.subtitle}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
 

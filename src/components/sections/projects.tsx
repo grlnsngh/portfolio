@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { SwipeArea } from "@/components/ui/swipe-area";
 import {
   Tooltip,
   TooltipContent,
@@ -221,13 +222,6 @@ export function Projects() {
   );
   const [isMounted, setIsMounted] = useState(false);
 
-  // Touch gesture state
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
-
-  // Minimum swipe distance (in px)
-  const minSwipeDistance = 50;
-
   useEffect(() => {
     setIsMounted(true);
     return () => setIsMounted(false);
@@ -298,39 +292,10 @@ export function Projects() {
     setFullscreenImage(currentProjectImages[prevIndex]);
   };
 
-  // Touch gesture handlers
-  const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = (projectTitle?: string, imagesLength?: number) => {
-    if (!touchStart || !touchEnd) return;
-
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      if (projectTitle && imagesLength) {
-        nextImage(projectTitle, imagesLength);
-      } else if (fullscreenImage) {
-        nextFullscreenImage();
-      }
-    }
-
-    if (isRightSwipe) {
-      if (projectTitle && imagesLength) {
-        prevImage(projectTitle, imagesLength);
-      } else if (fullscreenImage) {
-        prevFullscreenImage();
-      }
-    }
-  };
+  // Swipe gestures are handled per carousel by <SwipeArea>. They used to share
+  // one touchStart/touchEnd pair and one handler that always advanced the
+  // *card* carousel, so swiping the gallery inside the details dialog moved
+  // the card behind it and left the dialog's own image where it was.
 
   // Keyboard navigation
   useEffect(() => {
@@ -409,7 +374,7 @@ export function Projects() {
                     project.featured
                       ? "ring-2 ring-primary/30 shadow-primary/20"
                       : "hover:ring-1 hover:ring-primary/20"
-                  } animate-in fade-in slide-in-from-bottom`}
+                  } animate-in fade-in slide-in-from-bottom fill-mode-backwards md:max-lg:last:odd:col-span-2 md:max-lg:last:odd:w-[calc(50%-1rem)] md:max-lg:last:odd:justify-self-center`}
                   style={{ animationDelay: `${index * 150}ms` }}
                 >
                   {/* Featured Badge */}
@@ -434,15 +399,16 @@ export function Projects() {
                   </div>
 
                   {/* Image Gallery */}
-                  <div
+                  <SwipeArea
                     className="relative aspect-square overflow-hidden cursor-pointer group/image"
                     onClick={() =>
                       openFullscreen(project.images, dialogImageIndex)
                     }
-                    onTouchStart={onTouchStart}
-                    onTouchMove={onTouchMove}
-                    onTouchEnd={() =>
-                      onTouchEnd(project.title, project.images.length)
+                    onSwipeLeft={() =>
+                      nextImage(project.title, project.images.length)
+                    }
+                    onSwipeRight={() =>
+                      prevImage(project.title, project.images.length)
                     }
                   >
                     <div className="relative w-full h-full">
@@ -488,12 +454,13 @@ export function Projects() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-300" />
 
                     {/* Fullscreen Hint */}
-                    <div className="absolute top-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
+                    <div className="pointer-events-none absolute z-20 top-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover/image:opacity-100 transition-opacity duration-300">
                       <svg
-                        className="w-4 h-4 inline mr-1"
+                        className="w-4 h-4 inline xl:mr-1"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
+                        aria-hidden="true"
                       >
                         <path
                           strokeLinecap="round"
@@ -502,10 +469,15 @@ export function Projects() {
                           d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7"
                         />
                       </svg>
-                      Click to expand
+                      {/* Icon-only below xl: on the narrower three-column cards
+                          the full label ran into the corner badges. */}
+                      <span className="hidden xl:inline">Click to expand</span>
                     </div>
 
-                    {/* GitHub Button - Bottom Left on Image */}
+                    {/* GitHub Button - Bottom Left on Image. Hidden until hover
+                        only where the device can hover; on a touch screen
+                        there is no hover to reveal it, so it stays visible
+                        (can-hover: see tailwind.config.ts). */}
                     {project.github !== "#" && (
                       <div className="absolute bottom-4 left-4 z-30">
                         <Tooltip>
@@ -513,7 +485,7 @@ export function Projects() {
                             <Button
                               asChild
                               size="sm"
-                              className="h-10 w-10 p-0 bg-secondary/80 hover:bg-secondary/90 text-secondary-foreground border-0 shadow-lg backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110"
+                              className="h-11 w-11 p-0 bg-secondary/80 hover:bg-secondary/90 text-secondary-foreground border-0 shadow-lg backdrop-blur-sm can-hover:opacity-0 can-hover:group-hover:opacity-100 focus-visible:opacity-100 transition-all duration-300 hover:scale-110"
                             >
                               <Link
                                 href={project.github}
@@ -543,7 +515,7 @@ export function Projects() {
                             prevImage(project.title, project.images.length);
                           }}
                           aria-label={`Previous image of ${project.title}`}
-                          className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
+                          className="absolute z-20 left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 touch:h-11 touch:w-11 items-center justify-center bg-black/40 hover:bg-black/55 backdrop-blur-md text-white rounded-full can-hover:opacity-0 can-hover:group-hover:opacity-100 focus-visible:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronLeft className="w-4 h-4" />
                         </button>
@@ -553,13 +525,16 @@ export function Projects() {
                             nextImage(project.title, project.images.length);
                           }}
                           aria-label={`Next image of ${project.title}`}
-                          className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
+                          className="absolute z-20 right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 touch:h-11 touch:w-11 items-center justify-center bg-black/40 hover:bg-black/55 backdrop-blur-md text-white rounded-full can-hover:opacity-0 can-hover:group-hover:opacity-100 focus-visible:opacity-100 transition-all duration-300 hover:scale-110 border border-white/20"
                         >
                           <ChevronRight className="w-4 h-4" />
                         </button>
 
-                        {/* Enhanced Image Indicators */}
-                        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+                        {/* Enhanced Image Indicators. z-20 puts these above the
+                            active image (z-10); they were being painted behind
+                            it, so neither dots nor arrows ever showed. The
+                            pill keeps them legible over a white screenshot. */}
+                        <div className="absolute z-20 bottom-3 left-1/2 -translate-x-1/2 flex gap-2 rounded-full bg-black/40 px-2.5 py-1.5 backdrop-blur-sm">
                           {project.images.map((_, imgIndex) => (
                             <div
                               key={imgIndex}
@@ -573,7 +548,7 @@ export function Projects() {
                         </div>
                       </>
                     )}
-                  </div>
+                  </SwipeArea>
 
                   <div className="p-6 space-y-4">
                     <div className="space-y-2">
@@ -630,15 +605,25 @@ export function Projects() {
                             View Details
                           </Button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl w-[95vw] max-h-[90vh] overflow-y-auto p-0 gap-0">
+                        <DialogContent
+                          className="max-w-4xl w-[95vw]"
+                          bodyClassName="p-0 gap-0"
+                        >
                           <div className="relative">
                             {/* Enhanced Image Gallery in Dialog */}
-                            <div
+                            <SwipeArea
                               className="relative aspect-video overflow-hidden rounded-t-lg"
-                              onTouchStart={onTouchStart}
-                              onTouchMove={onTouchMove}
-                              onTouchEnd={() =>
-                                onTouchEnd(project.title, project.images.length)
+                              onSwipeLeft={() =>
+                                nextDialogImage(
+                                  project.title,
+                                  project.images.length
+                                )
+                              }
+                              onSwipeRight={() =>
+                                prevDialogImage(
+                                  project.title,
+                                  project.images.length
+                                )
                               }
                             >
                               <div className="relative w-full h-full">
@@ -682,7 +667,7 @@ export function Projects() {
                                       );
                                     }}
                                     aria-label="Previous image"
-                                    className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+                                    className="absolute z-20 left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/55 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronLeft className="w-5 h-5" />
                                   </button>
@@ -695,13 +680,13 @@ export function Projects() {
                                       );
                                     }}
                                     aria-label="Next image"
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
+                                    className="absolute z-20 right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/55 backdrop-blur-md text-white p-3 rounded-full transition-all duration-300 hover:scale-110 border border-white/20"
                                   >
                                     <ChevronRight className="w-5 h-5" />
                                   </button>
 
                                   {/* Enhanced Indicators */}
-                                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                                  <div className="absolute z-20 bottom-4 left-1/2 -translate-x-1/2 flex gap-2 rounded-full bg-black/40 px-2.5 py-1.5 backdrop-blur-sm">
                                     {project.images.map((_, imgIndex) => (
                                       <div
                                         key={imgIndex}
@@ -715,11 +700,14 @@ export function Projects() {
                                   </div>
                                 </>
                               )}
-                            </div>
+                            </SwipeArea>
 
                             {/* Content Section */}
                             <div className="p-6 space-y-6">
-                              <DialogHeader className="space-y-3">
+                              {/* Left-aligned on phones too: DialogHeader
+                                  centres by default, which is awkward for a
+                                  paragraph this long. */}
+                              <DialogHeader className="space-y-3 text-left pr-8">
                                 <DialogTitle className="text-xl sm:text-2xl lg:text-3xl font-bold leading-tight">
                                   {project.title}
                                 </DialogTitle>
@@ -884,7 +872,7 @@ export function Projects() {
                                           );
                                         }}
                                         aria-label={`Previous image of ${project.title}`}
-                                        className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
+                                        className="absolute left-2 top-1/2 -translate-y-1/2 flex h-8 w-8 touch:h-11 touch:w-11 items-center justify-center bg-black/40 hover:bg-black/55 backdrop-blur-md text-white rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
                                       >
                                         <ChevronLeft className="w-4 h-4" />
                                       </button>
@@ -897,7 +885,7 @@ export function Projects() {
                                           );
                                         }}
                                         aria-label={`Next image of ${project.title}`}
-                                        className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-md text-white p-1.5 rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
+                                        className="absolute right-2 top-1/2 -translate-y-1/2 flex h-8 w-8 touch:h-11 touch:w-11 items-center justify-center bg-black/40 hover:bg-black/55 backdrop-blur-md text-white rounded-full transition-all duration-300 hover:scale-110 border border-white/20 z-20"
                                       >
                                         <ChevronRight className="w-4 h-4" />
                                       </button>
@@ -1094,11 +1082,10 @@ export function Projects() {
                 </button>
 
                 {/* Main Image */}
-                <div
+                <SwipeArea
                   className="relative w-full h-full flex items-center justify-center"
-                  onTouchStart={onTouchStart}
-                  onTouchMove={onTouchMove}
-                  onTouchEnd={() => onTouchEnd()}
+                  onSwipeLeft={nextFullscreenImage}
+                  onSwipeRight={prevFullscreenImage}
                 >
                   <div className="relative w-full h-full flex items-center justify-center">
                     {currentProjectImages.map((image, index) => (
@@ -1134,28 +1121,31 @@ export function Projects() {
                       <button
                         onClick={prevFullscreenImage}
                         aria-label="Previous image"
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+                        className="absolute z-20 left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 sm:p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
                       >
-                        <ChevronLeft className="w-8 h-8" />
+                        <ChevronLeft className="w-6 h-6 sm:w-8 sm:h-8" />
                       </button>
                       <button
                         onClick={nextFullscreenImage}
                         aria-label="Next image"
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
+                        className="absolute z-20 right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white p-3 sm:p-4 rounded-full transition-all duration-300 hover:scale-110 backdrop-blur-md"
                       >
-                        <ChevronRight className="w-8 h-8" />
+                        <ChevronRight className="w-6 h-6 sm:w-8 sm:h-8" />
                       </button>
                     </>
                   )}
 
                   {/* Image Counter */}
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
+                  <div className="absolute z-20 bottom-4 left-1/2 -translate-x-1/2 bg-black/50 backdrop-blur-md text-white px-4 py-2 rounded-full text-sm">
                     {fullscreenIndex + 1} / {currentProjectImages.length}
                   </div>
 
                   {/* Thumbnail Navigation */}
                   {currentProjectImages.length > 1 && (
-                    <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 max-w-2xl overflow-x-auto p-2">
+                    // w-max + a max-width in terms of the *viewer*: with only
+                    // left-1/2 the strip could use half the screen at most, so
+                    // on a phone three of four thumbnails were scrolled away.
+                    <div className="absolute z-20 bottom-20 left-1/2 -translate-x-1/2 flex w-max max-w-[calc(100%-1rem)] sm:max-w-2xl gap-2 overflow-x-auto p-2">
                       {currentProjectImages.map((img, index) => (
                         <button
                           key={index}
@@ -1184,7 +1174,7 @@ export function Projects() {
                       ))}
                     </div>
                   )}
-                </div>
+                </SwipeArea>
               </div>
             </div>,
             document.body

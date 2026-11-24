@@ -1,4 +1,5 @@
 import type {Config} from 'tailwindcss';
+import plugin from 'tailwindcss/plugin';
 
 export default {
   darkMode: ['class'],
@@ -126,5 +127,27 @@ export default {
       }),
     },
   },
-  plugins: [require('tailwindcss-animate')],
+  plugins: [
+    require('tailwindcss-animate'),
+    // Capability / environment variants. Width alone cannot tell a phone from
+    // a desktop window, and "hover" is not something a touch screen has, so
+    // layout that depends on either asks the browser instead of guessing.
+    plugin(({addVariant}) => {
+      // The layout below the desktop breakpoint (1024px, kept in sync with
+      // DESKTOP_BREAKPOINT in src/lib/navigation.ts) is the touch layout; a
+      // coarse pointer gets it too, so an iPad in landscape is covered.
+      addVariant('touch', '@media (pointer: coarse), (max-width: 1023.98px)');
+      // A real hover-capable pointer. Hover-only affordances are gated on
+      // this so they stay visible everywhere else.
+      addVariant('can-hover', '@media (hover: hover) and (pointer: fine)');
+      // Laptop-height screens (a 1366x768 viewport is ~650px tall once the
+      // browser chrome is subtracted).
+      addVariant('short', '@media (max-height: 820px)');
+      // A phone held sideways: very little height, so fixed bars must shrink.
+      addVariant(
+        'landscape-short',
+        '@media (max-height: 500px) and (orientation: landscape)'
+      );
+    }),
+  ],
 } satisfies Config;
