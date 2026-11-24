@@ -165,13 +165,13 @@ export function Contact() {
             <Sparkles className="w-4 h-4" />
             Let’s Connect
           </div>
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 md:mb-3">
-            Ready to{" "}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Work Together?
-            </span>
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 lg:mb-3">
+            Ready to <span className="text-gradient">Work Together?</span>
           </h2>
-          <p className="text-muted-foreground text-lg md:text-base max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
+          {/* Compact sizing starts at lg, where fullpage.js has to fit this in
+              one screen. Tablets (md) scroll natively and are touch devices:
+              they get the roomy sizes and full-size controls. */}
+          <p className="text-muted-foreground text-lg lg:text-base max-w-2xl mx-auto leading-relaxed px-4 md:px-0">
             I’m always excited to discuss new opportunities, collaborate on
             projects, or just have a friendly chat about technology and
             innovation.
@@ -193,7 +193,7 @@ export function Contact() {
                 {contactInfo.map((info, index) => (
                   <div
                     key={info.label}
-                    className="flex items-start gap-3 p-3 md:p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left min-h-[60px] md:min-h-0"
+                    className="flex items-start gap-3 p-3 md:p-3 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left fill-mode-backwards min-h-[60px] lg:min-h-0"
                     style={{ animationDelay: `${index * 100}ms` }}
                   >
                     <div className="p-2 md:p-2 bg-primary/10 rounded-lg flex-shrink-0">
@@ -209,7 +209,7 @@ export function Contact() {
                       {info.href !== "#" ? (
                         <Link
                           href={info.href}
-                          className="text-sm md:text-sm text-primary hover:underline font-medium"
+                          className="inline-flex items-center touch:min-h-11 text-sm text-primary hover:underline font-medium"
                         >
                           {info.value}
                         </Link>
@@ -238,7 +238,7 @@ export function Contact() {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={`p-3 md:p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors duration-200 ${social.color} animate-in fade-in slide-in-from-bottom min-w-[48px] md:min-w-0 h-12 md:h-auto flex items-center justify-center`}
+                      className={`p-3 md:p-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors duration-200 ${social.color} animate-in fade-in slide-in-from-bottom fill-mode-backwards h-12 min-w-[48px] flex items-center justify-center`}
                       style={{ animationDelay: `${index * 100}ms` }}
                     >
                       <social.icon className="w-5 h-5" />
@@ -253,7 +253,7 @@ export function Contact() {
             <div className="flex justify-center pt-2">
               <Badge
                 variant="secondary"
-                className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs md:text-sm min-h-[36px] md:min-h-0 flex items-center"
+                className="px-3 py-1 md:px-4 md:py-2 bg-green-100 text-green-800 border-green-200 dark:bg-green-950 dark:text-green-300 dark:border-green-800 text-xs md:text-sm flex items-center"
               >
                 <CheckCircle className="w-3 h-3 md:w-4 md:h-4 mr-2" />
                 Available for new projects
@@ -311,7 +311,7 @@ export function Contact() {
                                 autoComplete="name"
                                 placeholder="Your full name"
                                 {...field}
-                                className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"
+                                className="h-12 lg:h-11 text-base lg:text-sm focus:ring-2 focus:ring-primary/20"
                               />
                             </FormControl>
                             <FormMessage />
@@ -333,7 +333,7 @@ export function Contact() {
                                 autoComplete="email"
                                 placeholder="your.email@example.com"
                                 {...field}
-                                className="h-12 md:h-11 text-base md:text-sm focus:ring-2 focus:ring-primary/20"
+                                className="h-12 lg:h-11 text-base lg:text-sm focus:ring-2 focus:ring-primary/20"
                               />
                             </FormControl>
                             <FormMessage />
@@ -355,7 +355,7 @@ export function Contact() {
                               placeholder="Tell me about your project, ideas, or just say hello..."
                               {...field}
                               rows={5}
-                              className="text-base md:text-sm resize-none focus:ring-2 focus:ring-primary/20 min-h-[120px] md:min-h-0"
+                              className="text-base lg:text-sm resize-none focus:ring-2 focus:ring-primary/20 min-h-[120px] lg:min-h-0"
                             />
                           </FormControl>
                           <FormMessage />
@@ -365,7 +365,7 @@ export function Contact() {
 
                     <Button
                       type="submit"
-                      className="w-full h-12 md:h-11 text-base md:text-sm font-medium group"
+                      className="w-full h-12 lg:h-11 text-base lg:text-sm font-medium group"
                       disabled={form.formState.isSubmitting}
                     >
                       {form.formState.isSubmitting ? (

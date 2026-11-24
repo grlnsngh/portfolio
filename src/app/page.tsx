@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import ReactFullpage from "@fullpage/react-fullpage";
 import { About } from "@/components/sections/about";
 import { Contact } from "@/components/sections/contact";
@@ -10,24 +10,22 @@ import { Sidebar } from "@/components/sidebar";
 import { Header } from "@/components/header";
 import { MobileNav } from "@/components/mobile-nav";
 import { cn } from "@/lib/utils";
-import type { fullpageApi, Item } from "@fullpage/react-fullpage";
+import {
+  DESKTOP_BREAKPOINT,
+  NATIVE_SCROLL_QUERY,
+  SECTION_ANCHORS,
+  goToSection,
+  sectionElementId,
+} from "@/lib/navigation";
+import type { Item } from "@fullpage/react-fullpage";
 
-// Below this width fullpage.js disables itself (see responsiveWidth below)
-// and the same sections become a normal, natively-scrolling document.
+// Below DESKTOP_BREAKPOINT fullpage.js disables itself (see responsiveWidth
+// below) and the same sections become a normal, natively-scrolling document.
 // Tablets belong on that side of the line: between 768px and 1023px every
 // section's content is taller than one viewport, so fullpage could only show
-// them behind an inner scrollbar. Keep in sync with the 1024px media queries
-// in globals.css and the `lg:` variants on Sidebar/MobileNav/Header.
-const DESKTOP_BREAKPOINT = 1024;
-
-const anchors = ["hero", "about", "projects", "skills", "contact"];
-
-// fullpage.js refuses to share a name between an `anchors` entry and an
-// element id — it logs "data-anchor tags can not have the same value as any
-// `id` element" for every section and the two navigation mechanisms fight
-// over the hash. The anchors stay bare (so URLs remain /#about) and the
-// elements the mobile code path looks up get their own prefixed ids.
-const sectionElementId = (anchor: string) => `section-${anchor}`;
+// them behind an inner scrollbar. The constant and the navigation helper live
+// in src/lib/navigation.ts so the hero's buttons agree with this file.
+const anchors = [...SECTION_ANCHORS];
 
 const sections = [
   { id: "hero", Component: Hero, tinted: false },
@@ -40,10 +38,9 @@ const sections = [
 const FullpageWrapper = () => {
   const [activeSection, setActiveSection] = useState("hero");
   const [isNativeScroll, setIsNativeScroll] = useState(false);
-  const fullpageApiRef = useRef<fullpageApi | null>(null);
 
   useEffect(() => {
-    const query = window.matchMedia(`(max-width: ${DESKTOP_BREAKPOINT - 1}px)`);
+    const query = window.matchMedia(NATIVE_SCROLL_QUERY);
     const update = (e: MediaQueryList | MediaQueryListEvent) =>
       setIsNativeScroll(e.matches);
 
@@ -140,16 +137,10 @@ const FullpageWrapper = () => {
   };
 
   const handleSectionChange = (section: string) => {
-    if (isNativeScroll) {
-      setActiveSection(section);
-      // Native scrolling below the desktop breakpoint
-      const element = document.getElementById(sectionElementId(section));
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    } else {
-      fullpageApiRef.current?.moveTo(section);
-    }
+    // Native scroll has no onLeave to update the highlight, so do it here;
+    // above the breakpoint fullpage's onLeave does it once the move starts.
+    if (isNativeScroll) setActiveSection(section);
+    goToSection(section);
   };
 
   // A single tree serves both breakpoints. Below DESKTOP_BREAKPOINT,
@@ -179,8 +170,8 @@ const FullpageWrapper = () => {
             scrollOverflow={true}
             responsiveWidth={DESKTOP_BREAKPOINT}
             render={({ fullpageApi: api }) => {
-              fullpageApiRef.current = api;
-              // Expose API to window for components that need it
+              // Published on window so goToSection() (src/lib/navigation.ts)
+              // can drive fullpage.js from anywhere in the tree.
               if (typeof window !== "undefined") {
                 window.fullpage_api = api;
               }

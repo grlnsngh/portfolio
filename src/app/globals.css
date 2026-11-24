@@ -30,6 +30,21 @@
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
+    /* Desktop sidebar. Defined here (the Tailwind `sidebar` colours have
+       always pointed at these names, but nothing set them) so it can differ by
+       theme: it used to borrow `primary`, which flips to near-white in dark
+       mode and turned the rail into a glaring slab against a dark page. */
+    --sidebar-background: 220 25% 35%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-border: 220 25% 35%;
+
+    /* Section-heading gradient. Both stops are >= 4.5:1 against --background
+       (blue-600 / violet-600). The old `primary -> secondary` gradient ended on
+       a colour almost identical to the page, so the end of every heading faded
+       out of sight. */
+    --gradient-from: 221 83% 53%;
+    --gradient-to: 262 83% 58%;
+
     /* Heights of the fixed header and of the bottom nav shown below the
        desktop breakpoint. Every rule that keeps content clear of that chrome
        reads these instead of repeating a magic number. */
@@ -45,6 +60,24 @@
       --bottom-nav-h: calc(4rem + env(safe-area-inset-bottom, 0px));
     }
   }
+
+  /* A phone held sideways has ~375px of height; two 64px bars would take a
+     third of it. Slimmer bars here (MobileNav lays its items out in a row at
+     the same breakpoint), which leaves ~275px for content instead of ~247px. */
+  @media (max-height: 500px) and (orientation: landscape) {
+    :root {
+      --header-h: 3rem;
+      --bottom-nav-h: 3.25rem;
+    }
+
+    @supports (padding: max(0px)) {
+      :root {
+        --header-h: calc(3rem + env(safe-area-inset-top, 0px));
+        --bottom-nav-h: calc(3.25rem + env(safe-area-inset-bottom, 0px));
+      }
+    }
+  }
+
   .dark {
     --background: 220 9% 23%;
     --foreground: 220 15% 96%;
@@ -70,6 +103,14 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+
+    --sidebar-background: 220 9% 17%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-border: 220 9% 28%;
+
+    /* blue-400 / violet-400 against the dark background. */
+    --gradient-from: 213 94% 68%;
+    --gradient-to: 255 92% 76%;
   }
 }
 
@@ -213,6 +254,22 @@
 
 #fp-nav {
   z-index: 50 !important;
+}
+
+/* Gradient text for the section headings. A utility rather than repeating the
+   five-class Tailwind recipe so the colours (and their contrast) live in one
+   place: see --gradient-from / --gradient-to above. */
+@layer utilities {
+  .text-gradient {
+    background-image: linear-gradient(
+      90deg,
+      hsl(var(--gradient-from)),
+      hsl(var(--gradient-to))
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 /* Like `items-center`, but when the centered content is taller than this

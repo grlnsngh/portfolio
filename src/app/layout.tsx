@@ -167,15 +167,36 @@ export default function RootLayout({
 
 // Registered after load so it never competes with the initial render. Kept
 // out of <head> because a blocking inline script there delays first paint.
+//
+// Production only. sw.js serves /_next/static/* cache-first on the grounds that
+// those URLs are content-hashed, which is true of a production build and false
+// of the dev server: there the same URL gets new code on every save, so a
+// registered worker keeps handing the browser yesterday's chunks and React
+// reports hydration mismatches against fresh server HTML. In dev this script
+// instead removes any worker (and its caches) left over from an earlier visit.
 function ServiceWorkerRegistration() {
+  const register = process.env.NODE_ENV === "production";
+
   return (
     <script
       dangerouslySetInnerHTML={{
-        __html: `
+        __html: register
+          ? `
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
     navigator.serviceWorker.register('/sw.js').catch(function () {});
   });
+}`
+          : `
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(function (regs) {
+    regs.forEach(function (r) { r.unregister(); });
+  });
+  if (window.caches) {
+    caches.keys().then(function (keys) {
+      keys.forEach(function (k) { caches.delete(k); });
+    });
+  }
 }`,
       }}
     />

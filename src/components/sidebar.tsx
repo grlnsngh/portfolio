@@ -27,7 +27,11 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
   };
 
   return (
-    <aside className="fixed top-0 left-0 h-screen w-20 hidden lg:flex flex-col items-center justify-center py-8 z-50 bg-primary text-primary-foreground">
+    // bg-sidebar / text-sidebar-foreground rather than primary: primary turns
+    // near-white in dark mode, which made this rail the brightest thing on an
+    // otherwise dark page. The sidebar tokens are defined per theme in
+    // globals.css.
+    <aside className="fixed top-0 left-0 h-screen w-20 hidden lg:flex flex-col items-center justify-center py-8 z-50 bg-sidebar text-sidebar-foreground border-r border-sidebar-border">
       <nav className="flex flex-col items-center gap-8">
         <TooltipProvider>
           {navLinks.map((link) => (
@@ -37,14 +41,14 @@ export function Sidebar({ activeSection, onSectionChange }: SidebarProps) {
                   onClick={() => handleNavClick(link.anchor)}
                   aria-current={activeSection === link.anchor ? "true" : undefined}
                   className={cn(
-                    "group p-3 rounded-full text-primary-foreground/70 transition-colors hover:bg-primary-foreground/10 hover:text-primary-foreground relative",
-                    activeSection === link.anchor && "text-primary-foreground"
+                    "group p-3 rounded-full text-sidebar-foreground/70 transition-colors hover:bg-sidebar-foreground/10 hover:text-sidebar-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-foreground/70 relative",
+                    activeSection === link.anchor && "text-sidebar-foreground"
                   )}
                 >
                   <link.icon className="h-6 w-6" aria-hidden="true" />
                   <span className="sr-only">{link.label}</span>
                   {activeSection === link.anchor && (
-                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-primary-foreground rounded-full" />
+                    <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1/2 h-0.5 bg-sidebar-foreground rounded-full" />
                   )}
                 </button>
               </TooltipTrigger>

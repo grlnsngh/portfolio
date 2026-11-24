@@ -92,67 +92,72 @@ const techCategories = [
 
 export function Skills() {
   return (
-    <div className="relative w-full min-h-full flex items-safe-center justify-center overflow-hidden py-8 md:py-10">
+    <div className="relative w-full min-h-full flex items-safe-center justify-center overflow-hidden py-8 lg:py-10">
       <div className="container mx-auto max-w-7xl relative z-10">
-        {/* Header */}
-        <div className="text-center mb-8 md:mb-8 px-4 md:px-0">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 md:mb-3">
+        {/* Header. The compact sizes (lg:) apply only where fullpage.js is
+            fitting this into one screen; tablets scroll natively and keep the
+            roomier phone sizing. They used to switch at md (768px), a leftover
+            from when fullpage.js started there. */}
+        <div className="text-center mb-8 px-4 lg:px-0">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary font-medium text-sm mb-4 lg:mb-3">
             <Sparkles className="w-4 h-4" />
             Tech Stack & Expertise
           </div>
-          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 md:mb-3">
-            Technologies I{" "}
-            <span className="bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-              Love Working With
-            </span>
+          <h2 className="font-headline text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight mb-4 lg:mb-3">
+            Technologies I <span className="text-gradient">Love Working With</span>
           </h2>
-          <p className="text-muted-foreground text-lg md:text-base max-w-2xl mx-auto leading-relaxed">
+          <p className="text-muted-foreground text-lg lg:text-base max-w-2xl mx-auto leading-relaxed">
             A comprehensive toolkit of modern technologies and frameworks that
             power my development workflow
           </p>
         </div>
 
-        {/* Tech Stack Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-3 lg:gap-4 px-4 md:px-0">
+        {/* Tech Stack Grid. Each category is a header plus wrapping chips,
+            not a one-per-row list: as rows the six cards stacked to ~3,300px
+            on a phone and ~1,200px on desktop; as chips they take roughly
+            half that, which is also why desktop needs far less inner scroll. */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-4 lg:px-0">
           {techCategories.map((category, categoryIndex) => (
             <Card
               key={category.title}
-              className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-in fade-in slide-in-from-bottom border-0 shadow-sm"
+              className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 animate-in fade-in slide-in-from-bottom fill-mode-backwards border-0 shadow-sm"
               style={{ animationDelay: `${categoryIndex * 100}ms` }}
             >
               {/* Category Header */}
-              <div className="px-4 py-3 md:px-3 md:py-2 bg-muted/50 border-b">
-                <div className="flex items-center gap-3 md:gap-2">
-                  <div className="p-2 md:p-1.5 bg-primary/10 rounded-lg">
-                    <category.icon className="w-5 h-5 md:w-4 md:h-4 text-primary" />
+              <div className="px-4 py-3 lg:px-3 lg:py-2 bg-muted/50 border-b">
+                <div className="flex items-center gap-3 lg:gap-2">
+                  <div className="p-2 lg:p-1.5 bg-primary/10 rounded-lg">
+                    <category.icon className="w-5 h-5 lg:w-4 lg:h-4 text-primary" />
                   </div>
-                  <h3 className="text-lg md:text-base font-semibold text-foreground">
+                  <h3 className="text-lg lg:text-base font-semibold text-foreground">
                     {category.title}
                   </h3>
                 </div>
               </div>
 
-              {/* Technologies List */}
-              <div className="px-4 py-3 md:px-3 md:py-2 space-y-2 md:space-y-1">
+              {/* Technologies */}
+              <ul
+                role="list"
+                className="flex flex-wrap gap-2 p-4 lg:p-3"
+                aria-label={`${category.title} technologies`}
+              >
                 {category.technologies.map((tech, techIndex) => (
-                  <div
+                  <li
                     key={tech.name}
-                    className="flex items-center gap-3 md:gap-2 px-3 py-2 md:px-2 md:py-1.5 rounded-lg hover:bg-muted/50 transition-colors duration-200 animate-in fade-in slide-in-from-left min-h-[44px] md:min-h-0"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-border/60 bg-background/60 px-3 py-1.5 text-sm font-medium leading-tight text-foreground transition-colors duration-200 hover:border-primary/30 hover:bg-primary/10 animate-in fade-in zoom-in-95 fill-mode-backwards"
                     style={{
                       animationDelay: `${
-                        categoryIndex * 100 + techIndex * 50
+                        categoryIndex * 100 + techIndex * 40
                       }ms`,
                     }}
                   >
-                    <span className="text-lg md:text-base flex-shrink-0">
+                    <span aria-hidden="true" className="flex-shrink-0">
                       {tech.icon}
                     </span>
-                    <span className="text-base md:text-sm font-medium text-foreground leading-tight">
-                      {tech.name}
-                    </span>
-                  </div>
+                    {tech.name}
+                  </li>
                 ))}
-              </div>
+              </ul>
 
               {/* Subtle Hover Effect */}
               <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
@@ -161,71 +166,49 @@ export function Skills() {
         </div>
 
         {/* Bottom Stats */}
-        <div className="mt-8 md:mt-8 text-center px-4 md:px-0">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-4 max-w-2xl mx-auto">
-            <div className="space-y-1">
-              <div className="text-3xl md:text-2xl font-bold text-primary">
-                20+
+        <div className="mt-8 text-center px-4 lg:px-0">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+            {[
+              { value: "20+", label: "Technologies" },
+              { value: "5+", label: "Years Experience" },
+              { value: "15+", label: "Projects Built" },
+              { value: "100%", label: "Passionate" },
+            ].map((stat) => (
+              <div key={stat.label} className="space-y-1">
+                <div className="text-3xl lg:text-2xl font-bold text-primary">
+                  {stat.value}
+                </div>
+                <div className="text-sm lg:text-xs text-muted-foreground">
+                  {stat.label}
+                </div>
               </div>
-              <div className="text-sm md:text-xs text-muted-foreground">
-                Technologies
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl md:text-2xl font-bold text-primary">
-                5+
-              </div>
-              <div className="text-sm md:text-xs text-muted-foreground">
-                Years Experience
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl md:text-2xl font-bold text-primary">
-                15+
-              </div>
-              <div className="text-sm md:text-xs text-muted-foreground">
-                Projects Built
-              </div>
-            </div>
-            <div className="space-y-1">
-              <div className="text-3xl md:text-2xl font-bold text-primary">
-                100%
-              </div>
-              <div className="text-sm md:text-xs text-muted-foreground">
-                Passionate
-              </div>
-            </div>
+            ))}
           </div>
         </div>
 
-        {/* Call to Action */}
-        <div className="mt-8 md:mt-6 text-center px-4 md:px-0">
-          <p className="text-muted-foreground mb-4 md:mb-4 text-base md:text-sm">
+        {/* Call to Action. These badges are labels, not controls, so they
+            carry no 44px minimum height (they used to, which just made them
+            taller than they needed to be on phones and tablets). */}
+        <div className="mt-8 lg:mt-6 text-center px-4 lg:px-0">
+          <p className="text-muted-foreground mb-4 text-base lg:text-sm">
             Always learning and exploring new technologies to stay ahead of the
             curve
           </p>
-          <div className="flex flex-wrap justify-center gap-3 md:gap-2">
-            <Badge
-              variant="secondary"
-              className="px-3 py-2 md:px-2 md:py-1 text-sm md:text-xs min-h-[44px] md:min-h-0 flex items-center"
-            >
-              <Zap className="w-4 h-4 md:w-3 md:h-3 mr-2 md:mr-1" />
-              Performance Focused
-            </Badge>
-            <Badge
-              variant="secondary"
-              className="px-3 py-2 md:px-2 md:py-1 text-sm md:text-xs min-h-[44px] md:min-h-0 flex items-center"
-            >
-              <Shield className="w-4 h-4 md:w-3 md:h-3 mr-2 md:mr-1" />
-              Quality Driven
-            </Badge>
-            <Badge
-              variant="secondary"
-              className="px-3 py-2 md:px-2 md:py-1 text-sm md:text-xs min-h-[44px] md:min-h-0 flex items-center"
-            >
-              <Rocket className="w-4 h-4 md:w-3 md:h-3 mr-2 md:mr-1" />
-              Innovation Minded
-            </Badge>
+          <div className="flex flex-wrap justify-center gap-3 lg:gap-2">
+            {[
+              { icon: Zap, label: "Performance Focused" },
+              { icon: Shield, label: "Quality Driven" },
+              { icon: Rocket, label: "Innovation Minded" },
+            ].map((item) => (
+              <Badge
+                key={item.label}
+                variant="secondary"
+                className="px-3 py-2 lg:px-2 lg:py-1 text-sm lg:text-xs flex items-center"
+              >
+                <item.icon className="w-4 h-4 lg:w-3 lg:h-3 mr-2 lg:mr-1" />
+                {item.label}
+              </Badge>
+            ))}
           </div>
         </div>
       </div>
