@@ -143,6 +143,11 @@ export default {
       // Laptop-height screens (a 1366x768 viewport is ~650px tall once the
       // browser chrome is subtracted).
       addVariant('short', '@media (max-height: 820px)');
+      // Contact is the one screen whose full design (badge, footer line,
+      // descriptions) needs ~900px of room, more than a 1080p monitor's ~950px
+      // viewport leaves once the header is taken off. Anything that has to give
+      // way up to there uses `tight:`; `short:` stays for the laptop-only cuts.
+      addVariant('tight', '@media (max-height: 1000px)');
       // A phone held sideways: very little height, so fixed bars must shrink.
       addVariant(
         'landscape-short',

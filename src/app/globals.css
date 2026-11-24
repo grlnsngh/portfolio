@@ -145,25 +145,26 @@
 /* ---------------------------------------------------------------------------
    Layout geometry
 
-   The header is `fixed`, so it takes no space in the flow and every section
+   The header is `fixed`, so it takes no space in the flow and every screen
    gets the whole viewport. Each scrolling context then reserves the header
-   strip for itself:
+   strip for itself. There are two contexts (src/lib/navigation.ts defines the
+   thresholds; keep the numbers here in sync with it):
 
-     >= 1024px  fullpage.js owns the scrolling; the reserve goes on
-                .fp-overflow, the element fullpage actually scrolls.
-     <  1024px  fullpage.js disables itself (responsiveWidth) and the document
-                scrolls natively; the reserve goes on <main>.
-
-   Keep 1024 in sync with DESKTOP_BREAKPOINT in src/app/page.tsx, which is what
-   fullpage.js is handed as `responsiveWidth`.
+     fullpage   >= 1024px wide AND >= 540px tall. fullpage.js owns scrolling and
+                every screen is laid out to fit the viewport, so the reserve
+                goes on .fp-overflow, the element fullpage actually scrolls
+                (and which, in practice, never has anything to scroll).
+     native     anything narrower or shorter. fullpage.js disables itself
+                (`responsiveWidth` / `responsiveHeight`) and the document
+                scrolls; the reserve goes on <main>.
    --------------------------------------------------------------------------- */
 
-@media (min-width: 1024px) {
-  /* fullpage stacks all five sections inside <main> and slides them with a
-     transform, so <main>'s content is ~5 viewports tall. fullpage's own
+@media (min-width: 1024px) and (min-height: 540px) {
+  /* fullpage stacks every screen inside <main> and slides them with a
+     transform, so <main>'s content is many viewports tall. fullpage's own
      `body { overflow: hidden }` still leaves <body> programmatically
      scrollable, which lets a native anchor jump or a focus scroll into an
-     off-screen section move <body> underneath the transform and desync the
+     off-screen screen move <body> underneath the transform and desync the
      page. `clip` makes it unscrollable rather than merely hidden. */
   main {
     overflow: clip;
@@ -178,22 +179,51 @@
        64px sat below the fold, unreachable. */
     height: 100%;
     padding-top: var(--header-h);
+    /* fullpage's dot navigation floats at the right edge; without this the
+       outer cards of a full-width row (Skills, More Projects) run under it. */
+    padding-right: 1.5rem;
+  }
+
+  /* Height-aware sizing. A screen has to fit one viewport, and the viewports
+     differ a lot in height: a 1080p monitor leaves ~950px, a 1440x900 laptop
+     ~780px, a 1366x768 laptop ~650px. Everything here is sized in rem, so
+     easing the root size from 16px (at 950px tall and up) down to 14px (at
+     650px and below) shrinks type, spacing, the header and every screen
+     together, instead of having a laptop clip what a monitor shows. The floor
+     is 14px, not lower: below that the smallest captions (text-xs) fall under
+     10px and stop being readable, so the last bit of fit comes from the layouts
+     compacting (the `short:` variants), not from shrinking type further.
+     Expressed in rem so a user's own default font size still scales it. */
+  html {
+    font-size: clamp(0.875rem, 0.604rem + 0.667vh, 1rem);
   }
 }
 
-@media (max-width: 1023.98px) {
+/* On a laptop-height screen the vertical padding around a screen's content is
+   the cheapest thing to give back: the content is centred in whatever room
+   there is, so it costs nothing on a tall monitor and buys ~40px here.
+   `.fp-section` is in the selector for specificity: Tailwind's responsive
+   utilities (md:py-10 and friends) are emitted after plain CSS in the bundle,
+   so at equal specificity they would silently win. */
+@media (min-width: 1024px) and (min-height: 540px) and (max-height: 820px) {
+  .fp-section .fp-overflow > * {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+}
+
+@media (max-width: 1023.98px), (max-height: 539.98px) {
   main {
     padding-top: var(--header-h);
-    padding-bottom: var(--bottom-nav-h);
   }
 
   /* fullpage.js's own `.fp-scrollable .fp-section` rule forces min-height:100vh
-     in responsive mode, which ignores the header and the bottom nav. Same idea
-     minus the chrome, on dvh so mobile browser toolbars do not cut it off.
-     Centring is safe here because this is a min-height: content taller than the
-     box grows the section rather than overflowing it. */
+     in responsive mode, which ignores the header. Same idea minus the chrome,
+     on dvh so mobile browser toolbars do not cut it off. Centring is safe here
+     because this is a min-height: content taller than the box grows the
+     section rather than overflowing it. */
   .section {
-    min-height: calc(100dvh - var(--header-h) - var(--bottom-nav-h)) !important;
+    min-height: calc(100dvh - var(--header-h)) !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -202,8 +232,33 @@
     scroll-margin-top: var(--header-h);
   }
 
+  /* A group can span several screens (About is two, Skills two, Projects
+     four). On desktop each is a screen of its own; here the later ones flow on
+     from the one before instead of each claiming a viewport-height block,
+     which on a phone would leave a screen of empty space after a short one. */
+  .screen-continued {
+    min-height: 0 !important;
+  }
+
   html {
     scroll-behavior: smooth;
+  }
+}
+
+/* The bottom nav only exists below the desktop width, so only there does <main>
+   have to clear it and the screens have to leave room for it. (A desktop-wide
+   window that is merely short has the sidebar, not the bottom nav.) */
+@media (max-width: 1023.98px) {
+  main {
+    padding-bottom: var(--bottom-nav-h);
+  }
+
+  .section {
+    min-height: calc(100dvh - var(--header-h) - var(--bottom-nav-h)) !important;
+  }
+
+  .screen-continued {
+    min-height: 0 !important;
   }
 }
 
